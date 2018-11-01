@@ -39,8 +39,6 @@
 }
 
 .navbar .navbar-toggle:before {
-    content: '\E8D5';
-    font-family: 'Material Icons';
     font-size: 26px;
 }
 
@@ -186,7 +184,8 @@
 }
 
 .navbar-nav .dropdown-menu {
-    margin-top: -40px !important;
+    margin-top: 1px !important;
+   
 }
 
 .label-count {
@@ -3066,9 +3065,9 @@
         position: absolute;
     }
 
-    .navbar .dropdown-menu {
-        margin-left: -50px;
-    }
+    /* .navbar .dropdown-menu {
+        margin-left: 90px !important;
+    } */
 
     .navbar .js-right-sidebar {
         margin-top: 15px;
@@ -5266,78 +5265,7 @@ section.content {
     color: #fff;
 }
 
-/* Bootstrap Select ============================ */
-.bootstrap-select {
-    box-shadow: none !important;
-    border-bottom: 1px solid #ddd !important;
-    -webkit-border-radius: 0;
-    -moz-border-radius: 0;
-    -ms-border-radius: 0;
-    border-radius: 0;
-}
 
-.bootstrap-select .dropdown-toggle:focus, .bootstrap-select .dropdown-toggle:active {
-    outline: none !important;
-}
-
-.bootstrap-select .bs-searchbox,
-.bootstrap-select .bs-actionsbox,
-.bootstrap-select .bs-donebutton {
-    padding: 0 0 5px 0;
-    border-bottom: 1px solid #e9e9e9;
-}
-
-.bootstrap-select .bs-searchbox .form-control,
-.bootstrap-select .bs-actionsbox .form-control,
-.bootstrap-select .bs-donebutton .form-control {
-    -webkit-border-radius: 0;
-    -moz-border-radius: 0;
-    -ms-border-radius: 0;
-    border-radius: 0;
-    -webkit-box-shadow: none !important;
-    -moz-box-shadow: none !important;
-    -ms-box-shadow: none !important;
-    box-shadow: none !important;
-    border: none;
-    margin-left: 30px;
-}
-
-.bootstrap-select .bs-searchbox {
-    position: relative;
-}
-
-.bootstrap-select .bs-searchbox:after {
-    content: '\E8B6';
-    font-family: 'Material Icons';
-    position: absolute;
-    top: 0;
-    left: 10px;
-    font-size: 25px;
-}
-
-.bootstrap-select ul.dropdown-menu {
-    margin-top: 0 !important;
-}
-
-.bootstrap-select .dropdown-menu li.selected a {
-    background-color: #eee !important;
-    color: #555 !important;
-}
-
-.bootstrap-select .dropdown-menu .active a {
-    background-color: transparent;
-    color: #333 !important;
-}
-
-.bootstrap-select .dropdown-menu .notify {
-    background-color: #F44336 !important;
-    color: #fff !important;
-    border: none !important;
-}
-
-.bootstrap-select.btn-group.show-tick .dropdown-menu li.selected a span.check-mark {
-    margin-top: 9px;
-}
 
 /* Tooltip & Popovers ========================== */
 .tooltip {
@@ -8168,29 +8096,25 @@ section.content {
     left: 65px;
 }
 
-.sidebar .user-info .info-contact .material-icons {
-    position: relative;
-    font-size: 20px;
-    top: 5px;
-}
 
-/*.sidebar .user-info .info-personal {*/
-/*cursor: default;*/
-/*display: block;*/
-/*position: relative;*/
-/*bottom: 45px;*/
-/*left: 10px;*/
-/*}*/
+.sidebar .user-info .info-personal {
+cursor: default;
+display: block;
+position: relative;
+bottom: 45px;
+left: 10px;
+}
 
 .sidebar .user-info .info-container .name {
     margin-top: 15px;
     max-width: 200px;
+    font-size: 15px;
     color: #fff;
 }
 
 .sidebar .user-info .info-container .email {
-
-    max-width: 200px;
+    max-width: 12px;
+    font-size: 15px;
     color: #fff;
 }
 

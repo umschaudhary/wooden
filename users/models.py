@@ -6,13 +6,13 @@ from model_utils import Choices
 
 USER_ROLES = Choices(
     'admin',
-    'wardstaff',
-    'divisionstaff',
+    'provider',
+    'customer',
 )
 
 
 class UserManager(BaseUserManager):
-    def create_user(self, email, full_name=None, password=None, is_active=True, is_staff=False, is_admin=False):
+    def create_user(self, email, full_name=None, password=None, active=True, staff=False, admin=False):
         if not email:
             raise ValueError("Users must have an email address")
         if not password:
@@ -23,9 +23,9 @@ class UserManager(BaseUserManager):
             full_name=full_name
         )
         user_obj.set_password(password)  # change user password
-        user_obj.staff = is_staff
-        user_obj.admin = is_admin
-        user_obj.active = is_active
+        user_obj.is_staff = staff
+        user_obj.is_admin = admin
+        user_obj.is_active = active
         user_obj.save(using=self._db)
         return user_obj
 
@@ -34,7 +34,8 @@ class UserManager(BaseUserManager):
             email,
             full_name=full_name,
             password=password,
-            is_staff=True
+            is_staff=True,
+           
         )
         return user
 
@@ -45,6 +46,7 @@ class UserManager(BaseUserManager):
             password=password,
             is_staff=True,
             is_admin=True,
+          
 
         )
         user.role = 'admin'
@@ -56,9 +58,9 @@ class User(AbstractBaseUser):
     email = models.EmailField(max_length=255, unique=True)
     full_name = models.CharField(max_length=255, blank=True, null=True)
     role = models.CharField(max_length=100, choices=USER_ROLES, default=USER_ROLES.admin)
-    active = models.BooleanField(default=True)  # can login
-    staff = models.BooleanField(default=False)  # staff user non superuser
-    admin = models.BooleanField(default=False)  # superuser
+    is_active = models.BooleanField(default=True)  # can login
+    is_staff = models.BooleanField(default=False)  # staff user non superuser
+    is_admin = models.BooleanField(default=False)  # superuser
     timestamp = models.DateTimeField(auto_now_add=True)
     # confirm     = models.BooleanField(default=False)
     # confirmed_date     = models.DateTimeField(default=False)
@@ -87,18 +89,21 @@ class User(AbstractBaseUser):
 
     def has_module_perms(self, app_label):
         return True
+    
+    def has_permission(self):
+        return self.active and self.staff
+    
+    def is_superuser(self):
+        return self.role == USER_ROLES.admin
 
-    @property
-    def is_staff(self):
-        return self.staff
+    def is_provider(self):
+        return self.role == USER_ROLES.provider
 
-    @property
-    def is_admin(self):
-        return self.admin
+    def is_customer(self):
+        return self.role == USER_ROLES.customer
 
-    @property
-    def is_active(self):
-        return self.active
+    
+     
     
     class Meta:
         db_table = 'users_user'
@@ -115,3 +120,46 @@ class GuestEmail(models.Model):
 
     class Meta:
         db_table = 'users_guest_email'
+
+
+
+
+class SideBarManager(models.Manager):
+
+    def new_or_get(self, request, ):
+        sidebar_id = request.session.get('sidebar_id', None)
+        qs = self.get_queryset().filter(id=sidebar_id)
+        if qs.count() == 1:
+            new_obj = False
+            print('sidebar exist')
+            sidebar_obj = qs.first()
+            if request.user.is_authenticated and sidebar_obj.user == None:
+                sidebar_obj.user = request.user
+                sidebar_obj.save()
+        else:
+            sidebar_obj = Sidebar.objects.new_sidebar(user=request.user)
+            new_obj = True
+            request.session['sidebar_id'] = sidebar_obj.id
+            request.session['sidebar_id_status'] = sidebar_obj.is_opened
+        return sidebar_obj, new_obj
+
+    def new_sidebar(self, user=None):
+        user_obj = None
+        if user is not None:
+            if user.is_authenticated:
+                user_obj = user
+        return self.model.objects.create(user=user_obj)
+
+
+class Sidebar(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    is_opened = models.BooleanField(default = True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    objects = SideBarManager()
+
+    def __str__(self):
+        return '{}'.format(self.id)
+
+    class Meta:
+        db_table = 'users_sidebar'

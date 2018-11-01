@@ -34,9 +34,9 @@
 
 <div class="page-wrapper">
     {% if user.is_authenticated %}
-        {% if user.role == 'admin' and user.is_admin %}
+        {% if user.role == 'admin'%}
             {% include 'includes/partial_admin_navbar.html' %}
-        {% elif user.role == 'wardstaff' and not user.is_admin and user.is_wardstaff %}
+        {% elif user.role == 'provider'  %}
             {% include 'includes/partial_ward_staff.html' %}
 
         {% else %}

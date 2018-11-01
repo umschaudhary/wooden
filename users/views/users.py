@@ -7,7 +7,7 @@ from django.http import Http404, HttpResponse
 from django.shortcuts import redirect, render
 
 from users.forms import LoginForm, PasswordChangeForm
-from users.models import User
+from users.models import Sidebar, User
 
 
 def login_user(request):
@@ -65,3 +65,15 @@ def logout_user(request):
     return redirect("users:login_user")
 
 
+
+
+def change_sidebar_status(request):
+    user = request.user
+    if user.is_authenticated :
+        sidebar_obj, new_obj = Sidebar.objects.new_or_get(request)
+        sidebar_obj.is_opened = not sidebar_obj.is_opened
+        sidebar_obj.save()
+        request.session['sidebar_id_status'] = sidebar_obj.is_opened
+        return HttpResponse('{}'.format(sidebar_obj.is_opened))
+    else:
+        return HttpResponse('sorry')

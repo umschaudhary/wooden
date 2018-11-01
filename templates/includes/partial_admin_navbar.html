@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-deep-blue">
+<nav class="navbar navbar-expand-lg navbar-dark bg-deep-blue ">
         <div class="visible-xs">
                 <div class="button close_button" id="id_close_button">
                   <div class="bar top"></div>
@@ -15,7 +15,7 @@
                     </div>
                 </div>
 
-        <a class="navbar-brand ml-5 font-27" href="/">दैनिक प्रशासन  </a>
+        <a class="navbar-brand ml-3 font-22" href="/">Wooden</a>
     <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
             data-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -29,11 +29,9 @@
                 <a style="color:white;" class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                    data-toggle="dropdown"
                    aria-haspopup="true" aria-expanded="false">
-                    <i class="fa fa-user-circle"></i> {{ request.user.username }}
+                    <i class="fa fa-user-circle"></i> {% if request.user.is_superuser %} Admin {% endif %}
                 </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-
-                    <div class="dropdown-divider"></div>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="left:-45px;border-radius:0;">
                     <a class="dropdown-item" href="{% url 'users:logout_user' %}">Log Out</a>
                 </div>
             </li>
@@ -51,16 +49,15 @@
                 {% if user.image %}
                     <img src="" width="48" height="48" alt="User image"/>
                 {% else %}
-
                     <i style="color: white; font-size:60px;" class="fa fa-user"></i>
                 {% endif %}
             </div>
             <div class="info-container">
                 <div class="info-contact">
                     <div class="name"><i
-                            class="fa fa-user"></i> {{ request.user.username }}
+                            class="fa fa-user-circle"></i> {{ request.user.full_name }}
                     </div>
-                    <div class="email"><i class="fa fa-envelope "></i> {{ request.user.email }}
+                    <div class="email"><i class="fa fa-envelope"></i> {{ request.user.email }}
                     </div>
                 </div>
 
@@ -72,8 +69,8 @@
             <ul class='list'>
                 <li id="id_home">
                     <a href="/" class="ml-2">
-                        <i class="fa fa-home fa-2x "></i>
-                        <span>गृह</span>
+                        <i class="fa fa-dashboard mt-2"></i>
+                        <span>Dashboard</span>
 
                     </a>
                     <hr style="margin:0;padding:0;">
@@ -83,200 +80,27 @@
 
                 <li id="id_parent">
                     <a href="javascript:void(0);" class="menu-toggle">
-                        <span>घर सम्बन्धित</span>
+                        <span>Companies</span>
                     </a>
                     <ul class="ml-menu">
                         <li id="home-recommendations">
-                            <a id="home-recommendations" href="{% url 'home_recommendations:list' %}" >
-                                <span>घर कयामको सिफारिस</span>
+                            <a id="home-recommendations" href="" >
+                                <span>Companies</span>
                             </a>
 
                         </li>
                         <li id="home-certified-recommendations">
-                            <a id="home-certified-recommendations" href="{% url 'home_certified_recommendations:list' %}">
-                                <span>घर प्रमाणित सिफारिस</span>
+                            <a id="home-certified-recommendations" href="">
+                                <span>Users</span>
                             </a>
                         </li>
-                        <li id="home-road-certifications">
-                            <a id="home-road-certifications" href="{% url 'home_road_certifications:list' %}">
-                                <span>घर बाटो प्रमाणित</span>
-                            </a>
-                        </li>
-                        <li id="home-completion-certifications">
-                            <a id="home-completion-certifications" href="{% url 'home_completion_certifications:list' %}">
-                                <span>घर सम्पन्नको प्रमाण पत्र</span>
-                            </a>
-                        </li>
-
+                        
 
                     </ul>
                 </li>
 
 
-                {#                land wise#}
-                <li id="id_parent">
-                    <a href="javascript:void(0);" class="menu-toggle">
-
-                        <span>जग्गा सम्बन्धित</span>
-                    </a>
-                    <ul class="ml-menu">
-                        <li id="land-ratings">
-                            <a href="{% url 'land_ratings:list' %}">
-                                <span>जग्गा मुल्यांकन</span>
-                            </a>
-
-                        </li>
-                        <li id="mohi-name-sari">
-                            <a href="{% url 'mohi_name_sari:list' %}">
-                                <span>मोही नाम सारी</span>
-                            </a>
-                        </li>
-                        <li id="land-owner-certifications">
-                            <a href="{% url 'land_owner_certifications:list' %}">
-                                <span>जग्गा मालिक प्रमाणीकरण</span>
-                            </a>
-                        </li>
-
-
-                    </ul>
-                </li>
-
-                <li id="id_parent">
-                  <a href="javascript:void(0);" class="menu-toggle">
-                      <span>अन्य</span>
-                  </a>
-                  <ul class="ml-menu">
-                    <li id="four-piller">
-                        <a href="{% url 'four_piller:list' %}" class="">
-                            <span>चार किल्ला सम्बन्दमा</span>
-                        </a>
-                    </li>
-
-                    <li id="residential-settlements">
-                        <a href="{% url 'residential_settlements:list' %}" class="">
-                            <span>अस्तायी/स्थायी बसोबास प्रमाणित</span>
-                        </a>
-                    </li>
-
-                    <li id='name-thar-pramanit'>
-                        <a href="{% url 'name_thar:list' %}" class="">
-                            <span>नाम थर प्रमाणित</span>
-                        </a>
-                    </li>
-
-                    <li id='drinking-water-connections'>
-                        <a href="{% url 'drinking_water_connections:list' %}" class="">
-                            <span>खानेपानी जडान</span>
-                        </a>
-                    </li>
-
-                    <li id='bidhut-jadan'>
-                        <a id='id_bidhut_jadan' href="{% url 'bidhut_jadan:list' %}" class="">
-                            <span>बिधुत जडान</span>
-                        </a>
-                    </li>
-                  </ul>
-                </li>
-
-                <li id="id_parent" style="">
-                    <a href="javascript:void(0);" class="menu-toggle">
-                        <span> <i class="fa fa-cogs"></i> सेटिङ्हरू</span>
-                    </a>
-                    <ul class="ml-menu">
-                        <li id="fiscal-years">
-                            <a href="{% url 'fiscal_years:list' %}" class="">
-
-                                <span>आर्थिक वर्ष</span>
-                            </a>
-
-                        </li>
-
-                        <li id="ward-numbers">
-                            <a href="{% url 'ward_numbers:list' %}" class="">
-                                <span>वार्ड नम्बरहरू</span>
-                            </a>
-
-                        </li>
-
-                        <li id="type-of-houses">
-                            <a href="{% url 'type_of_houses:list' %}">
-                                <span>घरको प्रकार</span>
-                            </a>
-                        </li>
-                        <li id="house-structures">
-                            <a href="{% url 'house_structures:list' %}">
-                                <span>घर संरचना प्रकार</span>
-                            </a>
-                        </li>
-
-                        <li id="states">
-                            <a href="{% url 'states:list' %}">
-                                <span>प्रदेश</span>
-                            </a>
-                        </li>
-
-                        <li id="districts">
-                            <a href="{% url 'districts:list' %}">
-                                <span>जिल्ला</span>
-                            </a>
-                        </li>
-
-                        <li id="designations">
-                            <a href="{% url 'designations:list' %}">
-                                <span>पद</span>
-                            </a>
-                        </li>
-
-                        <li id="natas">
-                            <a href="{% url 'nata:list' %}">
-                                <span>नाता</span>
-                            </a>
-                        </li>
-
-                        <li id="topics">
-                            <a href="{% url 'topics:list' %}">
-                                <span>शिर्षक</span>
-                            </a>
-                        </li>
-
-                        <li id="land-types">
-                            <a href="{% url 'land_types:list' %}">
-                                <span>जग्गाको क्षेत्रगत किसिम</span>
-                            </a>
-                        </li>
-
-                        <li id="land-units">
-                            <a href="{% url 'land_units:list' %}">
-                                <span>क्षेत्रफल ईकाईको नाम</span>
-                            </a>
-                        </li>
-
-                        <li id="old-and-present-places">
-                            <a href="{% url 'old_and_present_places:list' %}">
-                                <span>साबिक र हालको नाम</span>
-                            </a>
-                        </li>
-
-                        <li id="road-types">
-                            <a href="{% url 'road_types:list' %}">
-                                <span>बाटोको प्रकार</span>
-                            </a>
-                        </li>
-
-                        <li id="citizenship-types">
-                            <a href="{% url 'citizenship_types:list' %}">
-                                <span>नागरिकताको किसिम</span>
-                            </a>
-                        </li>
-
-                        <li id="local-bodies">
-                            <a href="{% url 'local_bodies:list' %}">
-                                <span>स्थानीय निकाय</span>
-                            </a>
-                        </li>
-
-                    </ul>
-                </li>
+                
 
             </ul>
 
