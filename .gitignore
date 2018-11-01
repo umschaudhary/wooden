@@ -46,8 +46,7 @@ nosetests.xml
 coverage.xml
 *,cover
 .hypothesis/
-/DainikPrashasan/production.py
-DainikPrashasan/production.py
+
 
 # Translations
 *.mo
@@ -93,6 +92,7 @@ ENV/
 
 
 /static/bower_components/
+/staticfiles/bower_components/
 /media/*
 /media/post_images/*
 /.idea/
