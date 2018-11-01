@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard  | {{ block.super }} {% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-5">
+    <div class="row ">
+<div class="col-12">
+
+
+        <form action="" method="POST" action="{% url 'user_home' %}">
+        {% csrf_token %}
+                <div class="col-lg-6 ">
+                        <label for="email_address_2">Select</label>
+                        <div class="form-group">
+                            <div class="form-line">
+                                <select name="batch" class="form-control" required="" id="id_batch">
+                                    <option value="">छनौट गर्नुहोस्</option>
+                                    {% comment %} <option value="">गाउँपालिका </option> {% endcomment %}
+                                    <option value="1" selected>वडाकार्यालय </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+            
+                    <div class="col-lg-6 ">
+                        <label for="email_address_2">वडाकार्यालय  </label>
+                        <div class="form-group">
+                            <div class="form-line">
+                                <select name="ward_no" class="form-control" required="" id="id_ward_no">
+            
+                                    <option value="" >Select Ward</option>
+                                    {% for ward in ward_numbers %}
+                                        <option value="{{ ward.pk }}">
+                                            {{ ward.ward_no }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="submit" value='submit'>
+        </form>
+    </div>
+       
+    </div>
+</div>
+
+
+{% endblock %}
+
+{% block 'extra_script' %}
+
+
+
+{% endblock 'extra_script' %}

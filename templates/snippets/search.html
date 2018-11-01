@@ -1,0 +1,25 @@
+<form id='id_search_form' method='GET' action='{{ action }}' class="form-inline ">
+    <!--<div class='input-group input-group'>
+        <input style="" id='id_search_field' class="form-control" type="search" placeholder="Search" aria-label="Search"
+               name='q'
+               value='{{ request.GET.q }}'>
+
+        <span class='input-group-btn'>
+
+    </span>
+  </div>-->
+
+  <div class="input-group">
+    <input style="" id='id_search_field' class="form-control" type="search" placeholder="Search" aria-label="Search"
+           name='q'
+           value='{{ request.GET.q }}'>
+    <div class="input-group-append">
+      <button class="btn  btn-success btn-lg" type="submit" style="border-radius:0 3px 3px 0;">Search</button>
+    </div>
+    <button class="btn ml-2 reset btn-lg btn-secondary">Reset</button>
+  </div>
+
+  <div class="input-group">
+    
+  </div>
+</form>

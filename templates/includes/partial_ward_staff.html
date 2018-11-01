@@ -1,0 +1,199 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-deep-blue">
+        <div class="visible-xs">
+                <div class="button close_button" id="id_close_button">
+                  <div class="bar top"></div>
+                  <div class="bar middle"></div>
+                  <div class="bar bottom"></div>
+                </div>
+              </div>
+         
+            <div class="hidden-xs mt-1">
+                    <div class="button  open_button {% if request.session.sidebar_id_status %} active {%endif %}" id="id_open_button">
+                    <div class="bar top"></div>
+                    <div class="bar middle"></div>
+                    <div class="bar bottom"></div>
+                    </div>
+                </div>
+
+        <a class="navbar-brand ml-5 font-27" href="/">दैनिक प्रशासन  </a>
+       
+        
+  
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+                data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto"></ul>
+            <ul class="navbar-nav">
+                <li class="nav-item dropdown">
+                    <a style="color:white;" class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-user-circle"></i> {{ request.user.username }}
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+    
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{% url 'users:logout_user' %}">Log Out</a>
+                    </div>
+                </li>
+    
+            </ul>
+        </div>
+    </nav>
+    
+    <section>
+        <!-- Left Sidebar -->
+        <aside id="leftsidebar" class="sidebar">
+            <!-- User Info -->
+            <div class="user-info bg-navy-blue">
+                <div class="image">
+                    {% if user.image %}
+                        <img src="" width="48" height="48" alt="User image"/>
+                    {% else %}
+    
+                        <i style="color: white; font-size:60px;" class="fa fa-user"></i>
+                    {% endif %}
+                </div>
+                <div class="info-container">
+                    <div class="info-contact">
+                        <div class="name"><i
+                                class="fa fa-user"></i> {{ request.user.username }}
+                        </div>
+                        <div class="email"><i class="fa fa-envelope "></i> {{ request.user.email }}
+                        </div>
+                    </div>
+    
+                </div>
+            </div>
+            <!-- #User Info -->
+            <!-- Menu -->
+            <div class="menu">
+                <ul class='list'>
+                    <li id="id_home">
+                        <a href="/" class="ml-2">
+                            <i class="fa fa-home fa-2x "></i>
+                            <span>गृह</span>
+    
+                        </a>
+                        <hr style="margin:0;padding:0;">
+    
+                    </li>
+    
+    
+                    <li id="id_parent">
+                        <a href="javascript:void(0);" class="menu-toggle">
+                            <span>घर सम्बन्धित</span>
+                        </a>
+                        <ul class="ml-menu">
+                            <li id="home-recommendations">
+                                <a id="home-recommendations" href="{% url 'home_recommendations:list' %}" >
+                                    <span>घर कयामको सिफारिस</span>
+                                </a>
+    
+                            </li>
+                            <li id="home-certified-recommendations">
+                                <a id="home-certified-recommendations" href="{% url 'home_certified_recommendations:list' %}">
+                                    <span>घर प्रमाणित सिफारिस</span>
+                                </a>
+                            </li>
+                            <li id="home-road-certifications">
+                                <a id="home-road-certifications" href="{% url 'home_road_certifications:list' %}">
+                                    <span>घर बाटो प्रमाणित</span>
+                                </a>
+                            </li>
+                            <li id="home-completion-certifications">
+                                <a id="home-completion-certifications" href="{% url 'home_completion_certifications:list' %}">
+                                    <span>घर सम्पन्नको प्रमाण पत्र</span>
+                                </a>
+                            </li>
+    
+    
+                        </ul>
+                    </li>
+    
+    
+                    {#                land wise#}
+                    <li id="id_parent">
+                        <a href="javascript:void(0);" class="menu-toggle">
+    
+                            <span>जग्गा सम्बन्धित</span>
+                        </a>
+                        <ul class="ml-menu">
+                            <li id="land-ratings">
+                                <a href="{% url 'land_ratings:list' %}">
+                                    <span>जग्गा मुल्यांकन</span>
+                                </a>
+    
+                            </li>
+                            <li id="mohi-name-sari">
+                                <a href="{% url 'mohi_name_sari:list' %}">
+                                    <span>मोही नाम सारी</span>
+                                </a>
+                            </li>
+                            <li id="land-owner-certifications">
+                                <a href="{% url 'land_owner_certifications:list' %}">
+                                    <span>जग्गा मालिक प्रमाणीकरण</span>
+                                </a>
+                            </li>
+    
+    
+                        </ul>
+                    </li>
+    
+                    <li id="id_parent">
+                      <a href="javascript:void(0);" class="menu-toggle">
+                          <span>अन्य</span>
+                      </a>
+                      <ul class="ml-menu">
+                        <li id="four-piller">
+                            <a href="{% url 'four_piller:list' %}" class="">
+                                <span>चार किल्ला सम्बन्दमा</span>
+                            </a>
+                        </li>
+    
+                        <li id="residential-settlements">
+                            <a href="{% url 'residential_settlements:list' %}" class="">
+                                <span>अस्तायी/स्थायी बसोबास प्रमाणित</span>
+                            </a>
+                        </li>
+    
+                        <li id='name-thar-pramanit'>
+                            <a href="{% url 'name_thar:list' %}" class="">
+                                <span>नाम थर प्रमाणित</span>
+                            </a>
+                        </li>
+    
+                        <li id='drinking-water-connections'>
+                            <a href="{% url 'drinking_water_connections:list' %}" class="">
+                                <span>खानेपानी जडान</span>
+                            </a>
+                        </li>
+    
+                        <li id='bidhut-jadan'>
+                            <a id='id_bidhut_jadan' href="{% url 'bidhut_jadan:list' %}" class="">
+                                <span>बिधुत जडान</span>
+                            </a>
+                        </li>
+                      </ul>
+                    </li>
+    
+                    
+    
+                </ul>
+    
+            </div>
+    
+    
+            <div class="legal">
+                <div class="copyright" id="id_copyright">
+                    &copy; <b id="id_year">{{ year }} </b> &nbsp; <a target="_blank" href="https://pdmt.com.np/">PDMT</a>
+                </div>
+            </div>
+        </aside>
+    
+    </section>
+    

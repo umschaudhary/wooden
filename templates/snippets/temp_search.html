@@ -1,0 +1,59 @@
+{% load datefilter %}
+
+<div class="container-fluid">
+    <div class="row">
+
+        <div class="col-lg-2 col-12 mb-sm-3">
+            <select class="form-control " name="filter" id="filter">
+                <option value="search-form">Search</option>
+                <option value="date">Filter</option>
+            </select>
+        </div>
+
+        <div class="col-lg-10 col-12">
+            <div class="date-content d-none">
+                <form class="form-inline" action={{ date_action}} >
+                    <input class="mb-2 mr-sm-2" name="utf8" type="hidden" value="✓">
+                    <div class="input-group mb-2 mr-sm-2" style="border-right: 1px solid #cfcfcf; padding-right: 20px;">
+                      <input type="text" id="start_date_nep" name="start_date_nep" class="form-control " placeholder="Start Date">
+                      <div class="input-group-append">
+                        <span class="input-group-text">To</span>
+                      </div>
+                      <input type="text" id="end_date_nep" name="end_date_nep" class="form-control " placeholder="End Date">
+                      <div class="input-group-append">
+                        <button type="submit" class="btn btn-primary">View</button>
+                      </div>
+                    </div>
+
+                    <input class="mb-2 mr-sm-2" class="start_date" type="text" id="start_date" hidden name="start_date" >
+                    <input class="mb-2 mr-sm-2" class="end_date" type="text" id="end_date" hidden name="end_date">
+
+                    <div class="dropdown mb-2 mr-sm-2">
+                       <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                         महिना अनुसार
+                       </button>
+                       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                         <a class="dropdown-item"
+                          href="?utf8=✓&amp;start_date={{ 3|datefilter }}&amp;end_date={{ 0|datefilter }}">Last 3
+                           Months</a>
+                         <a class="dropdown-item"
+                            href="?utf8=✓&amp;start_date={{ 6|datefilter }}&amp;end_date={{ 0|datefilter }}">Last 6
+                             Months</a>
+                         <a class="dropdown-item"
+                            href="?utf8=✓&amp;start_date={{ 12|datefilter }}&amp;end_date={{ 0|datefilter }}">Last 12
+                             Months</a>
+
+                       </div>
+                     </div>
+                </form>
+            </div>
+
+            <div class="search-form">
+                <div class="col-12 col-lg-6 mb-1 mr-sm-2">
+                    {% include "snippets/search.html" %}
+                </div>
+            </div>
+            
+        </div>
+      </div>
+    </div>
