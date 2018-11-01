@@ -449,3 +449,10 @@ table thead tr td{
     -o-transition: all 0.2s;
   }
   
+.bg-dark-grey{
+background: #0f0f0fe6 !important;
+
+}
+.bg-grey-dark{
+background: #141415 !important;
+}
