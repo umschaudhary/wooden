@@ -1,0 +1,59 @@
+
+
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load widget_tweaks %}
+
+{% block title %}
+    परिवर्तन | आर्थिक वर्ष
+{% endblock %}
+
+
+{% block breadcrumbLink %}
+    {% if request.user.is_authenticated %}
+        <li class="breadcrumb-item"><a href="{% url 'fiscal_years:list' %}">
+            आर्थिक वर्ष
+        </a></li> {% endif %}
+    <li class="breadcrumb-item active">परिवर्तन</li>
+{% endblock %}
+{% block content %}
+    <div class="container ">
+        <div class="card">
+            <div class="card-body">
+                <form class="form-horizontal" method="post">
+                    {% csrf_token %}
+                    <div class="row clearfix">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 form-control-label">
+                            <div class=" form-group row">
+                                <label class="col-sm-4 col-form-label"><span
+                                        class="float-right">{{ form.fiscal_year.label }} <span
+                                        class="text-danger">*</span></span></label>
+                                {% if form.fiscal_year.errors %}
+                                    <div class="col-sm-6">
+                                        {{ form.fiscal_year | add_class:"is-invalid" }}
+                                        <div class="invalid-feedback">
+                                            {{ form.fiscal_year.errors }}
+                                        </div>
+                                    </div>
+                                {% else %}
+                                    <div class="col-sm-6">
+                                        {{ form.fiscal_year }}
+                                    </div>
+                                {% endif %}
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class=" form-group row">
+                        <div class="col-sm-6 offset-sm-4">
+                            <button type="submit" class='btn btn-submit btn-block btn-primary' name="submit">पेश गर्नुहोस्
+                            </button>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load widget_tweaks %}
+{% block title %}
+    नयाँ | आर्थिक वर्ष
+{% endblock %}
+
+{% block breadcrumbLink %}
+    {% if request.user.is_authenticated %}
+        <li class="breadcrumb-item"><a href="{% url 'fiscal_years:list' %}">
+            आर्थिक वर्ष
+        </a></li> {% endif %}
+    <li class="breadcrumb-item active">नयाँ</li>
+{% endblock %}
+
+{% block extra_stylesheet %}
+    <link rel="stylesheet" href="{% static 'nepalidatepicker/nepali.datepicker.v2.2.min.css' %}">
+{% endblock %}
+
+
+{% block content %}
+    <div class="container ">
+        <div class="card">
+            <div class="card-body">
+                {% if form.non_field_errors %}
+                    <div class="row">
+                        <div class="col-lg-10 offset-lg-1">
+                            <div class="alert alert-danger">
+                                <ul>
+                                    {% for error in form.non_field_errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+                <div class="row my-4">
+                    <div class="col-lg-10 offset-lg-1">
+
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class=" form-group row">
+                                <label class="col-sm-4 col-form-label"><span
+                                        class="float-right">{{ form.name.label }} <span
+                                        class="text-danger">*</span></span></label>
+                                {% if form.name.errors %}
+                                    <div class="col-sm-6">
+                                        {{ form.name | add_class:"is-invalid" }}
+                                        <div class="invalid-feedback">
+                                            {{ form.name.errors }}
+                                        </div>
+                                    </div>
+                                {% else %}
+                                    <div class="col-sm-6">
+                                        {{ form.name }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class=" form-group row">
+                                <label class="col-sm-4 col-form-label"><span
+                                        class="float-right">{{ form.is_active.label }} <span
+                                        class="text-danger">*</span></span></label>
+                                {% if form.is_active.errors %}
+                                    <div class="col-sm-6">
+                                        {{ form.name | add_class:"is-invalid" }}
+                                        <div class="invalid-feedback">
+                                            {{ form.is_active.errors }}
+                                        </div>
+                                    </div>
+                                {% else %}
+                                    <div class="col-sm-6">
+                                        {{ form.is_active }}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+
+                           
+                            <div class=" form-group row">
+                                <div class="col-sm-6 offset-sm-4">
+                                    <button type="submit" class='btn btn-submit btn-block btn-primary' name="submit">पेश
+                                        गर्नुहोस्
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block extra_script %}
+    <script type="text/javascript" src="{% static 'nepalidatepicker/nepali.datepicker.v2.2.min.js' %}"></script>
+
+    <script>
+
+        $(document).ready(function () {
+            $('#id_start_date_nep').nepaliDatePicker({
+                npdMonth: true,
+                npdYear: true,
+                ndpEnglishInput: 'id_start_date'
+            });
+
+            $('#id_end_date_nep').nepaliDatePicker({
+                npdMonth: true,
+                npdYear: true,
+                ndpEnglishInput: 'id_end_date'
+            });
+        });
+
+    </script>
+{% endblock %}
