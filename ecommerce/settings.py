@@ -27,7 +27,7 @@ SECRET_KEY = '0waj$5=zz(x(w=drsh@kb$w1af6bw-hae5cg@z$lrr9yifpfn3'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'companies',
     'users',
     'pages',
+    'widget_tweaks',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

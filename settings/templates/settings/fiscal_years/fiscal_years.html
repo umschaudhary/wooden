@@ -1,33 +1,33 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
 {% block title %}
-    वित्तीय वर्ष | {{ block.super }}
+    Fiscals Year | {{ block.super }}
 {% endblock %}
 {% block breadcrumbLink %}
     {% if request.user.is_authenticated %}
-        <li class="breadcrumb-item active">वित्तीय वर्ष</li> {% endif %}
+        <li class="breadcrumb-item active">Fiscals Year</li> {% endif %}
 {% endblock %}
 
 {% block content %}
 
     <div class="container-fluid">
-        
         {% if active_fiscal_year %}
             <div class="card">
                 <div class="body table-responsive">
-                    
                     <div class="row">
-                            <div class="col-lg-4 text-left ">
-                                    <h5 class="pt-2">सक्रिय आर्थिक वर्ष</h5>
+                            <div class="col-lg-4 col-md-6 col-sm-12  col-xs-12 text-left  ">
+                                    <h5 class="">Active Fiscal Year</h5>
                             </div>
                             
                         </div>
+<div class="table-responsive">
+
 
                     <table class="table ">
                         <thead class="bg-green ">
                         <tr>
-                            <th scope="col">प्र.नं.</th>
-                            <th scope="col">नाम</th>
+                            <th scope="col">S.N.</th>
+                            <th scope="col">Name</th>
                            
                             <th style="max-width: 15%;"></th>
 
@@ -41,14 +41,14 @@
                            
                             <td style="max-width: 15%;" class="text-right">
                                 {% if fiscal_years %}<a href="{% url 'fiscal_years:change' %}"
-                                                                              class="btn btn-lg btn-primary ">परिवर्तन
-                                गर्नुहोस्</a>
+                                                                              class="btn btn-lg btn-primary ">Change</a>
                                     {% endif %}</td>
                         </tr>
 
 
                         </tbody>
                     </table>
+                </div>
 
                 </div>
             </div>
@@ -59,16 +59,16 @@
             <div class="body table-responsive">
 
                 <div class="row">
-                    <div class="col-lg-4 text-left ">
-                        <h5 class="pt-3">निष्क्रिय आर्थिक वर्षहरू</h5>
+                    <div class="col-lg-4 col-md-6 col-sm-12  col-xs-12 text-left ">
+                        <h5 class="">Inactive Fiscal Years</h5>
                     </div>
-                    <div class="offset-5 col-lg-3 text-right float-right ">
+                    <div class=" offset-lg-5  col-lg-3 col-md-6 col-sm-12 col-xs-12  text-right float-right ">
 
                         {% if fiscal_years.count > 0 and  not active_fiscal_year %}
                             <a href="{% url 'fiscal_years:change' %}"
-                               class="btn  btn-primary btn-lg">सक्रिय गर्नुहोस्</a>
+                               class="btn  btn-primary btn-lg">Activate</a>
                         {% endif %}
-                        <a href="{% url 'fiscal_years:create' %}" class="btn btn-lg btn-primary ">नयाँ</a>
+                        <a href="{% url 'fiscal_years:create' %}" class="btn btn-primary btn-circle-lg ">  <i class="fa fa-plus"></i></a>
 
                     </div>
                 </div>
@@ -76,17 +76,17 @@
                 <table class="table mt-2">
                     <thead class="thead-light">
                     <tr>
-                        <th scope="col">प्र.नं.</th>
-                        <th scope="col">नाम</th>
+                        <th scope="col">S.N.</th>
+                        <th scope="col">Name</th>
                       
                         <th style="max-width:15%"></th>
                     </tr>
                     </thead>
                     <tbody>
 
-                    {% for fiscal in fiscal_years %}
+                    {% for fiscal in objects %}
                         <tr>
-                            <th scope="row">{{ forloop.counter }}</th>
+                            <td scope="row">{{ forloop.counter }}</td>
                             <td>{{ fiscal.name }}
                             </td>
                             
