@@ -405,3 +405,47 @@ table thead tr td{
   vertical-align: middle!important;
   background-color: #d0d1d2;
 }
+
+
+
+/* # forms  */
+.form-group {
+    position: relative;
+    margin-top: 1rem;
+    
+  }
+  .form-group .form-control {
+    border-radius: 0px;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+  .form-group .form-control:placeholder-shown + label {
+    top: 5px;
+    left: 0px;
+    font-weight: 500;
+  }
+  .form-group .form-control:focus {
+    box-shadow: inset 0px -1px 0px blue;
+    border-color: blue;
+  }
+  .form-group .form-control:focus + label {
+    top: -18px;
+    font-size: 11px;
+    color: blue;
+    font-weight: 500;
+  }
+  .form-group label {
+    position: absolute;
+    top: -18px;
+    font-weight: 500;
+    font-size: 11px;
+    color: blue;
+    transition: all 0.2s;
+    -moz-transition: all 0.2s;
+    -webkit-transition: all 0.2s;
+    -o-transition: all 0.2s;
+  }
+  

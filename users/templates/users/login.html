@@ -1,14 +1,14 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
+{% block title %}
+Login User | {{block.super}}
+
+{% endblock title %}
 {% block extra_stylesheets %}
     <link rel="stylesheet" href="{% static 'css/login.css' %}">
 {% endblock %}
 
-{% block breadcrumbHead %}
 
-{% endblock %}
-
-{% block navigaton %}{% endblock %}
 
 {% block content %}
 
@@ -29,7 +29,9 @@
                             </div>
                         </div>
                     {% endif %}
-
+<div class="row">
+    
+</div>
 
                     <div class="row">
                         <div class="offset-md-4 col-md-4 my-3">
@@ -43,13 +45,15 @@
                                             <div class="col-md-12">
                                                 <form class="login-form" method="POST">
                                                     {% csrf_token %}
-
-                                                    <div class="form-group {% if form.username.errors %}has-error{% endif %}">
+                                                    <div class="form-group {% if form.email.errors %}has-error{% endif %}">
                                                         <div class="input-group input-group-sm">
                                                             <!--<span class="input-group-addon">
                                                               <em class="fa fa-user"></em>
                                                             </span> -->
-                                                            {{ form.username }}
+                                                            {{ form.email }}
+                                                            <label>Email address</label>
+                                                            
+                                                          
                                                         </div>
                                                     </div>
 
@@ -59,22 +63,18 @@
                                                               <em class="fa fa-lock"></em>
                                                             </span> -->
                                                             {{ form.password }}
+                                                            <label>Password</label>
 
                                                         </div>
-                                                        <input type="checkbox" onclick="myFunction()"> Show Password
+                                                        <input class='mt-2' type="checkbox" onclick="myFunction()"> Show Password
                                                     </div>
-
 
                                                     <div class="form-group mt-2">
                                                         <button class="btn btn-success btn-sm btn-block" name="submit"
                                                                 type="submit">
                                                             <em class="fas fa-sign-in"></em> Login
                                                         </button>
-                                                        <div class="mt-2 text-center">
-                                                            <a class="text-decoration-none text-success"
-                                                               href="{% url 'users:send_password_reset_email' %}">Forgot
-                                                                password?</a>
-                                                        </div>
+                                                        
                                                     </div>
                                                 </form>
 

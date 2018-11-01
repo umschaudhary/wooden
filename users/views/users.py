@@ -1,4 +1,4 @@
-import jwt
+
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -6,17 +6,16 @@ from django.contrib.auth.decorators import login_required
 from django.http import Http404, HttpResponse
 from django.shortcuts import redirect, render
 
-from settings.models.ward_no import WardSession
-from users.forms import LoginForm, PasswordChangeForm, PasswordResetForm, \
-    ProfileForm, SendPasswordResetEmailForm
-from users.models import  User
+from users.forms import LoginForm, PasswordChangeForm
+from users.models import User
+
 
 def login_user(request):
     """
     Login a user
     """
     next = request.GET.get('next', None)
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         return redirect('/')
 
     form = LoginForm(data=request.POST or None)
@@ -26,9 +25,9 @@ def login_user(request):
 
     if request.method == 'POST':
         if form.is_valid():
-            username = form.cleaned_data.get('username')
+            email = form.cleaned_data.get('email')
             password = form.cleaned_data.get('password')
-            user = authenticate(username=username, password=password)
+            user = authenticate(email=email, password=password)
             if user is None:
                 messages.error(request, "Invalid login credentials")
                 return render(request, 'users/login.html', context)
@@ -57,69 +56,6 @@ def user_password_change(request):
     }
     return render(request, 'users/change_password.html', context)
 
-
-def user_send_password_reset_email(request):
-    """
-    Send password reset email
-    """
-    if request.user.is_authenticated():
-        return redirect('/')
-
-    form = SendPasswordResetEmailForm(data=request.POST or None)
-    if request.method == 'POST':
-        if form.is_valid():
-            form.save()
-            messages.success(request, "Password reset email sent. Please check your email for instructions.")
-            return redirect('users:send_password_reset_email')
-
-    context = {
-        'form': form
-    }
-    return render(request, 'users/send_password_reset_email.html', context)
-
-
-def user_password_reset(request):
-    """
-    Reset user password
-    """
-    if request.user.is_authenticated():
-        return redirect('/')
-
-    token = request.GET.get('token')
-    if token is None:
-        raise Http404()
-
-    try:
-        payload = jwt.decode(token, settings.SECRET_KEY, algorithm='HS256')
-    except jwt.ExpiredSignature:
-        messages.error(request, 'Reset token has expired.')
-        return redirect('users:send_password_reset_email')
-    except jwt.DecodeError:
-        messages.error(request, 'Error decoding reset token.')
-        return redirect('users:send_password_reset_email')
-    except jwt.InvalidTokenError:
-        messages.error(request, 'Invalid reset token.')
-        return redirect('users:send_password_reset_email')
-
-    try:
-        user = User.objects.get(pk=payload['reset'])
-    except User.DoesNotExist:
-        messages.error(request, 'Invalid token.')
-        return redirect('users:send_password_reset_email')
-
-    form = PasswordResetForm(data=request.POST or None, user=user)
-    if request.method == 'POST':
-        if form.is_valid():
-            form.save()
-            messages.success(request, "Password reset successfully.")
-            return redirect('users:login_user')
-
-    context = {
-        'form': form
-    }
-    return render(request, 'users/password_reset.html', context)
-
-
 @login_required
 def logout_user(request):
     """
@@ -127,24 +63,5 @@ def logout_user(request):
     """
     logout(request)
     return redirect("users:login_user")
-
-
-@login_required
-def user_profile_edit(request):
-    """
-    Edit user profile
-    """
-    form = ProfileForm(instance=request.user)
-    if request.method == 'POST':
-        form = ProfileForm(request.POST or None, request.FILES, instance=request.user)
-        if form.is_valid():
-            form.save()
-            messages.success(request, "Profile updated.")
-            return redirect('users:profile_edit')
-
-    context = {
-        'form': form
-    }
-    return render(request, 'users/profile_edit.html', context)
 
 
