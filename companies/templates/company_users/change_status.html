@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}
+    Change Status | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbHead %}
+
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+                <div class="card">
+                        <div class="card-body p-y-20">
+                            {% if form.non_field_errors %}
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="alert alert-danger">
+                                            <ul>
+                                                {% for error in form.non_field_errors %}
+                                                    <li>{{ error }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+            
+                            <form method="POST" >
+            
+                                {% csrf_token %}
+                                <div class="delete-page ">
+                                    <div class="container-fluid">
+                                        <div class="row">
+                                            <div class="offset-md-3 col-md-6">
+                                                <p class="lead text-center"> Are You Sure want to {% if user.is_deleted %} Activate {% else %} Deactivate {% endif %} user {{user.full_name}} ?</p>
+                                                    <div class="form-row">
+                                                        <div class="col-md-6 mt-3 mb-2">
+                                                            <button type="submit" class="btn btn-lg {% if user.is_deleted %}btn-success {% else %} btn-danger{% endif %}  btn-block ">
+                                                                Yes I Want
+                                                            </button>
+                                                        </div>
+                                                        <div class="col-md-6 mt-3">
+                                                            {% url 'company_users:list' user.company.pk as next %}
+                                                            <a href="{{ next }}"
+                                                               class="btn btn-lg btn-secondary  btn-block ">No I Don't </a>
+                                                            
+                                                        </div>
+                                                    </div>
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+        </div>
+        
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,180 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load widget_tweaks %}
+{% block title %}
+    New Fiscal Year | {{block.super}}
+{% endblock %}
+
+{% block breadcrumbLink %}
+    {% if request.user.is_authenticated %}
+        <li class="breadcrumb-item"><a href="{% url 'companies:list' %}">
+            Companies
+        </a></li> {% endif %}
+    <li class="breadcrumb-item active">New</li>
+{% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="table-responsive">
+        <div class="card ">
+            <div class="card-body">
+                {% if form.non_field_errors %}
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="alert alert-danger">
+                                <ul>
+                                    {% for error in form.non_field_errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+                <div class="row ">
+                    <div class="col-lg-10 col-md-12 col-sm-12 col-12">
+                        <form method="post">
+                            {% csrf_token %}
+                            
+                            <div class=" form-group row">
+                                <span class="col-lg-4 col-md-2 col-sm-2 col-1"><span
+                                        class=" float-lg-right float-md-right float-sm-right float-right"> </span></span>
+
+                                {% if form.name.errors %}
+                                    <div class="col-lg-4 col-md-2 col-sm-2 col-4 col-1">
+                                        {{ form.name | add_class:"is-invalid" }}
+                                        <div class="invalid-feedback">
+                                            {{ form.name.errors }}
+                                        </div>
+                                    </div>
+                                {% else %}
+
+                                    <div class="col-lg-6 col-md-8 col-sm-8 col-12">
+                                        {{ form.name }}
+                                        <label for="" class="">Company Name <span
+                                            class="text-danger">*</span></label>
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            
+                            <div class=" form-group row">
+                                    <span class="col-lg-4 col-md-2 col-sm-2 col-1"><span
+                                            class=" float-lg-right float-md-right float-sm-right float-right"> </span></span>
+    
+                                    {% if form.address.errors %}
+                                        <div class="col-lg-4 col-md-2 col-sm-2 col-4">
+                                            {{ form.address | add_class:"is-invalid" }}
+                                            <div class="invalid-feedback">
+                                                {{ form.address.errors }}
+                                            </div>
+                                        </div>
+                                    {% else %}
+    
+                                        <div class="col-lg-6 col-md-8 col-sm-8 col-12">
+                                            {{ form.address }}
+                                            <label for="" class="">{{form.address.label}} <span
+                                                class="text-danger">*</span></label>
+                                        </div>
+                                    {% endif %}
+                                </div>
+
+                                    <div class=" form-group row">
+                                        <span class="col-lg-4 col-md-2 col-sm-2 col-1"><span
+                                                class=" float-lg-right float-md-right float-sm-right float-right"> </span></span>
+        
+                                        {% if form.city.errors %}
+                                            <div class="col-lg-4 col-md-2 col-sm-2 col-4">
+                                                {{ form.city | add_class:"is-invalid" }}
+                                                <div class="invalid-feedback">
+                                                    {{ form.city.errors }}
+                                                </div>
+                                            </div>
+                                        {% else %}
+        
+                                            <div class="col-lg-6 col-md-8 col-sm-8 col-12">
+                                                {{ form.city }}
+                                                <label for="" class="">{{form.city.label}} <span
+                                                    class="text-danger">*</span></label>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+
+                                    <div class=" form-group row">
+                                            <span class="col-lg-4 col-md-2 col-sm-2 col-1"><span
+                                                    class=" float-lg-right float-md-right float-sm-right float-right"> </span></span>
+            
+                                            {% if form.city.errors %}
+                                                <div class="col-lg-4 col-md-2 col-sm-2 col-4">
+                                                    {{ form.postal | add_class:"is-invalid" }}
+                                                    <div class="invalid-feedback">
+                                                        {{ form.postal.errors }}
+                                                    </div>
+                                                </div>
+                                            {% else %}
+            
+                                                <div class="col-lg-6 col-md-8 col-sm-8 col-12">
+                                                    {{ form.postal }}
+                                                    <label for="" class="">{{form.postal.label}} <span
+                                                        class="text-danger">*</span></label>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+
+                                    <div class=" form-group row">
+                                            <span class="col-lg-4 col-md-2 col-sm-2 col-1"><span
+                                                    class=" float-lg-right float-md-right float-sm-right float-right"> </span></span>
+            
+                                            {% if form.email.errors %}
+                                                <div class="col-lg-4 col-md-2 col-sm-2 col-4">
+                                                    {{ form.email | add_class:"is-invalid" }}
+                                                    <div class="invalid-feedback">
+                                                        {{ form.email.errors }}
+                                                    </div>
+                                                </div>
+                                            {% else %}
+            
+                                                <div class="col-lg-6 col-md-8 col-sm-8 col-12">
+                                                    {{ form.email }}
+                                                    <label for="" class="">{{form.email.label}} <span
+                                                        class="text-danger">*</span></label>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                        <div class=" form-group row">
+                                                <span class="col-lg-4 col-md-2 col-sm-2 col-1"><span
+                                                        class=" float-lg-right float-md-right float-sm-right float-right"> </span></span>
+                
+                                                {% if form.phone_number.errors %}
+                                                    <div class="col-lg-4 col-md-2 col-sm-2 col-4">
+                                                        {{ form.phone_number | add_class:"is-invalid" }}
+                                                        <div class="invalid-feedback">
+                                                            {{ form.phone_number.errors }}
+                                                        </div>
+                                                    </div>
+                                                {% else %}
+                
+                                                    <div class="col-lg-6 col-md-8 col-sm-8 col-12">
+                                                        {{ form.phone_number }}
+                                                        <label for="" class="">{{form.phone_number.label}} <span
+                                                            class="text-danger">*</span></label>
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+
+                           
+                            <div class=" form-group row">
+                                <div class="offset-sm-2 offset-lg-4 col-lg-6 col-md-8 col-sm-8 col-12">
+                                    <button type="submit" class='btn btn-submit btn-block btn-primary' name="submit">Save
+                                        
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+{% endblock %}

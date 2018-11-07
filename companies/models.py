@@ -47,8 +47,11 @@ class Company(models.Model):
         db_table = 'companies_company'
 
 class CompanyAdmin(models.Model):
-    user = models.OneToOneField(User, related_name='company_admin', on_delete=models.DO_NOTHING)
-    company = models.ForeignKey(Company,related_name='company_admins', on_delete=models.DO_NOTHING)
+    full_name = models.CharField(max_length=120,error_messages={'max_length':'Length Shouldnot exceed 120 Characters'})
+    user = models.OneToOneField(User, related_name='company_admin', on_delete=models.DO_NOTHING,null=True, blank=True)
+    company = models.ForeignKey(Company,related_name='company_admins', on_delete=models.DO_NOTHING, null=True, blank=True)
+    email = models.EmailField(validators=[EmailValidator(message="Invalid Email Address")])
+    password = models.CharField(max_length = 20)
     is_deleted = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -56,7 +59,7 @@ class CompanyAdmin(models.Model):
     objects = CustomModelManager.from_queryset(CustomModelQuerySet)()
     
     def __str__(self):
-        return '{}'.format(self.company.name)
+        return '{}'.format(self.full_name)
 
     class Meta:
         db_table = 'companies_company_admin'

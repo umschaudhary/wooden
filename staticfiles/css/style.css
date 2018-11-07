@@ -441,13 +441,15 @@ table thead tr td{
     position: absolute;
     top: -18px;
     font-weight: 500;
-    font-size: 11px;
+    font-size: 12px;
+    margin-left:15px;
     color: blue;
     transition: all 0.2s;
     -moz-transition: all 0.2s;
     -webkit-transition: all 0.2s;
     -o-transition: all 0.2s;
   }
+
   
 .bg-dark-grey{
 background: #0f0f0fe6 !important;
@@ -456,3 +458,4 @@ background: #0f0f0fe6 !important;
 .bg-grey-dark{
 background: #141415 !important;
 }
+

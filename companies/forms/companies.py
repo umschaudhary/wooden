@@ -10,13 +10,18 @@ class CompanyForm(forms.ModelForm):
             'name',
             'address',
             'city',
-            'postal_code',
+            'postal',
             'email',
-            'phone_no'
+            'phone_number'
         ]
 
         widgets = {
-            'name': forms.CharField(attrs={'class': 'form-control','required':'required'}),
+            'name': forms.TextInput(attrs={'class': 'form-control','required':'required','placeholder':''}),
+            'address': forms.TextInput(attrs={'class': 'form-control','required':'required','placeholder':''}),
+            'postal': forms.TextInput(attrs={'class': 'form-control','required':'required','placeholder':''}),
+            'city': forms.TextInput(attrs={'class': 'form-control','required':'required','placeholder':''}),
+            'email': forms.TextInput(attrs={'class': 'form-control','required':'required','placeholder':''}),
+            'phone_number': forms.TextInput(attrs={'class': 'form-control','required':'required','placeholder':''}),
         }
 
         labels = {

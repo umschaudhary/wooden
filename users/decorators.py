@@ -1,4 +1,7 @@
 from django.core.exceptions import PermissionDenied
+from django.contrib import messages
+from django.core.exceptions import PermissionDenied
+from django.http import HttpResponseRedirect
 
 
 def admin_required(function):
@@ -6,32 +9,22 @@ def admin_required(function):
         if request.user.is_superuser():
             return function(request, *args, **kwargs)
         else:
-            raise PermissionDenied
+            messages.error(request,'Not Authorised ')
+            return HttpResponseRedirect('/')
 
     wrap.__doc__ = function.__doc__
     wrap.__name__ = function.__name__
     return wrap
 
 
-# def employee_required(function):
-#     def wrap(request, *args, **kwargs):
-#         if request.user.is_employee():
-#             return function(request, *args, **kwargs)
-#         else:
-#             raise PermissionDenied
+def provider_required(function):
+    def wrap(request, *args, **kwargs):
+        if request.user.is_provider():
+            return function(request, *args, **kwargs)
+        else:
+            messages.error(request,'Not Authorised ')
+            return HttpResponseRedirect('/')
 
-#     wrap.__doc__ = function.__doc__
-#     wrap.__name__ = function.__name__
-#     return wrap
-
-
-# def student_required(function):
-#     def wrap(request, *args, **kwargs):
-#         if request.user.is_student():
-#             return function(request, *args, **kwargs)
-#         else:
-#             raise PermissionDenied
-
-#     wrap.__doc__ = function.__doc__
-#     wrap.__name__ = function.__name__
-#     return wrap
+    wrap.__doc__ = function.__doc__
+    wrap.__name__ = function.__name__
+    return wrap

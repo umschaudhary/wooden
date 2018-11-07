@@ -20,5 +20,7 @@ urlpatterns = [
     path('',views.home,name='home'),
     path('admin/', admin.site.urls),
     path('users/', include('users.urls')),
+    path('companies/', include('companies.urls.companies')),
+    path('company_users/', include('companies.urls.company_users')),
     path('fiscal-years/', include('settings.urls.fiscal_years')),
 ]

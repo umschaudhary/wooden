@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark-grey ">
+<nav class="navbar navbar-expand-lg navbar-dark bg-red ">
         <div class="visible-xs">
                 <div class="button close_button" id="id_close_button">
                   <div class="bar top"></div>
@@ -44,7 +44,7 @@
     <!-- Left Sidebar -->
     <aside id="leftsidebar" class="sidebar">
         <!-- User Info -->
-        <div class="user-info bg-grey-dark">
+        <div class="user-info bg-red">
             <div class="image">
                 {% if user.image %}
                     <img src="" width="48" height="48" alt="User image"/>
@@ -68,42 +68,37 @@
         <div class="menu">
             <ul class='list'>
                 <li id="id_home">
-                    <a href="/" class="ml-2">
-                        <i class="fa fa-dashboard mt-2"></i>
+                    <a href="/" class="">
+                        <i class="fa fa-dashboard mt-2 ml-3"></i>
                         <span>Dashboard</span>
 
                     </a>
                     <hr style="margin:0;padding:0;">
 
                 </li>
-
+                <li id="companies">
+                        <a href="{% url 'companies:list' %}" class="">
+                            {% comment %} <i class="fa fa-dashboard mt-2"></i> {% endcomment %}
+                            <span>Companies</span>
+    
+                        </a>
+                        
+                    </li>
 
                 <li id="id_parent">
-                    <a href="javascript:void(0);" class="menu-toggle">
-                        <span>Companies</span>
-                    </a>
-                    <ul class="ml-menu">
-                        <li id="home-recommendations">
-                            <a id="home-recommendations" href="" >
-                                <span>Companies</span>
-                            </a>
-
-                        </li>
-                        <li id="home-certified-recommendations">
-                            <a id="home-certified-recommendations" href="">
-                                <span>Users</span>
-                            </a>
-                        </li>
-                        
-
-                    </ul>
-                </li>
-
-
-                
-
+                        <a href="javascript:void(0);" class="menu-toggle">
+                            <span>Settings</span>
+                        </a>
+                        <ul class="ml-menu">
+                            <li id="fiscal-years">
+                                <a id="fiscal-years" href="{% url 'fiscal_years:list' %}" >
+                                    <span>Fiscal Years</span>
+                                </a>
+    
+                            </li>
+                        </ul>
+                    </li>
             </ul>
-
         </div>
 
 
