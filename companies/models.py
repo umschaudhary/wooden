@@ -1,8 +1,11 @@
-from django.db import models
 from django.core.validators import EmailValidator
-from users.models import User
+from django.db import models
+
+from categories.models import Category
 from ecommerce.utils import CustomModelManager, CustomModelQuerySet
-   
+from users.models import User
+
+
 # Create your models here.
 
 
@@ -45,6 +48,8 @@ class Company(models.Model):
 
     class Meta:
         db_table = 'companies_company'
+        verbose_name = 'Company'
+        verbose_name_plural = 'Companies'
 
 class CompanyAdmin(models.Model):
     full_name = models.CharField(max_length=120,error_messages={'max_length':'Length Shouldnot exceed 120 Characters'})
@@ -65,3 +70,22 @@ class CompanyAdmin(models.Model):
         db_table = 'companies_company_admin'
         verbose_name = 'Company Admin'
         verbose_name_plural = 'Company Admins'
+
+
+class CompanyCategory(models.Model):
+    company = models.OneToOneField(Company, related_name='company_category', on_delete=models.DO_NOTHING)
+    category = models.ManyToManyField(Category, related_name='company_categories')
+    is_deleted = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    objects = CustomModelManager.from_queryset(CustomModelQuerySet)()
+
+    def __str__(self):
+        return '{0}'.format(self.id)
+
+    class Meta:
+        db_table = 'companies_company_category'
+        verbose_name = 'Company Category'
+        verbose_name_plural = 'Company Categories'
+    

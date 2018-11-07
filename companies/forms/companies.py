@@ -1,6 +1,6 @@
 from django import forms
 
-from companies.models import Company
+from companies.models import Company, CompanyCategory
 
 
 class CompanyForm(forms.ModelForm):
@@ -30,3 +30,14 @@ class CompanyForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+
+
+class CompanyCategoryForm(forms.ModelForm):
+    class Meta:
+        model = CompanyCategory
+        fields = [
+            'category'
+        ]
+
+ 
