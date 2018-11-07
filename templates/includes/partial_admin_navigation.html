@@ -77,7 +77,7 @@
 
                 </li>
                 <li id="companies">
-                        <a href="{% url 'companies:list' %}" class="ml-2">
+                        <a href="{% url 'companies:list' %}">
                             {% comment %} <i class="fa fa-dashboard mt-2"></i> {% endcomment %}
                             <span>Companies</span>
     
@@ -85,6 +85,15 @@
                         <hr style="margin:0;padding:0;">
     
                     </li>
+                    <li id="companies">
+                            <a href="{% url 'categories:list' %}">
+                                {% comment %} <i class="fa fa-dashboard mt-2"></i> {% endcomment %}
+                                <span>Categories</span>
+        
+                            </a>
+                          
+        
+                        </li>
 
 
                

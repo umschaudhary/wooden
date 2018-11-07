@@ -22,5 +22,6 @@ urlpatterns = [
     path('users/', include('users.urls')),
     path('companies/', include('companies.urls.companies')),
     path('company_users/', include('companies.urls.company_users')),
+    path('categories/', include('categories.urls')),
     path('fiscal-years/', include('settings.urls.fiscal_years')),
 ]
