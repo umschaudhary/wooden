@@ -34,6 +34,17 @@ class CartManager(models.Manager):
                 user_obj = user
         return self.model.objects.create(user=user_obj)
 
+    def get_cart(self, request):
+        cart_id = request.session.get('cart_id', None)
+        qs = self.get_queryset().filter(id=cart_id)
+        if qs.count() == 1:
+            new_obj = False
+            cart_obj = qs.first()
+            if request.user.is_authenticated and cart_obj.user == None:
+                cart_obj.user = request.user
+                cart_obj.save()
+
+
 
 class Cart(models.Model):
     user = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)

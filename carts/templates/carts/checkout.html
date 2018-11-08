@@ -1,8 +1,18 @@
 {% extends 'base.html' %}
 {% load widget_tweaks %}
 {% block  content %}
-<div class="container">
+
+<div class="container-fluid">
     <div class="row">
+
+{% for message in messages %}
+<div class="alert alert-{{ message.tags }} alert-dismissable">
+    <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
+    <strong></strong> {{ message }}
+
+</div>
+{% endfor %}
+
             {% if not billing_profile %}
         <div class="col-lg-6 col-md-6 col-sm-12 col-12">
             <div class="card">
@@ -33,7 +43,6 @@
                                     {% endif %}
                                 </div>
 
-               
                 <div class=" form-group row">
                     <div class=" offset-lg-1 col-lg-8 col-md-8 col-sm-8 col-12">
                         <button type="submit" class='btn btn-submit btn-lg btn-primary' name="submit">Continue
@@ -110,17 +119,19 @@
         </div>
         {% else %}
                    
-                            {% if not order.shipping_address %}
+                            {% if not order.shipping_address and not order.billing_address%}
 
                             <div class="col-lg-6">
                 
                                     <div class="card">
                                             <div class="card-body">
                                                 <h5>Shipping Address : </h5>
-                                
-                                                <form method='POST' action='{% if action_url %}{{ checkout_address_create }}{% else %}{% url "users:login_user" %}{% endif %}'> 
+                                                {% url 'checkout_address_create' as action_url %}
+                                                <form id='id_shipping_form' method='POST' action='{% if action_url %}{{ action_url }}{% else %}{% url "users:login_user" %}{% endif %}'> 
                                                     {% csrf_token %}
-                                                    <input type='hidden' name='address_type' value='billing'/>
+                                            
+                                                    <input type='hidden' name='next' value='{{ request.build_absolute_uri  }}'/>
+                                                    <input type='hidden' name='address_type' value='shipping'/>
                                                     <div class=" form-group row">
                                                             <span class="col-lg-4 col-md-2 col-sm-2 col-1"><span
                                                                     class=" float-lg-right float-md-right float-sm-right float-right"> </span></span>
@@ -244,7 +255,7 @@
                       
                                                             <div class=" form-group row">
                                                                     <div class=" offset-lg-1 col-lg-10 col-md-8 col-sm-8 col-12">
-                                                                        <button type="submit" class='btn btn-block btn-lg btn-primary' name="submit">Continue
+                                                                        <button type="submit" class='btn btn-block btn-lg btn-primary' name="submit">Save
                                                                     
                                                                         </button>
                                                                     </div>
@@ -254,6 +265,7 @@
                                         </div>
                             </div>
 
+                            {% comment %} ending shipping address {% endcomment %}
 
                             <div class="col-lg-6">
                 
@@ -261,27 +273,29 @@
                                             <div class="card-body">
                                                 <h5>Billing Address : </h5>
                                 
-                                                <form method='POST' action='{% if action_url %}{{ checkout_address_create }}{% else %}{% url "users:login_user" %}{% endif %}'> 
+                                                {% url 'checkout_address_create' as action_url %}
+                                                <form id='id_billing_form' method='POST' action='{% if action_url %}{{ action_url }}{% else %}{% url "users:login_user" %}{% endif %}'> 
                                                     {% csrf_token %}
-                                                
-                                                            <input type='hidden' name='address_type' value='billing'/>
+                                            
+                                                    <input type='hidden' name='next' value='{{ request.build_absolute_uri  }}'/>
+                                                    <input type='hidden' name='address_type' value='billing'/>
                                                   
                                                     <div class=" form-group row">
                                                             <span class="col-lg-4 col-md-2 col-sm-2 col-1"><span
                                                                     class=" float-lg-right float-md-right float-sm-right float-right"> </span></span>
                             
-                                                            {% if address_form.address_line_1.errors %}
+                                                            {% if billing_address_form.address_line_1.errors %}
                                                                 <div class="col-lg-4 col-md-2 col-sm-2 col-4">
-                                                                    {{ address_form.address_line_1 | add_class:"is-invalid" }}
+                                                                    {{ billing_address_form.address_line_1 | add_class:"is-invalid" }}
                                                                     <div class="invalid-feedback">
-                                                                        {{ address_form.address_line_1.errors }}
+                                                                        {{ billing_address_form.address_line_1.errors }}
                                                                     </div>
                                                                 </div>
                                                             {% else %}
                             
                                                                 <div class="col-lg-10 offset-lg-1 col-md-8 col-sm-8 col-12">
-                                                                        {% render_field address_form.address_line_1 class='form-control'  placeholder='' required='required' %}
-                                                                    <label for="" class="">{{address_form.address_line_1.label}} <span
+                                                                        {% render_field billing_address_form.address_line_1 class='form-control'  placeholder='' required='required' %}
+                                                                    <label for="" class="">{{billing_address_form.address_line_1.label}} <span
                                                                         class="text-danger">*</span></label>
                                                                 </div>
                                                             {% endif %}
@@ -291,18 +305,18 @@
                                                                 <span class="col-lg-4 col-md-2 col-sm-2 col-1"><span
                                                                         class=" float-lg-right float-md-right float-sm-right float-right"> </span></span>
                                 
-                                                                {% if address_form.address_line_2.errors %}
+                                                                {% if billing_address_form.address_line_2.errors %}
                                                                     <div class="col-lg-4 col-md-2 col-sm-2 col-4">
-                                                                        {{ address_form.address_line_2 | add_class:"is-invalid" }}
+                                                                        {{ billing_address_form.address_line_2 | add_class:"is-invalid" }}
                                                                         <div class="invalid-feedback">
-                                                                            {{ address_form.address_line_2.errors }}
+                                                                            {{ billing_address_form.address_line_2.errors }}
                                                                         </div>
                                                                     </div>
                                                                 {% else %}
                                 
                                                                     <div class="col-lg-10 offset-lg-1 col-md-8 col-sm-8 col-12">
-                                                                            {% render_field address_form.address_line_2 class='form-control'  placeholder='' required='required' %}
-                                                                        <label for="" class="">{{address_form.address_line_2.label}} </label>
+                                                                            {% render_field billing_address_form.address_line_2 class='form-control'  placeholder='' required='required' %}
+                                                                        <label for="" class="">{{billing_address_form.address_line_2.label}} </label>
                                                                     </div>
                                                                 {% endif %}
                                                         </div>
@@ -311,18 +325,18 @@
                                                                 <span class="col-lg-4 col-md-2 col-sm-2 col-1"><span
                                                                         class=" float-lg-right float-md-right float-sm-right float-right"> </span></span>
                                 
-                                                                {% if address_form.city.errors %}
+                                                                {% if billing_address_form.city.errors %}
                                                                     <div class="col-lg-4 col-md-2 col-sm-2 col-4">
-                                                                        {{ address_form.city | add_class:"is-invalid" }}
+                                                                        {{ billing_address_form.city | add_class:"is-invalid" }}
                                                                         <div class="invalid-feedback">
-                                                                            {{ address_form.city.errors }}
+                                                                            {{ billing_address_form.city.errors }}
                                                                         </div>
                                                                     </div>
                                                                 {% else %}
                                 
                                                                     <div class="col-lg-10 offset-lg-1 col-md-8 col-sm-8 col-12">
-                                                                            {% render_field address_form.city class='form-control'  placeholder='' required='required' %}
-                                                                        <label for="" class="">{{address_form.city.label}} </label>
+                                                                            {% render_field billing_address_form.city class='form-control'  placeholder='' required='required' %}
+                                                                        <label for="" class="">{{billing_address_form.city.label}} </label>
                                                                     </div>
                                                                 {% endif %}
                                                         </div>
@@ -331,17 +345,17 @@
                                                                 <span class="col-lg-4 col-md-2 col-sm-2 col-1"><span
                                                                         class=" float-lg-right float-md-right float-sm-right float-right"> </span></span>
                                 
-                                                                {% if address_form.country.errors %}
+                                                                {% if billing_address_form.country.errors %}
                                                                     <div class="col-lg-4 col-md-2 col-sm-2 col-4">
-                                                                        {{ address_form.country | add_class:"is-invalid" }}
+                                                                        {{ billing_address_form.country | add_class:"is-invalid" }}
                                                                         <div class="invalid-feedback">
-                                                                            {{ address_form.country.errors }}
+                                                                            {{ billing_address_form.country.errors }}
                                                                         </div>
                                                                     </div>
                                                                 {% else %}
                                 
                                                                     <div class="col-lg-10 offset-lg-1 col-md-8 col-sm-8 col-12">
-                                                                            {% render_field address_form.country class='form-control'  placeholder='Country' required='required' %}
+                                                                            {% render_field billing_address_form.country class='form-control'  placeholder='Country' required='required' %}
                                                                     
                                                                     </div>
                                                                 {% endif %}
@@ -351,18 +365,18 @@
                                                                 <span class="col-lg-4 col-md-2 col-sm-2 col-1"><span
                                                                         class=" float-lg-right float-md-right float-sm-right float-right"> </span></span>
                                 
-                                                                {% if address_form.state.errors %}
+                                                                {% if billing_address_form.state.errors %}
                                                                     <div class="col-lg-4 col-md-2 col-sm-2 col-4">
-                                                                        {{ address_form.state | add_class:"is-invalid" }}
+                                                                        {{ billing_address_form.state | add_class:"is-invalid" }}
                                                                         <div class="invalid-feedback">
-                                                                            {{ address_form.state.errors }}
+                                                                            {{ billing_address_form.state.errors }}
                                                                         </div>
                                                                     </div>
                                                                 {% else %}
                                 
                                                                     <div class="col-lg-10 offset-lg-1 col-md-8 col-sm-8 col-12">
-                                                                            {% render_field address_form.state class='form-control'  placeholder='' required='required' %}
-                                                                        <label for="" class="">{{address_form.state.label}} </label>
+                                                                            {% render_field billing_address_form.state class='form-control'  placeholder='' required='required' %}
+                                                                        <label for="" class="">{{billing_address_form.state.label}} </label>
                                                                     </div>
                                                                 {% endif %}
                                                         </div>
@@ -371,28 +385,34 @@
                                                                 <span class="col-lg-4 col-md-2 col-sm-2 col-1"><span
                                                                         class=" float-lg-right float-md-right float-sm-right float-right"> </span></span>
                                 
-                                                                {% if address_form.postal_code.errors %}
+                                                                {% if billing_address_form.postal_code.errors %}
                                                                     <div class="col-lg-4 col-md-2 col-sm-2 col-4">
-                                                                        {{ address_form.postal_code | add_class:"is-invalid" }}
+                                                                        {{ billing_address_form.postal_code | add_class:"is-invalid" }}
                                                                         <div class="invalid-feedback">
-                                                                            {{ address_form.postal_code.errors }}
+                                                                            {{ billing_address_form.postal_code.errors }}
                                                                         </div>
                                                                     </div>
                                                                 {% else %}
                                 
                                                                     <div class="col-lg-10 offset-lg-1 col-md-8 col-sm-8 col-12">
-                                                                            {% render_field address_form.postal_code class='form-control'  placeholder='' required='required' %}
-                                                                        <label for="" class="">{{address_form.postal_code.label}} </label>
+                                                                            {% render_field billing_address_form.postal_code class='form-control'  placeholder='' required='required' %}
+                                                                        <label for="" class="">{{billing_address_form.postal_code.label}} </label>
                                                                     </div>
                                                                 {% endif %}
                                                         </div>
                       
                                                             <div class=" form-group row">
-                                                                    <div class=" offset-lg-1 col-lg-10 col-md-8 col-sm-8 col-12">
-                                                                        <button type="submit" class='btn btn-block btn-lg btn-primary' name="submit">Continue
+                                                                    <div class=" offset-lg-1 col-lg-6 col-md-8 col-sm-8 col-12">
+                                                                        <button type="submit" class='btn btn-block btn-lg btn-primary' name="submit">Save
                                                                     
                                                                         </button>
                                                                     </div>
+                                                                    <div class=" ">
+                                                                            <button type="" class='btn btn-block btn-lg btn-warning' name="copy" id='id_copy_address' >Same as Shipping Address
+                                                                        
+                                                                            </button>
+                                                                        </div>
+
                                                          </div>
                                                  </form>
                                             </div>
@@ -401,21 +421,31 @@
 
                                
                             {% else %}
-                                <h1>Finalize Checkout</h1>
-                                <p>Cart Items:
-                                    {% for product in order.cart.products.all %}{{ product }}{% if not forloop.last %},
-                                    {% endif %}{% endfor %}</p>
-                                <p>Shipping Address: {{ order.shipping_address.get_address }}</p>
-                                <p>Billing Address: {{ order.shipping_address.get_address }}</p>
-                                <p>Cart Total: {{ order.cart.total }}</p>
-                                <p>Shipping Total: {{ order.shipping_total }}</p>
-                                <p>Order Total: {{ order.total }}</p>
+                            <div class="col-lg-8 offset-lg-2">
+                
+                                    <div class="card">
+                                            <div class="card-body">
+                                                    <h1>Finalize Checkout</h1>
+                                                    <p>Cart Items:
+                                                        {% for product in order.cart.cart_items.all %}{{ product }}{% if not forloop.last %},
+                                                        {% endif %}{% endfor %}</p>
+                                                    <p>Shipping Address: {{ order.shipping_address.get_address }}</p>
+                                                    <p>Billing Address: {{ order.billing_address.get_address }}</p>
+                                                    <p>Cart Total: {{ order.cart.total }}</p>
+                                                    <p>Shipping Total: {{ order.shipping_total }}</p>
+                                                    <p>Order Total: {{ order.total }}</p>
+                                                    <form class="form" method="post">
+                                                            {% csrf_token %}
+                                                            <button type="submit" class="btn btn-success btn-lg">Checkout</button>
+                                                        </form>
+                    
+                                            </div>
+                                        </div>
+                            </div
+                            
+                               
 
-
-                                <form action="" class="form" method="post">
-                                    {% csrf_token %}
-                                    <button type="submit" class="btn btn-success">Checkout</button>
-                                </form>
+                                
 
                             {% endif %} 
 
@@ -424,5 +454,31 @@
 
 </div>
 
+{% block extra_script %}
+<script>
+    $(function(){
+            $('#id_copy_address').click(function(e){
+                e.preventDefault();
+                address_1 = $('#id_shipping_form #id_address_line_1').val()
+                address_2 = $('#id_shipping_form #id_address_line_2').val()
+                city = $('#id_shipping_form #id_city').val()
+                country = $('#id_shipping_form #id_country').val()
+                state = $('#id_shipping_form #id_state').val()
+                postal_code = $('#id_shipping_form #id_postal_code').val()
+                
+                $('#id_billing_form #id_address_line_1').val(address_1)
+                $('#id_billing_form #id_address_line_2').val(address_2)
+                $('#id_billing_form #id_city').val(city)
+                $('#id_billing_form #id_country').val(country)
+                $('#id_billing_form #id_state').val(state)
+                $('#id_billing_form #id_postal_code').val(postal_code)
+
+
+            });
+
+    })
+</script>
+
+{% endblock %}
 
 {% endblock %}

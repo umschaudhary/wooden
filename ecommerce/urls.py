@@ -17,12 +17,16 @@ from django.contrib import admin
 from django.urls import path , include
 from pages import views
 from users.views import  guest_register_view, register_page
+from addresses.views import checkout_address_create
+from django.views.generic import TemplateView
+from carts.views import success
 
 urlpatterns = [
     path('',views.home,name='home'),
     path('admin/', admin.site.urls),
     path('users/', include('users.urls')),
     path('cart/', include('carts.urls')),
+    path('checkout_address_create/',checkout_address_create, name='checkout_address_create'),
     path('companies/', include('companies.urls.companies')),
     path('company_users/', include('companies.urls.company_users')),
     path('categories/', include('categories.urls')),
@@ -30,4 +34,5 @@ urlpatterns = [
     path('guest_register/', guest_register_view, name='guest_register'),
     path('items/', include('items.urls')),
     path('register/', register_page, name='register'),
+    path('success/',success, name='success'),
 ]
