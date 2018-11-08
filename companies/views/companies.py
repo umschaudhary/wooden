@@ -26,7 +26,7 @@ def company_create(request):
         if form.is_valid():
             data = form.save(commit=False)
             data.save()
-            messages.success(request, 'Company Created Successfully . ')
+            messages.success(request, 'Company Created Successfully .')
             return redirect('companies:list')
     context['form'] = form
     return render(request, 'companies/company_create.html', context)

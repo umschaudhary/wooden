@@ -1,8 +1,10 @@
 
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
-from django.contrib import messages
+
 from companies import forms
+from companies.models import Company
 from users.decorators import provider_required
 
 
@@ -10,13 +12,19 @@ from users.decorators import provider_required
 def category_select(request):
     context = {}
     user = request.user
-    form  = forms.CompanyCategoryForm(request.POST or None)
+    try:
+        instance = Company.objects.first()
+    except Company.DoesNotExist:
+        instance = None
+
+    form  = forms.CompanyCategoryForm(request.POST or None, instance=instance)
     if request.method == 'POST':
         if form.is_valid():
-            form.save()
+            data = form.save(commit=False)
+            data.company = user.company_admin.company
+            data.save()
             messages.success(request, 'Selected ')
             return redirect('/')
-            3
     context['form'] = form
     template_name = 'companies/category_select.html'
     return render(request, template_name , context)

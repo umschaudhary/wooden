@@ -40,4 +40,8 @@ class CompanyCategoryForm(forms.ModelForm):
             'category'
         ]
 
+        widgets = {
+            'category': forms.SelectMultiple(attrs={'class':'form-control', 'required':'required', 'placeholder':''})
+        }
+
  

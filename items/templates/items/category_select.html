@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}
+    Select Category | {{ block.super }}
+{% endblock %}
+{% block breadcrumbLink %}
+    {% if request.user.is_authenticated %}
+        <li class="breadcrumb-item active">Select Category </li> {% endif %}
+{% endblock %}
+{% block content %}
+
+    <div class="container-fluid">
+        <div class="card">
+            <div class="body table-responsive">
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12  col-xs-12 text-left ">
+                        <h5 class="">Category | <small>Select Category to see items inside the category</small></h5>
+                    </div>
+                    
+                </div>
+
+                <table class="table mt-2">
+                    <thead class="thead-light">
+                    <tr>
+                        <th scope="col">S.N.</th>
+                        <th scope="col">Category</th>
+                        <th>Item Count</th>
+                        <th style="max-width:15%"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    {% for object in objects %}
+                        <tr>
+                            <td scope="row">{{ forloop.counter }}</td>
+                            <td> <a href="{% url 'items:list' object.pk %}">{{ object.name }}</a>
+                            </td>
+                            <td>{{object.items.all_active.count}}</td>
+                         <td class='text-right'>
+                            <a href="{% url 'items:list' object.pk %}">See Items</a>
+                            </td> 
+
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            {% if request.GET.q %}
+                                <td class="text-danger text-center" colspan="8"><h5>No Record Found ।</h5></td>
+                            {% else %}
+                                <td class="text-danger text-center" colspan="8"><h5>No any Data on Database Yet</h5></td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+
+
+                    </tbody>
+                </table>
+                {% include 'snippets/pagination.html'  with datas=fiscal_years %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

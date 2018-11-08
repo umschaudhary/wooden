@@ -2,7 +2,8 @@ from companies.models import Company
 from django.db import models
 from django.db.models.signals import pre_save
 from django.urls import reverse
-
+from ecommerce import settings
+import os
 from categories.models import Category
 from ecommerce.utils import CustomModelManager, CustomModelQuerySet, \
     unique_slug_generator
@@ -47,7 +48,7 @@ pre_save.connect(item_pre_save_receiver, sender=Item)
 class StockRecord(models.Model):
     item = models.OneToOneField(Item, related_name='stock_record', on_delete=models.DO_NOTHING)
     price_excl_tax = models.DecimalField(max_digits=19, decimal_places=2)
-    discounted_percentage = models.DecimalField(max_digits=19, decimal_places=2)
+    discount_percentage = models.DecimalField(max_digits=19, decimal_places=2)
     discounted_price = models.DecimalField(max_digits=19, decimal_places=2, blank=True, null=True)
     quantity = models.PositiveIntegerField()
     is_deleted = models.BooleanField(default=False)
@@ -64,9 +65,24 @@ class StockRecord(models.Model):
 
 def stock_discount_price_calculation(sender, instance , *args, **kwargs):
     price = instance.price_excl_tax
-    discount_percent = instance.discounted_percentage
+    discount_percent = instance.discount_percentage
     if discount_percent:
         discount = (discount_percent/100)*price
         instance.discounted_price = price - discount
 
 pre_save.connect(stock_discount_price_calculation, sender=StockRecord)
+
+
+
+class ItemImage(models.Model):
+    item = models.ForeignKey(Item, related_name="item_images", on_delete=models.DO_NOTHING)
+    document = models.FileField()
+
+    class Meta:
+        db_table = "items_item_image"
+        verbose_name = 'Image'
+        verbose_name_plural = 'Images'
+
+    def __str__(self):
+        return self.item.name
+

@@ -24,7 +24,7 @@ def home(request):
             template_name = 'pages/provider_dashboard.html'
         else:
             pass
-    
-
+    else:
+        template_name = 'pages/user_dashboard.html'
     context['year'] = date.today().year
     return render(request, template_name, context)
