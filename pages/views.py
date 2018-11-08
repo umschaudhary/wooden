@@ -5,6 +5,7 @@ from django.shortcuts import redirect, render, reverse
 
 from settings.models import FiscalYear
 from users.models import Sidebar
+from items.models import Item
 
 
 # Create your views here.
@@ -25,6 +26,8 @@ def home(request):
         else:
             pass
     else:
+        products = Item.objects.all_active()
         template_name = 'pages/user_dashboard.html'
+        context['products'] = products
     context['year'] = date.today().year
     return render(request, template_name, context)
