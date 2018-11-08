@@ -5,9 +5,11 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import Http404, HttpResponse
 from django.shortcuts import redirect, render
+from django.utils.http import is_safe_url
 
-from users.forms import LoginForm, PasswordChangeForm
-from users.models import Sidebar, User
+from users.forms import GuestForm, LoginForm, PasswordChangeForm, \
+    RegisterForm
+from users.models import GuestEmail, Sidebar, User
 
 
 def login_user(request):
@@ -65,6 +67,35 @@ def logout_user(request):
     return redirect("users:login_user")
 
 
+
+def guest_register_view(request):
+    form = GuestForm(request.POST or None)
+    context = {
+        "form": form
+    }
+    next_ = request.GET.get('next')
+    next_post = request.POST.get('next')
+    redirect_path = next_ or next_post or None
+    if form.is_valid():
+        email = form.cleaned_data.get("email")
+        new_guest_email = GuestEmail.objects.create(email=email)
+        request.session['guest_email_id'] = new_guest_email.id
+        return redirect("")
+    return redirect("carts:checkout")
+
+
+def register_page(request):
+    form = RegisterForm(request.POST or None)
+    context = {
+        "form": form
+    }
+    if form.is_valid():
+        user = form.save(commit=False)
+        user.save()
+        messages.success(request, 'Conformation Email Has been Sent')
+        return redirect('/')
+
+    return render(request, "users/register.html", context)
 
 
 def change_sidebar_status(request):

@@ -179,4 +179,5 @@ class PasswordResetForm(forms.Form):
 
 
 class GuestForm(forms.Form):
-    email = forms.TextInput(attrs={'class':'form-contorl'})
+    email = forms.EmailField()
+

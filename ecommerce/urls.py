@@ -16,6 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path , include
 from pages import views
+from users.views import  guest_register_view, register_page
+
 urlpatterns = [
     path('',views.home,name='home'),
     path('admin/', admin.site.urls),
@@ -25,5 +27,7 @@ urlpatterns = [
     path('company_users/', include('companies.urls.company_users')),
     path('categories/', include('categories.urls')),
     path('fiscal-years/', include('settings.urls.fiscal_years')),
+    path('guest_register/', guest_register_view, name='guest_register'),
     path('items/', include('items.urls')),
+    path('register/', register_page, name='register'),
 ]
