@@ -177,3 +177,6 @@ class PasswordResetForm(forms.Form):
         self.user.save()
         return self.user
 
+
+class GuestForm(forms.Form):
+    email = forms.TextInput(attrs={'class':'form-contorl'})
