@@ -33,6 +33,9 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    'billings',
+    'addresses',
+    'orders',
     'carts',
     'items',
     'categories',
