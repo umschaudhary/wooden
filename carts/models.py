@@ -1,7 +1,8 @@
 from django.db import models
 from users.models import User
 from items.models import Item
-
+import decimal
+from django.db.models.signals import pre_save, post_save
 
 # Create your models here.
 
@@ -50,11 +51,25 @@ class Cart(models.Model):
     class Meta:
         db_table = 'carts_cart'
 
+# def post_save_cart_receiver(sender, instance, *args, **kwargs):
+#     items = instance.cart_items.filter(is_deleted=False)
+#     total = 0
+#     for item in items:
+#         total += item.total
+#     if instance.sub_total != total:
+#         instance.sub_total = total
+#         instance.save() 
+
+# post_save.connect(post_save_cart_receiver, sender=Cart)
+
+
+
 
 class CartItem(models.Model):
     cart = models.ForeignKey(Cart, related_name='cart_items', on_delete=models.DO_NOTHING)
     item = models.ForeignKey(Item, related_name='cart_items', on_delete=models.DO_NOTHING)
     quantity = models.PositiveIntegerField()
+    total = models.DecimalField(decimal_places=2, max_digits=19)
     is_deleted = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -66,26 +81,12 @@ class CartItem(models.Model):
 
     def __str__(self):
         return '{}'.format(self.item.name)
-#
-# def m2m_change_cart_receiver(sender, instance, action, *args, **kwargs):
-#     if action == 'post_add' or action == 'post_remove' or action == 'post_clear':
-#         products = instance.products.all()
-#         total = 0
-#         for x in products:
-#             total += x.price
-#         if instance.sub_total != total:
-#             instance.sub_total = total
-#             instance.save()
-#
-#
-# m2m_changed.connect(m2m_change_cart_receiver, sender=Cart.products.through)
-#
-#
-# def pre_save_cart_receiver(sender, instance, *args, **kwargs):
-#     if instance.sub_total > 0:
-#         instance.total = instance.sub_total
-#     else:
-#         instance.total = 0
-#
-#
-# pre_save.connect(pre_save_cart_receiver, sender=Cart)
+
+def pre_save_cart_receiver(sender, instance, *args, **kwargs):
+    if instance.item.stock_record.discounted_price:
+        price = instance.item.stock_record.discounted_price
+    else:
+        price = instance.item.stock_record.price_excl_tax
+    instance.total = decimal.Decimal(price) * decimal.Decimal(instance.quantity)
+
+pre_save.connect(pre_save_cart_receiver, sender=CartItem)

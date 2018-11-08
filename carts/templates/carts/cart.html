@@ -1,1 +1,88 @@
 {% extends "base.html" %}
+{% block title %}Cart | {{block.super}} {% endblock title %}
+
+{% block content %}
+
+            <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-lg-8 col-md-8 col-sm-8 col-12">
+                                <div class="card">
+                                        <div class="card-body">
+                                                <table class="table">
+                                                        <thead class="">
+                                                        <tr>
+                                                            <th scope="col">S.N.</th>
+                                                            <th scope="col">Item</th>
+                                                            <th>Price</th>
+                                                            <th>Quantity</th>
+                                                            <th>Total</th>
+                                                            <th style="max-width:15%"></th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                    
+                                                        {% for object in objects %}
+                                                            <tr>
+                                                                <td scope="row">{{ forloop.counter }}</td>
+                                                                <td>{{ object.item }}
+                                                                </td>
+                                                                {% if not object.item.stock_record.discounted_price %}
+                                                                <td>{{object.item.stock_record.price_excl_tax}}</td>
+                                                                {% else %}
+                                                                <td>{{object.item.stock_record.discounted_price}}</td>
+                                                                {% endif %}
+                                                                <td>{{object.quantity}}</td>
+                                                                <td>{{object.total}}</td>
+                                                                
+                                                             <td class='text-right'>
+                                                                 {% comment %} <a href="{% url 'company_users:list' object.pk %}" class='btn btn-primary'>Staffs</a>
+                                                            
+                                                                </td>  {% endcomment %}
+                                    
+                                                            </tr>
+                                                        {% empty %}
+                                                            <tr>
+                                                                {% if request.GET.q %}
+                                                                    <td class="text-danger text-center" colspan="8"><h5>No Record Found ।</h5></td>
+                                                                {% else %}
+                                                                    <td class="text-danger text-center" colspan="8"><h5>Cart Empty</h5></td>
+                                                                {% endif %}
+                                                            </tr>
+                                                        {% endfor %}
+                                                        {% if cart.total %}
+                                                        <tr>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            
+                                                            <td>{{cart.total}}</td>
+                                                        </tr>
+                                                       
+                                                        {% endif %}
+                                    
+
+                                                        </tbody>
+                                                    </table>
+                                                    <div class="buttons text-right">
+                                                            <a href="/" class="btn btn-lg btn-primary">Continue Shopping</a>
+                                                            <a href="" class="btn btn-lg btn-success">Checkout</a>
+                                                    </div>
+                                                    
+                                        </div>
+                                </div>
+                        </div>
+
+
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-4">
+                            <div class="card">
+                                    <div class="card-body">
+                                        
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+
+
+{% endblock content %}

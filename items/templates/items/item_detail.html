@@ -34,13 +34,11 @@
                                                             </div>
                                                 </div>
                                                 
-                                            
-                                            
                                             </form>
                                     {% endif %}
 
                                 {% else %}
-                                <a href="" class="btn btn-primary">Go To Cart</a>
+                                <a href="{% url 'carts:cart' %}" class="btn btn-primary">Go To Cart</a>
                                 {% endif %}
                             </div>
 

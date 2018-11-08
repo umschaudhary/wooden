@@ -29,7 +29,10 @@ def home(request):
     else:
         products = Item.objects.all_active()
         cart_obj, new_obj = Cart.objects.new_or_get(request)
+        if cart_obj:
+            items = cart_obj.cart_items.filter(is_deleted=False).count()
         context['cart'] = cart_obj
+        context['item_count'] = items
         template_name = 'pages/user_dashboard.html'
         context['products'] = products
     context['year'] = date.today().year
