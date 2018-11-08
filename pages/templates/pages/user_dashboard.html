@@ -18,7 +18,7 @@
                                             <img src="{% static 'images/default.jpg '%}" alt="Image Here">
                                            
                                             <hr>
-                                            {{product.name}} - {{product.stock_record.price_excl_tax}} | {{product.stock_record.discount_percentage}} %
+                                            <a href="{% url 'items:detail' product.slug %}">{{product.name}} </a>- {{product.stock_record.price_excl_tax}} | {{product.stock_record.discount_percentage}} %
                                     
                                 </div>
                             </div>

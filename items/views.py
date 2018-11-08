@@ -1,11 +1,13 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
+from items import forms
 
+from carts.models import Cart, CartItem
 from categories.models import Category
 from items.models import Item
 from users.decorators import provider_required
-from items import forms
+
 
 # Create your views here.
 
@@ -65,3 +67,39 @@ def item_add(request,pk):
     context['stock_form'] = stockForm
     template_name = 'items/item_add.html'
     return render(request, template_name, context )
+
+
+def item_detail(request, slug):
+    context = {}
+    try:
+        item = Item.objects.get(is_deleted=False, slug=slug)
+        item_stock_count = item.stock_record.quantity
+    except Item.DoesNotExist:
+        messages.error(request, 'Product Not Found ')
+        return redirect('/')
+    except Item.MultipleObjectsReturned:
+        qs = Item.objects.filter(slug=slug, is_deleted=False)
+        item = qs.first()
+    if item:
+        cart_obj, new_obj = Cart.objects.new_or_get(request)
+        if request.method == 'POST':
+            quantity = request.POST['quantity']
+            cart_item = CartItem()
+            cart_item.cart = cart_obj
+            cart_item.item = item
+            cart_item.quantity = quantity 
+            cart_item.save()
+            item.in_cart = True
+            item.save()
+            messages.success(request, 'Item Added to Cart')
+            return redirect('/')
+
+    context['item'] = item
+    context['quantity'] = range(1,item_stock_count+1)
+    context['item_count'] = item_stock_count
+    
+    context['cart'] = cart_obj
+
+    template_name = 'items/item_detail.html'
+    return render(request, template_name, context)
+

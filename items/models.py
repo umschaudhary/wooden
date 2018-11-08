@@ -19,6 +19,7 @@ class Item(models.Model):
     description = models.TextField()
     available = models.BooleanField(default=True)
     featured = models.BooleanField(default=False)
+    in_cart = models.BooleanField(default=False)
     is_deleted = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

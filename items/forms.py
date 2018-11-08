@@ -1,6 +1,7 @@
 from django import forms
 
 from items.models import Item, StockRecord
+from carts.models import CartItem, Cart
 
 
 class ItemCreateForm(forms.ModelForm):
@@ -53,4 +54,23 @@ class StockForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+
+
+
+class QuantityForm(forms.ModelForm):
+    class Meta:
+        model = CartItem
+        fields = [
+            'quantity',
+        ]
+
+        widgets = {
+            'quantity' : forms.TextInput(attrs={'class':'form-control', 'required':'required','placeholder':'Quantity'})
+            
+        }
+
+        
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        
 

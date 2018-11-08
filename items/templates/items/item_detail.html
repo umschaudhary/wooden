@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-6">
+                                <p>
+                                {{item.name}}
+                                </p>
+                                <hr>
+                                <p>  Price : {{item.stock_record.price_excl_tax}}</p>
+                                {% if not item.in_cart %}
+                                    {% if item_count > 0 %} 
+                                            <form action="" method="POST">
+                                                {% csrf_token %}
+                                                <select name="quantity" id="id_quantity">
+                                                    <option value="">Select Quantity</option>
+                                                    {% for i in quantity %}
+                                                    <option value="{{i}}">{{i}}</option>
+                                                    {% endfor %}
+                                                </select>
+                                                <button type="submit" class="btn btn-primary">Add to Cart</button>
+                                                {% else %}
+                                                <div class="col-6" >
+                                                        <div class="card">
+                                                                <div class="card-body">
+                                                                        <p class="text-danger">Item Out Of Stock</p>
+                                                                </div>
+                                                            </div>
+                                                </div>
+                                                
+                                            
+                                            
+                                            </form>
+                                    {% endif %}
+
+                                {% else %}
+                                <a href="" class="btn btn-primary">Go To Cart</a>
+                                {% endif %}
+                            </div>
+
+                            
+                            <div class="col-6">
+                                <div class="description">
+                                    <p>Name: {{item.name}}</p>
+                                    <p>price: {{item.stock_record.price_excl_tax}}</p>
+                                    <p>Description:{{item.description}}</p>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h1>Item Recently Viewed</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

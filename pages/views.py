@@ -6,6 +6,7 @@ from django.shortcuts import redirect, render, reverse
 from settings.models import FiscalYear
 from users.models import Sidebar
 from items.models import Item
+from carts.models import Cart
 
 
 # Create your views here.
@@ -27,6 +28,8 @@ def home(request):
             pass
     else:
         products = Item.objects.all_active()
+        cart_obj, new_obj = Cart.objects.new_or_get(request)
+        context['cart'] = cart_obj
         template_name = 'pages/user_dashboard.html'
         context['products'] = products
     context['year'] = date.today().year

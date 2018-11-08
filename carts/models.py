@@ -22,6 +22,7 @@ class CartManager(models.Manager):
         else:
             cart_obj = Cart.objects.new_cart(user=request.user)
             new_obj = True
+            print('card Created')
             request.session['cart_id'] = cart_obj.id
         return cart_obj, new_obj
 
@@ -52,7 +53,7 @@ class Cart(models.Model):
 
 class CartItem(models.Model):
     cart = models.ForeignKey(Cart, related_name='cart_items', on_delete=models.DO_NOTHING)
-    product = models.ForeignKey(Item, related_name='cart_items', on_delete=models.DO_NOTHING)
+    item = models.ForeignKey(Item, related_name='cart_items', on_delete=models.DO_NOTHING)
     quantity = models.PositiveIntegerField()
     is_deleted = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -64,7 +65,7 @@ class CartItem(models.Model):
         verbose_name_plural = 'Cart Items'
 
     def __str__(self):
-        return self.cart.id
+        return '{}'.format(self.item.name)
 #
 # def m2m_change_cart_receiver(sender, instance, action, *args, **kwargs):
 #     if action == 'post_add' or action == 'post_remove' or action == 'post_clear':
