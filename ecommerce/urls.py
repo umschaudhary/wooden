@@ -20,6 +20,9 @@ from users.views import  guest_register_view, register_page
 from addresses.views import checkout_address_create
 from django.views.generic import TemplateView
 from carts.views import success
+from django.conf import settings
+from django.conf.urls.static import static
+
 
 urlpatterns = [
     path('',views.home,name='home'),
@@ -33,6 +36,7 @@ urlpatterns = [
     path('fiscal-years/', include('settings.urls.fiscal_years')),
     path('guest_register/', guest_register_view, name='guest_register'),
     path('items/', include('items.urls')),
+    path('orders/',include('orders.urls')),
     path('register/', register_page, name='register'),
     path('success/',success, name='success'),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
