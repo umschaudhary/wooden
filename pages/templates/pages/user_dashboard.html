@@ -1,35 +1,179 @@
 {% extends "base.html" %}
 {% load staticfiles %}
 {% load widget_tweaks %}
+{% block extra_stylesheet %}
+<style>
+    body{
+        background: white;
+        width: 100%;
+  
+    }
+        .medium-up--one-fifth {
+            width: 20%;
+        }
+        .grid__item {
+            float: left;
+           
+            width: 100%;
+        }
+        .list--nav {
+            list-style: none;
+        }
+        .list--nav li.site-nav__item{
+            border-bottom: 1px solid gainsboro;
+            padding:10px;
+        }
+        .medium-up--hide {
+            display: none !important;
+        }
+       
+</style>
+{% endblock extra_stylesheet %}
 {% block content %}
 <div class="container-fluid">
-    <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-12">
 
-            <div class="card">
-                <div class="card-body"> 
-                    <div class="row">
-                            {% for product in products %} 
-                        <div class="col-lg-3 col-md-3 col-sm-3 col-3">
-                            <div class="card">
-                                <div class="card-body">
+            <div class="row mt-5">
+                <div class="col-lg-3">
+                        <nav class="grid__item small--text-center medium-up--one-fifth" role="navigation">
+                                <hr class="hr--small medium-up--hide">
+                                <button id="ToggleMobileMenu" class="mobile-menu-icon medium-up--hide" aria-haspopup="true" aria-owns="SiteNav">
+                                  <span class="line"></span>
+                                  <span class="line"></span>
+                                  <span class="line"></span>
+                                  <span class="line"></span>
+                                  <span class="icon__fallback-text">Menu</span>
+                                </button>
+                                <div id="SiteNav" class="site-nav" role="menu">
+                                  <ul class="list--nav">
                                     
-                                        
-                                            <img src="{% static 'images/default.jpg '%}" alt="Image Here">
-                                           
-                                            <hr>
-                                            <a href="{% url 'items:detail' product.slug %}">{{product.name}} </a>- {{product.stock_record.price_excl_tax}} | {{product.stock_record.discount_percentage}} %
+                                      
+                                        <li class="site-nav__item site-nav--active">
+                                          <a href="/" class="site-nav__link" aria-current="page">Home</a>
+                                        </li>
+                                      
+                                        <li class="site-nav__item">
+                                          <a href="/collections/accessories" class="site-nav__link">Accessories</a>
+                                        </li>
+                                      
+                                        <li class="site-nav__item">
+                                          <a href="/collections/denim" class="site-nav__link">Denim</a>
+                                        </li>
+                                      
                                     
+                                        <li class="site-nav__item">
+                                          <a href="/collections/footwear" class="site-nav__link">Footwear</a>
+                                        </li>
+                                      
+                                        <li class="site-nav__item">
+                                          <a href="/collections/jeans" class="site-nav__link">Jeans</a>
+                                        </li>
+                                      
+                                    
+                                        <li class="site-nav__item">
+                                          <a href="/collections/outerwear" class="site-nav__link">Outerwear</a>
+                                        </li>
+                                      
+                                      
+                                        <li class="site-nav__item">
+                                          <a href="/collections/pants" class="site-nav__link">Pants</a>
+                                        </li>
+                                      
+                                        <li class="site-nav__item">
+                                          <a href="/collections/shirts" class="site-nav__link">Shirts</a>
+                                        </li>
+                                      
+                                      
+                                        <li class="site-nav__item">
+                                          <a href="/collections/t-shirts" class="site-nav__link">T-Shirts</a>
+                                        </li>
+                                      
+                                    
+                                        <li class="site-nav__item">
+                                          <a href="/collections/shorts" class="site-nav__link">Shorts</a>
+                                        </li>
+                                      
+                                    
+                                  </ul>
                                 </div>
-                            </div>
-                        </div>
+
+                              </nav>
+
+                </div>
+                <div class="col-lg-9 col-md-12 col-sm-12 col-12">
                        
-                                    {% endfor %}
-                    </div>
+                        <div class="row">
+                                {% for product in products %} 
+                                <div class="col-lg-4 col-md-12 mb-4">
+
+                                        <!--Card-->
+                                        <div class="card">
+        
+                                            <!--Card image-->
+                                            <div class="view ">
+                                                    {% for i in product.item_images.all %}
+                                                    {% if forloop.last %}
+                                                        {% if i.document %}
+                                                        <img src="{{ i.document.url }}" height="40px" class="img-fluid " alt='product image here'>
+                                                    {% endif %}
+                                                    {% endif %}
+                                        {% endfor %}
+                                               
+                                        
+                                                <a>
+                                                    <div class="mask rgba-white-slight waves-effect waves-light"></div>
+                                                </a>
+                                            </div>
+                                            <!--Card image-->
+        
+                                            <!--Card content-->
+                                            <div class="card-body">
+                                                <!--Category & Title-->
+        
+                                                <h5 class="card-title mb-1">
+                                                    <strong>
+                                                        <a href="" class="dark-grey-text">{{product.name}}</a>
+                                                    </strong>
+                                                </h5>
+                                                <span class="badge badge-danger mb-2">bestseller</span>
+                                                <span class="badge badge-success mb-2 ml-2">SALE</span>
+                                                <!-- Rating -->
+                                                <ul class="rating" style=" list-style-type: none;
+                                                margin: 0;
+                                                padding: 0;
+                                                overflow: hidden; ">
+                                                    <li class="float-left"><i class="fa fa-star blue-text"></i></li>
+                                                    <li class="float-left"><i class="fa fa-star blue-text"></i></li>
+                                                    <li class="float-left"><i class="fa fa-star blue-text"></i></li>
+                                                    <li class="float-left"><i class="fa fa-star blue-text"></i></li>
+                                                    <li class="float-left"><i class="fa fa-star blue-text"></i></li>
+                                                </ul>
+        
+                                                <!--Card footer-->
+                                                <div class="card-footer pb-0">
+                                                        <div class="row mb-0">
+                                                            <h5 class="mb-0 pb-0 mt-1 font-weight-bold"><span class="red-text"><strong>Rs {{product.stock_record.discounted_price}}</strong></span>
+                                                                <span class="grey-text"><small><s>{{product.stock_record.price_excl_tax}}</s></small></span>
+                                                            </h5>
+        
+                                                            <span class="float-right">
+        
+                                                            <a class="" data-toggle="tooltip" data-placement="top" title="" data-original-title="Add to Cart"><i class="fa fa-shopping-cart ml-3"></i></a>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+        
+        
+                                            </div>
+                                            <!--Card content-->
+        
+                                        </div>
+                                        <!--Card-->
+                                    </div>
+                                    {% endfor %} 
+                        </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
+   
 
-{% endblock content %}
+{% endblock  %}
