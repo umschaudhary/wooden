@@ -82,6 +82,7 @@ def item_detail(request, slug):
         item = qs.first()
     if item:
         cart_obj, new_obj = Cart.objects.new_or_get(request)
+        context['items'] = cart_obj.cart_items.all()
         if request.method == 'POST':
             quantity = request.POST['quantity']
             cart_item = CartItem()
@@ -101,6 +102,7 @@ def item_detail(request, slug):
     context['item'] = item
     context['quantity'] = range(1,item_stock_count+1)
     context['item_count'] = item_stock_count
+   
     
     context['cart'] = cart_obj
 

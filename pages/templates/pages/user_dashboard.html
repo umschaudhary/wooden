@@ -20,7 +20,7 @@
             list-style: none;
         }
         .list--nav li.site-nav__item{
-            border-bottom: 1px solid gainsboro;q
+            border-bottom: 1px solid gainsboro;
             padding:10px;
         }
         .medium-up--hide {
@@ -91,11 +91,8 @@
                                         <li class="site-nav__item">
                                           <a href="/collections/shorts" class="site-nav__link">Shorts</a>
                                         </li>
-                                      
-                                    
                                   </ul>
                                 </div>
-
                               </nav>
 
                 </div>
@@ -106,6 +103,7 @@
                                 <div class="col-lg-4 col-md-12 mb-4">
 
                                         <!--Card-->
+                                        <a href="{% url 'items:detail' product.slug %}">
                                         <div class="card">
         
                                             <!--Card image-->
@@ -157,7 +155,7 @@
         
                                                             <span class="float-right">
         
-                                                            <a class="" data-toggle="tooltip" data-placement="top" title="" data-original-title="Add to Cart"><i class="fa fa-shopping-cart ml-3"></i></a>
+                                                            <a href=" {% url 'items:detail' product.slug %}" class="" data-toggle="tooltip" data-placement="top" title="" data-original-title="Add to Cart"><i class="fa fa-shopping-cart ml-3"></i></a>
                                                             </span>
                                                         </div>
                                                     </div>
@@ -167,6 +165,7 @@
                                             <!--Card content-->
         
                                         </div>
+                                    </a>
                                         <!--Card-->
                                     </div>
                                     {% endfor %} 

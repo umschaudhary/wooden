@@ -80,7 +80,7 @@ def guest_register_view(request):
         email = form.cleaned_data.get("email")
         new_guest_email = GuestEmail.objects.create(email=email)
         request.session['guest_email_id'] = new_guest_email.id
-        return redirect("")
+        return redirect("/")
     return redirect("carts:checkout")
 
 

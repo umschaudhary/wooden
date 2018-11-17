@@ -26,10 +26,10 @@
                     <thead class="thead-light">
                     <tr>
                         <th scope="col">S.N.</th>
-                        <th scope="col">Order</th>
-                        <th>Address</th>
-                        <th>City</th>
-                        <th>Email</th>
+                        <th scope="col">Order ID</th>
+                        <th>E-mail</th>
+                        <th>Total</th>
+                        <th>status</th>
                       
                         <th style="max-width:15%"></th>
                     </tr>
@@ -41,9 +41,9 @@
                             <td scope="row">{{ forloop.counter }}</td>
                             <td>{{ object.order_id }}
                             </td>
-                            <td>{{object.address}}</td>
-                            <td>{{object.city}}</td>
-                            <td>{{object.email}}</td>
+                            <td>{{object.billing_profile}}</td>
+                            <td>{{object.total}}</td>
+                            <td>{{object.status}}</td>
                             
                          <td class='text-right'>
                              <a href="{% url 'company_users:list' object.pk %}" class='btn btn-primary'>Staffs</a>

@@ -20,7 +20,6 @@ def cart(request):
         context['objects'] = cart_items
 
     template_name = 'carts/cart.html'
-    
     return render(request, template_name, context)
 
 
@@ -77,10 +76,8 @@ def checkout(request):
             order_obj.save()
 
         if request.method == "POST":
-            is_done = order_obj.check_done()
-            if is_done:
-                del request.session['cart_id']
-                return redirect("success")
+            del request.session['cart_id']
+            return redirect("success")
 
     context['order'] = order_obj
     context['form'] = login_form
@@ -97,41 +94,10 @@ def success(request):
 
     cart_obj, cart_created = Cart.objects.new_or_get(request)
     billing_profile, billing_profile_created = BillingProfile.objects.new_or_get(request)
-    order_obj = None
-    if cart_created or cart_obj.cart_items.count() == 0:
-        return redirect('carts:cart')
-
-    try:
-        address_instance = Address.objects.get(is_deleted=False,address_type='shipping',billing_profile=billing_profile)
-    
-    except Address.DoesNotExist:
-        address_instance = None
-    except Address.MultipleObjectsReturned:
-        qs = Address.objects.filter(is_deleted=False,address_type='shipping',billing_profile=billing_profile)
-        address_instance = qs.first()
-
-    try:
-        billing_address_instance = Address.objects.get(is_deleted=False,address_type='billing',billing_profile=billing_profile)
-    except Address.DoesNotExist:
-        billing_address_instance = None
-        
-    except Address.MultipleObjectsReturned:
-        qs = Address.objects.filter(is_deleted=False,address_type='billing',billing_profile=billing_profile)
-        billing_address_instance = qs.first()
-
 
     if billing_profile is not None:
         print('billing exist')
         order_obj, new_obj = Order.objects.new_or_get(billing_profile, cart_obj)
-        if address_instance:
-            print(billing_address_instance)
-            order_obj.shipping_address = Address.objects.get(id=address_instance.id)
-        if billing_address_instance:
-            print(billing_address_instance)
-            order_obj.billing_address = Address.objects.get(id=billing_address_instance.id)
-        if address_instance or billing_address_instance:
-            order_obj.save()
-
     context['order'] = order_obj
     template_name = 'success.html'
     return render(request, template_name, context)
