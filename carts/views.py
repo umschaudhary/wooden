@@ -77,6 +77,7 @@ def checkout(request):
 
         if request.method == "POST":
             del request.session['cart_id']
+            del request.session['item_count']
             return redirect("success")
 
     context['order'] = order_obj

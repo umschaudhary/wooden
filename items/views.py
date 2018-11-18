@@ -90,10 +90,11 @@ def item_detail(request, slug):
             cart_item.item = item
             cart_item.quantity = quantity 
             cart_item.save()
-            item.in_cart = True
+            
             item.stock_record.quantity -= int(quantity)
             item.stock_record.save()
             item.save()
+            request.session['item_count'] +=1
             cart_obj.total += cart_item.total
             cart_obj.save()
             messages.success(request, 'Item Added to Cart')

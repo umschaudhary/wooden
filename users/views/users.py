@@ -9,7 +9,7 @@ from django.utils.http import is_safe_url
 
 from users.forms import GuestForm, LoginForm, PasswordChangeForm, \
     RegisterForm
-from users.models import GuestEmail, Sidebar, User
+from users.models import GuestEmail, Sidebar, User, USER_ROLES
 
 
 def login_user(request):
@@ -85,14 +85,20 @@ def guest_register_view(request):
 
 
 def register_page(request):
+    next = request.GET.get('next', None)
     form = RegisterForm(request.POST or None)
     context = {
         "form": form
     }
     if form.is_valid():
-        user = form.save(commit=False)
-        user.save()
-        messages.success(request, 'Conformation Email Has been Sent')
+        data = form.save(commit=False)
+        data.role = USER_ROLES.customer
+        data.save()
+        messages.info(request, "Thanks for registering. You are now logged in.")
+        user = authenticate(email=form.cleaned_data['email'], password=form.cleaned_data['password'])
+        login(request, user)
+        if next:
+            return redirect(next)
         return redirect('/')
 
     return render(request, "users/register.html", context)

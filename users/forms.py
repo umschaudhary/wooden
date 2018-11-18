@@ -11,13 +11,13 @@ class RegisterForm(forms.ModelForm):
     """
     password = forms.CharField(
         label='Password',
-        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Enter your password'}),
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': '','required':'required'}),
         strip=False,
     )
 
     confirm_password = forms.CharField(
         label='Confirm Password',
-        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Enter your password again'}),
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': '','required':'required'}),
         strip=False,
     )
 
@@ -31,16 +31,16 @@ class RegisterForm(forms.ModelForm):
         ]
         widgets = {
           
-            'full_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Full Name'}),
-            'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Enter your email'}),
-            '': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter your '}),
+            'full_name': forms.TextInput(attrs={'class': 'form-control','required':'required', 'placeholder': ''}),
+            'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': '','required':'required'}),
+            
         }
 
     def clean_confirm_password(self):
         password = self.cleaned_data['password']
         confirm_password = self.cleaned_data['confirm_password']
         
-        full_name = self.cleaned_data['last_name']
+        full_name = self.cleaned_data['full_name']
 
         if password and confirm_password and password != confirm_password:
             raise forms.ValidationError('Password mismatch')

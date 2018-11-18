@@ -25,6 +25,7 @@ class CartManager(models.Manager):
             new_obj = True
             print('card Created')
             request.session['cart_id'] = cart_obj.id
+            request.session['item_count'] = 0
         return cart_obj, new_obj
 
     def new_cart(self, user=None):

@@ -163,3 +163,32 @@ class Sidebar(models.Model):
 
     class Meta:
         db_table = 'users_sidebar'
+
+
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, default=None)
+    pic = models.ImageField()
+    address_line_1 = models.CharField(max_length=120)
+    address_line_2 = models.CharField(max_length=120, null=True, blank=True)
+    city = models.CharField(max_length=120)
+    country = models.CharField(max_length=120, default='Nepal')
+    postal_code = models.CharField(max_length=120)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    is_deleted = models.BooleanField(default=False)
+
+    class Meta:
+        db_table = 'users_user_profile'
+
+    def __str__(self):
+        return '{}'.format(self.user.full_name)
+
+    def get_address(self):
+        return "{line1}\n{line2}\n{city}\n{state}, {postal}\n{country}".format(
+            line1=self.address_line_1,
+            line2=self.address_line_2 or "",
+            city=self.city,
+            postal=self.postal_code,
+            country=self.country
+        )
