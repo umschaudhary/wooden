@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load staticfiles %}
 {% block extra_stylesheet %}
 <style>
     .gallery-wrap .img-big-wrap img {
@@ -48,13 +49,18 @@
        
     {% endif %}
     {% endif %}
+    {% empty %}
 
+<div> <a href="#"><img src="{% static 'images/default.jpg' %}" class="img-responsive" ></a></div>
 {% endfor %}
   
 </div> <!-- slider-product.// -->
 
 <div class="img-small-wrap">{% for image in item.item_images.all %}
     <div class="item-gallery"> <img src="{{image.document.url}}" > </div>
+    {% empty %}
+
+    <div class="item-gallery"><img src="{% static 'images/default.jpg' %}"></div>
     {% endfor %}
   </div> 
 

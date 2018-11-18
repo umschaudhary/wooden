@@ -114,6 +114,9 @@
                                                         <img src="{{ i.document.url }}" height="40px" class="img-fluid " alt='product image here'>
                                                     {% endif %}
                                                     {% endif %}
+                                                    {% empty %}
+                                                    <img src="{% static 'images/default.jpg' %}" height="40px" class="img-fluid " alt='product image here'>
+                                                    
                                         {% endfor %}
                                                
                                         
