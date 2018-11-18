@@ -2,7 +2,7 @@ from django import forms
 from django.conf import settings
 from django.contrib.auth import password_validation
 import re
-from .models import User
+from .models import User, UserProfile
 from users.models import USER_ROLES
 
 class RegisterForm(forms.ModelForm):
@@ -181,3 +181,27 @@ class PasswordResetForm(forms.Form):
 class GuestForm(forms.Form):
     email = forms.EmailField()
 
+
+
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = [
+           'address_line_1',
+           'address_line_2',
+           'gender',
+           'pic',
+           'city',
+           'postal_code',
+           'country'
+        ]
+        widgets = {
+          
+            'address_line_1': forms.TextInput(attrs={'class': 'form-control','required':'required', 'placeholder': ''}),
+            'address_line_2': forms.TextInput(attrs={'class': 'form-control','required':'required', 'placeholder': ''}),
+            'gender': forms.Select(attrs={'class': 'form-control','required':'required', 'placeholder': ''}),
+            'city': forms.TextInput(attrs={'class': 'form-control','required':'required', 'placeholder': ''}),
+            'postal_code': forms.TextInput(attrs={'class': 'form-control','required':'required', 'placeholder': ''}),
+            'country': forms.TextInput(attrs={'class': 'form-control','required':'required', 'placeholder': ''}),
+
+        }

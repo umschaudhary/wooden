@@ -104,6 +104,8 @@ def register_page(request):
     return render(request, "users/register.html", context)
 
 
+
+
 def change_sidebar_status(request):
     user = request.user
     if user.is_authenticated :

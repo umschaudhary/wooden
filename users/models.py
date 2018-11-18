@@ -10,6 +10,12 @@ USER_ROLES = Choices(
     'customer',
 )
 
+GENDER_TYPES = Choices(
+    'male',
+    'female',
+    'confidential',
+)
+
 
 class UserManager(BaseUserManager):
     def create_user(self, email, full_name=None, password=None, active=True, staff=False, admin=False):
@@ -169,6 +175,7 @@ class Sidebar(models.Model):
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, default=None)
     pic = models.ImageField()
+    gender = models.CharField(max_length=100, choices=GENDER_TYPES, default=GENDER_TYPES.confidential)
     address_line_1 = models.CharField(max_length=120)
     address_line_2 = models.CharField(max_length=120, null=True, blank=True)
     city = models.CharField(max_length=120)
