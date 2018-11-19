@@ -2,6 +2,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 from items import forms
+import decimal
 
 from carts.models import Cart, CartItem
 from categories.models import Category
@@ -82,7 +83,8 @@ def item_detail(request, slug):
         item = qs.first()
     if item:
         cart_obj, new_obj = Cart.objects.new_or_get(request)
-        context['items'] = cart_obj.cart_items.all()
+        if cart_obj:
+            context['items'] = cart_obj.cart_items.all()
         if request.method == 'POST':
             quantity = request.POST['quantity']
             cart_item = CartItem()
@@ -91,20 +93,33 @@ def item_detail(request, slug):
             cart_item.quantity = quantity 
             cart_item.save()
             
-            item.stock_record.quantity -= int(quantity)
+            item.stock_record.quantity -= decimal.Decimal(quantity)
             item.stock_record.save()
             item.save()
-            request.session['item_count'] +=1
-            cart_obj.total += cart_item.total
-            cart_obj.save()
+
+            request.session['item_count'] = cart_obj.cart_items.all().count()
             messages.success(request, 'Item Added to Cart')
             return redirect('carts:cart')
+    try:
+        data = CartItem.objects.get(item=item,cart=cart_obj)
+        if data:
+            context['data'] = 1
+        
+    except CartItem.MultipleObjectsReturned:
+        data = CartItem.objects.filter(item=item,cart=cart_obj).first()
+        if data:
+            context['data'] = 1
+    except CartItem.DoesNotExist:
+        data = None
+        if data:
+            context['data'] = 1
+        else:
+            context['data'] = 0
+    
 
     context['item'] = item
     context['quantity'] = range(1,item_stock_count+1)
     context['item_count'] = item_stock_count
-   
-    
     context['cart'] = cart_obj
 
     template_name = 'items/item_detail.html'

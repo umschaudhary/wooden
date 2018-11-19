@@ -1,16 +1,20 @@
 
+import json
+
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.http import Http404, HttpResponse
+from django.core import serializers
+from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
 from django.utils.http import is_safe_url
-from users import forms 
-from users.models import  User, GENDER_TYPES , UserProfile
-from django.http import JsonResponse
-import json
-from django.core import serializers
+
+from addresses.models import Address
+from billings.models import BillingProfile, BillingProfileManager
+from users import forms
+from users.models import GENDER_TYPES, User, UserProfile
+
 
 @login_required
 def profile(request):
@@ -43,6 +47,33 @@ def load_profile(request):
     except UserProfile.DoesNotExist:
         profile = None
     data = serializers.serialize('json', [profile,])
+    struct = json.loads(data)
+    data = json.dumps(struct[0])
+    
+    return HttpResponse(data, content_type='application/json; charset=UTF-8')
+
+
+def load_shipping(request):
+    billing_profile, billing_profile_created = BillingProfile.objects.new_or_get(request)
+    
+    if request.user.is_authenticated:
+        try: 
+            profile = BillingProfile.objects.get(email=request.user.email)
+        except BillingProfile.DoesNotExist:
+            profile = None
+    else:
+        try: 
+            profile = BillingProfile.objects.get(email=request.session['guest_email'])
+        except BillingProfile.DoesNotExist:
+            profile = None
+    try:
+        address = Address.objects.get(address_type='shipping',billing_profile=profile)
+    except Address.MultipleObjectsReturned:
+        address = Address.objects.filter(address_type='shipping',billing_profile=profile).last()
+    except Address.DoesNotExist:
+        address = None
+
+    data = serializers.serialize('json', [address,])
     struct = json.loads(data)
     data = json.dumps(struct[0])
     

@@ -89,13 +89,12 @@
 		<div class="col-sm-5">
 			<dl class="param param-inline">
 			 
-              {% if not item.in_cart %}
+              {% if data == 0 %}
               {% if item_count > 0 %} 
               <dt>Quantity: </dt>
                       <form action="" method="POST">
                           {% csrf_token %}
                           <select name="quantity" id="id_quantity">
-                          
                               {% for i in quantity %}
                               <option value="{{i}}">{{i}}</option>
                               {% endfor %}
@@ -105,7 +104,6 @@
                           
                             <p class="text-danger">Item Out Of Stock</p>
                            
-                          
                       </form>
               {% endif %}
 

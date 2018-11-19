@@ -1,0 +1,172 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% block  content %}
+
+    <div class="container-fluid">
+        <div class="row">
+
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissable">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
+                <strong></strong> {{ message }}
+
+            </div>
+            {% endfor %}
+
+    
+                            <div class="col-lg-6 offset-lg-3">
+    
+                                    <div class="card">
+                                            <div class="card-body">
+                                                <h5>Shipping Address : </h5>
+                             
+                                                <form id='id_shipping_form' method='POST'> 
+                                                    {% csrf_token %}
+                                            
+                                                    <input type='hidden' name='next' value='{{ request.build_absolute_uri  }}'/>
+                                                    <input type='hidden' name='address_type' value='shipping'/>
+                                                    <div class=" form-group row">
+                                                            <span class="col-lg-4 col-md-2 col-sm-2 col-1"><span
+                                                                    class=" float-lg-right float-md-right float-sm-right float-right"> </span></span>
+                            
+                                                            {% if address_form.address_line_1.errors %}
+                                                                <div class="col-lg-4 col-md-2 col-sm-2 col-4">
+                                                                    {{ address_form.address_line_1 | add_class:"is-invalid" }}
+                                                                    <div class="invalid-feedback">
+                                                                        {{ address_form.address_line_1.errors }}
+                                                                    </div>
+                                                                </div>
+                                                            {% else %}
+                            
+                                                                <div class="col-lg-10 offset-lg-1 col-md-8 col-sm-8 col-12">
+                                                                        {% render_field address_form.address_line_1 class='form-control'  placeholder='' required='required' %}
+                                                                    <label for="" class="">{{address_form.address_line_1.label}} <span
+                                                                        class="text-danger">*</span></label>
+                                                                </div>
+                                                            {% endif %}
+                                                        </div>
+                    
+                                                        <div class=" form-group row">
+                                                                <span class="col-lg-4 col-md-2 col-sm-2 col-1"><span
+                                                                        class=" float-lg-right float-md-right float-sm-right float-right"> </span></span>
+                                
+                                                                {% if address_form.address_line_2.errors %}
+                                                                    <div class="col-lg-4 col-md-2 col-sm-2 col-4">
+                                                                        {{ address_form.address_line_2 | add_class:"is-invalid" }}
+                                                                        <div class="invalid-feedback">
+                                                                            {{ address_form.address_line_2.errors }}
+                                                                        </div>
+                                                                    </div>
+                                                                {% else %}
+                                
+                                                                    <div class="col-lg-10 offset-lg-1 col-md-8 col-sm-8 col-12">
+                                                                            {% render_field address_form.address_line_2 class='form-control'  placeholder='' required='required' %}
+                                                                        <label for="" class="">{{address_form.address_line_2.label}} </label>
+                                                                    </div>
+                                                                {% endif %}
+                                                        </div>
+
+                                                        <div class=" form-group row">
+                                                                <span class="col-lg-4 col-md-2 col-sm-2 col-1"><span
+                                                                        class=" float-lg-right float-md-right float-sm-right float-right"> </span></span>
+                                
+                                                                {% if address_form.city.errors %}
+                                                                    <div class="col-lg-4 col-md-2 col-sm-2 col-4">
+                                                                        {{ address_form.city | add_class:"is-invalid" }}
+                                                                        <div class="invalid-feedback">
+                                                                            {{ address_form.city.errors }}
+                                                                        </div>
+                                                                    </div>
+                                                                {% else %}
+                                
+                                                                    <div class="col-lg-10 offset-lg-1 col-md-8 col-sm-8 col-12">
+                                                                            {% render_field address_form.city class='form-control'  placeholder='' required='required' %}
+                                                                        <label for="" class="">{{address_form.city.label}} </label>
+                                                                    </div>
+                                                                {% endif %}
+                                                        </div>
+
+                                                        <div class=" form-group row">
+                                                                <span class="col-lg-4 col-md-2 col-sm-2 col-1"><span
+                                                                        class=" float-lg-right float-md-right float-sm-right float-right"> </span></span>
+                                
+                                                                {% if address_form.country.errors %}
+                                                                    <div class="col-lg-4 col-md-2 col-sm-2 col-4">
+                                                                        {{ address_form.country | add_class:"is-invalid" }}
+                                                                        <div class="invalid-feedback">
+                                                                            {{ address_form.country.errors }}
+                                                                        </div>
+                                                                    </div>
+                                                                {% else %}
+                                
+                                                                    <div class="col-lg-10 offset-lg-1 col-md-8 col-sm-8 col-12">
+                                                                            {% render_field address_form.country class='form-control'  placeholder='Country' required='required' %}
+                                                                    
+                                                                    </div>
+                                                                {% endif %}
+                                                        </div>
+                                                        <div class=" form-group row">
+                                                                <span class="col-lg-4 col-md-2 col-sm-2 col-1"><span
+                                                                        class=" float-lg-right float-md-right float-sm-right float-right"> </span></span>
+                                
+                                                                {% if address_form.postal_code.errors %}
+                                                                    <div class="col-lg-4 col-md-2 col-sm-2 col-4">
+                                                                        {{ address_form.postal_code | add_class:"is-invalid" }}
+                                                                        <div class="invalid-feedback">
+                                                                            {{ address_form.postal_code.errors }}
+                                                                        </div>
+                                                                    </div>
+                                                                {% else %}
+                                
+                                                                    <div class="col-lg-10 offset-lg-1 col-md-8 col-sm-8 col-12">
+                                                                            {% render_field address_form.postal_code class='form-control'  placeholder='' required='required' %}
+                                                                        <label for="" class="">{{address_form.postal_code.label}} </label>
+                                                                    </div>
+                                                                {% endif %}
+                                                        </div>
+                      
+                                                            <div class=" form-group row">
+                                                                    <div class=" offset-lg-1 col-lg-10 col-md-8 col-sm-8 col-12">
+                                                                        <button type="submit" class='btn btn-block btn-lg btn-primary' name="submit">Continue</button>
+                                                                        {% if request.user.is_authenticated  and request.user.userprofile %}
+                                                                            <button id="id_load_profile" class="btn btn-block btn-lg btn-secondary">Load From Profile</button>
+                                                                            {% endif %}
+                                                                        
+                                                                    </div>
+                                                           
+                                                         </div>
+                                                 </form>
+                                            </div>
+                                        </div>
+                            </div>
+                           
+        </div>
+
+    </div>
+
+    {% block extra_script %}
+    <script>
+        $(function(){
+                $('#id_load_profile').click(function(e){
+                    e.preventDefault();
+                    url = '/users/load_profile/'
+                    $.ajax({
+                            url: url,
+                            dataType : 'json',
+                            cache: false,
+                            success: function(data) {
+                                $('#id_address_line_1').val(data.fields.address_line_1)
+                                $('#id_address_line_2').val(data.fields.address_line_2)
+                                $('#id_city').val(data.fields.city)
+                                $('#id_country').val(data.fields.country)
+                                $('#id_postal_code').val(data.fields.postal_code)
+                                console.log(data)
+                            }
+                        });
+                });
+        })
+    </script>
+
+    {% endblock %}
+
+{% endblock %}

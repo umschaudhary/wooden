@@ -15,21 +15,19 @@ class Address(models.Model):
     address_line_2 = models.CharField(max_length=120, null=True, blank=True)
     city = models.CharField(max_length=120)
     country = models.CharField(max_length=120, default='Nepal')
-    
     postal_code = models.CharField(max_length=120)
     is_deleted = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return str(self.billing_profile)
+        return '{}-{}'.format(self.billing_profile, self.address_type)
 
     def get_address(self):
-        return "{line1}\n{line2}\n{city}\n{state}, {postal}\n{country}".format(
+        return "{line1}\n{line2}\n{city}\n, {postal}\n{country}".format(
             line1=self.address_line_1,
             line2=self.address_line_2 or "",
             city=self.city,
-            state=self.state,
             postal=self.postal_code,
             country=self.country
         )

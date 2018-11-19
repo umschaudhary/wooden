@@ -71,7 +71,6 @@ class Cart(models.Model):
 #     if instance.sub_total != total:
 #         instance.sub_total = total
 #         instance.save() 
-
 # post_save.connect(post_save_cart_receiver, sender=Cart)
 
 
