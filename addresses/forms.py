@@ -11,7 +11,7 @@ class AddressForm(forms.ModelForm):
             'address_line_2',
             'city',
             'country',
-            'state',
+            
             'postal_code'
         ]
 
@@ -19,6 +19,6 @@ class AddressForm(forms.ModelForm):
             'address_line_1' : forms.TextInput(attrs={'class':'form-control'}),
             'address_line_2' : forms.TextInput(attrs={'class':'form-control'}),
             'city' : forms.TextInput(attrs={'class':'form-control'}),
-            'state' : forms.TextInput(attrs={'class':'form-control'}),
+            
             'postal_code' : forms.TextInput(attrs={'class':'form-control'}),
         }

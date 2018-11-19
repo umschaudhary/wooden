@@ -8,18 +8,20 @@ from django.shortcuts import redirect, render
 from django.utils.http import is_safe_url
 from users import forms 
 from users.models import  User, GENDER_TYPES , UserProfile
-
+from django.http import JsonResponse
+import json
+from django.core import serializers
 
 @login_required
 def profile(request):
     context = {}
     try: 
         profile = UserProfile.objects.get(user=request.user)
-        print('ayo hai pro')
+        print(profile.address_line_1)
     except UserProfile.DoesNotExist:
         profile = None
     
-    form = forms.ProfileForm(request.POST or None,request.FILES ,instance=profile)
+    form = forms.ProfileForm(request.POST or None,request.FILES or None ,instance=profile or None)
     if request.method == 'POST':
         if form.is_valid():
             data = form.save(commit=False)
@@ -32,3 +34,16 @@ def profile(request):
     template_name = 'users/profile.html'
     return render(request, template_name, context)
 
+@login_required
+def load_profile(request):
+    context = {}
+    try: 
+        profile = UserProfile.objects.get(user=request.user)
+        print(profile.address_line_1)
+    except UserProfile.DoesNotExist:
+        profile = None
+    data = serializers.serialize('json', [profile,])
+    struct = json.loads(data)
+    data = json.dumps(struct[0])
+    
+    return HttpResponse(data, content_type='application/json; charset=UTF-8')

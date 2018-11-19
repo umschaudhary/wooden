@@ -203,5 +203,4 @@ class ProfileForm(forms.ModelForm):
             'city': forms.TextInput(attrs={'class': 'form-control','required':'required', 'placeholder': ''}),
             'postal_code': forms.TextInput(attrs={'class': 'form-control','required':'required', 'placeholder': ''}),
             'country': forms.TextInput(attrs={'class': 'form-control','required':'required', 'placeholder': ''}),
-
         }

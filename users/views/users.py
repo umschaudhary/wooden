@@ -86,6 +86,8 @@ def guest_register_view(request):
 
 def register_page(request):
     next = request.GET.get('next', None)
+    if request.user.is_authenticated:
+        return redirect('/')
     form = RegisterForm(request.POST or None)
     context = {
         "form": form
@@ -99,7 +101,7 @@ def register_page(request):
         login(request, user)
         if next:
             return redirect(next)
-        return redirect('/')
+        return redirect('users:profile')
 
     return render(request, "users/register.html", context)
 

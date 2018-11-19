@@ -15,7 +15,7 @@ class Address(models.Model):
     address_line_2 = models.CharField(max_length=120, null=True, blank=True)
     city = models.CharField(max_length=120)
     country = models.CharField(max_length=120, default='Nepal')
-    state = models.CharField(max_length=120)
+    
     postal_code = models.CharField(max_length=120)
     is_deleted = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
