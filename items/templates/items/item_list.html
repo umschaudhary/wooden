@@ -49,9 +49,9 @@
                             <td>{{object.stock_record.quantity}}</td>
                             
                          <td class='text-right'>
-                             {% comment %} <a href="{% url 'company_users:list' object.pk %}" class='btn btn-primary'>Staffs</a>
+                             <a href="{% url 'items:update' object.slug %}" class='btn btn-primary'>Edit</a>
                         
-                            </td>  {% endcomment %}
+                            </td>
 
                         </tr>
                     {% empty %}

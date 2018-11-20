@@ -89,6 +89,7 @@ def login_admin(request):
                     return redirect('/')
                 else:
                     messages.error(request, 'Inactive Account, Contact Admin')
+                    
     return render(request, 'users/login.html', context)
 
 

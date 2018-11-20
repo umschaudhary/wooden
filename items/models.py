@@ -79,7 +79,7 @@ pre_save.connect(stock_discount_price_calculation, sender=StockRecord)
 
 class ItemImage(models.Model):
     item = models.ForeignKey(Item, related_name="item_images", on_delete=models.DO_NOTHING)
-    document = models.FileField()
+    document = models.ImageField()
 
     class Meta:
         db_table = "items_item_image"

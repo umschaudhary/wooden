@@ -1,12 +1,14 @@
+import decimal
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.forms.models import modelformset_factory
 from django.shortcuts import redirect, render
-from items import forms
-import decimal
 
 from carts.models import Cart, CartItem
 from categories.models import Category
-from items.models import Item
+from items import forms
+from items.forms import BaseItemModelFormSet
+from items.models import Item, ItemImage
 from users.decorators import provider_required
 
 
@@ -52,8 +54,10 @@ def item_add(request,pk):
     if category:
         form = forms.ItemCreateForm(data=request.POST or None)
         stockForm = forms.StockForm(data=request.POST or None)
+        ItemFormSet = modelformset_factory(model=ItemImage, form=forms.ItemImageForm, formset=BaseItemModelFormSet)
+        formset = ItemFormSet(request.POST or None,request.FILES or None, queryset=Item.objects.none())
         if request.method == 'POST':
-            if form.is_valid() and stockForm.is_valid():
+            if form.is_valid() and stockForm.is_valid() and formset.is_valid():
                 data = form.save(commit=False)
                 data.provider = request.user.company_admin.company
                 data.category = category
@@ -61,10 +65,18 @@ def item_add(request,pk):
                 stock = stockForm.save(commit=False)
                 stock.item = data
                 stock.save()
+
+                for image_form in formset.forms:
+                    cd = image_form.cleaned_data
+                    item_image = image_form.save(commit=False)
+                    item_image.item = data
+                    item_image.save()
+
                 messages.success(request, 'Item Created')
                 return redirect('items:list', category.pk)
     context['category'] = category
     context['form'] = form
+    context['formset'] = formset
     context['stock_form'] = stockForm
     template_name = 'items/item_add.html'
     return render(request, template_name, context )
@@ -125,3 +137,69 @@ def item_detail(request, slug):
     template_name = 'items/item_detail.html'
     return render(request, template_name, context)
 
+
+
+@login_required
+@provider_required
+def item_update(request,slug):
+    context = {}
+    try:
+        item = Item.objects.get(is_deleted=False, slug=slug)
+        item_stock_count = item.stock_record.quantity
+    except Item.DoesNotExist:
+        messages.error(request, 'Item Not Found ')
+        return redirect('/')
+    except Item.MultipleObjectsReturned:
+        qs = Item.objects.filter(slug=slug, is_deleted=False)
+        item = qs.first()
+    if item:
+        try:
+            stock_record = item.stock_record
+        except:
+            stock_record = None
+
+    form = forms.ItemCreateForm(data=request.POST or None, instance=item)
+    stockForm = forms.StockForm(data=request.POST or None, instance=stock_record)
+    ItemFormSet = modelformset_factory(model=ItemImage, form=forms.ItemImageForm, formset=BaseItemModelFormSet)
+    formset = ItemFormSet(request.POST or None,request.FILES or None, queryset=ItemImage.objects.none())
+    if request.method == 'POST':
+        if form.is_valid() and stockForm.is_valid() and formset.is_valid():
+            form.save()
+            stockForm.save()
+            for image_form in formset.forms:
+                cd = image_form.cleaned_data
+                item_image = image_form.save(commit=False)
+                item_image.item = item
+                item_image.save()
+
+            messages.success(request, 'Item Updated')
+            return redirect('items:list', item.category.pk)
+    images = ItemImage.objects.filter(item=item)
+    context['images'] = images
+    context['stock_record']  = stock_record
+    context['item'] = item
+    context['form'] = form
+    context['formset'] = formset
+    context['stock_form'] = stockForm
+    template_name = 'items/item_update.html'
+    return render(request, template_name, context)
+
+@login_required
+@provider_required
+def image_remove(request, pk):
+    context = {}
+    try:
+        image = ItemImage.objects.get(pk=pk)
+    except ItemImage.DoesNOtExist:
+        image = None
+        return redirect('/')
+    except ItemImage.MultipleObjectsReturned:
+        qs = ItemImage.objects.filter(pk=pk)
+        if qs:
+            image = qs.last()
+
+    if image :
+        image.delete()
+        messages.success(request, 'Item Updated')
+        
+    return redirect('items:update',image.item.slug)

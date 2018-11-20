@@ -1,7 +1,24 @@
 from django import forms
 
-from items.models import Item, StockRecord
+from items.models import Item, StockRecord ,ItemImage
 from carts.models import CartItem, Cart
+from django.forms import BaseModelFormSet, BaseFormSet
+
+
+class BaseItemModelFormSet(BaseModelFormSet):
+    def clean(self):
+        super(BaseItemModelFormSet, self).clean()
+
+class BaseItemFormSet(BaseFormSet):
+    def save(self, commit=True):
+        for form in self.forms:
+            print(form.cleaned_data)
+            name = form.cleaned_data.get('name')
+            description = form.cleaned_data.get('description', '')
+
+            item = Item(name=name,description=description)
+            item.save()
+        return self.forms
 
 
 class ItemCreateForm(forms.ModelForm):
@@ -73,4 +90,12 @@ class QuantityForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         
+
+class ItemImageForm(forms.ModelForm):
+    class Meta:
+        model = ItemImage
+        fields = [
+            'document',
+        ]
+
 

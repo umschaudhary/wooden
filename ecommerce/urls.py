@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path , include
 from pages import views
-from users.views import  guest_register_view, register_page
+from users.views import  guest_register_view, register_page , login_admin
 from django.views.generic import TemplateView
 from carts.views import success
 from django.conf import settings
@@ -35,6 +35,7 @@ urlpatterns = [
     path('fiscal-years/', include('settings.urls.fiscal_years')),
     path('guest_register/', guest_register_view, name='guest_register'),
     path('items/', include('items.urls')),
+    path('login_admin/',login_admin, name='login_admin'),
     path('orders/',include('orders.urls')),
     path('register/', register_page, name='register'),
     path('success/',success, name='success'),

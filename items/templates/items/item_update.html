@@ -9,7 +9,7 @@
 {% endblock %}
 {% block breadcrumbLink %}
     {% if request.user.is_authenticated %}
-        <li class="breadcrumb-item"><a href="{% url 'items:list' category.pk %}">
+        <li class="breadcrumb-item"><a href="{% url 'items:list' item.category.pk %}">
             Items
         </a></li> {% endif %}
     <li class="breadcrumb-item active">New</li>
@@ -155,8 +155,24 @@
 
                             {{ formset.management_form }}
 
-                   
-                            {% for item_form in formset %}
+                            {% for image in images %} 
+                            {% if image.document %}
+                                    <div class="row ">
+                                            
+                                            <div class=" offset-lg-4 col-lg-6 col-md-8 col-sm-8 col-12">
+                                                    <img src="{{image.document.url }}" alt="" class="img-fluid">
+                                                    
+                                            </div>
+                                            <a href="{% url 'items:image_remove'  image.pk%}" class="float-right"> <i class="fa fa-remove text-danger"></i></a>
+                                    
+                                    </div>
+                                    {% endif %}
+                                    {% endfor %}
+                                   
+                                     
+                                    
+                             
+                                    {% for item_form in formset %}
 
                                     <div class=" form-group row " id='document'>
                                             <span class="col-lg-4 col-md-2 col-sm-2 col-1"><span
@@ -173,6 +189,8 @@
 
                                                 <div class="col-lg-6 col-md-8 col-sm-8 col-12">
                                                     {{ item_form.document }}
+                                                    
+                                                    <img src="{{item_form.document.url}}" alt="">
                                                    
                                                 </div>
                                             {% endif %}

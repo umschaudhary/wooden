@@ -45,7 +45,7 @@ Login User | {{block.super}}
                                     <div class="login-form-wrap">
                                         <div class="row">
                                             <div class="col-md-12">
-                                            <form method='POST' action='{% if action_url %}{{ action_url }}{% else %}{% url "users:login_user" %}{% endif %}'>
+                                            <form method='POST' action='{% if action_url %}{{ action_url }}{% endif %}'>
                                                 {% csrf_token %}
                                                     {% if next_url %}
                                                         <input type='hidden' name='next' value='{{ next_url }}'/>
