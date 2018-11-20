@@ -108,7 +108,8 @@ section {
 
                       <td class="text-center text-md-left">
                           
-                        <a href="{% url 'carts:item_quantity_minus' product.pk %} "class="btn btn-sm btn-warning minus-button" name='minus_button' style='color:white;' data-toggle="tooltip" data-placement="top" title="" data-original-title="-1">-</a>
+                        <a href="{% url 'carts:item_quantity_minus' product.pk %} "class="btn btn-sm btn-warning minus-button {% if product.quantity == 1 %} disabled  {% endif %}" name='minus_button' style='color:white;' data-toggle="tooltip" data-placement="top" title="" data-original-title="-1">-</a>
+                       
                            <button class="btn " style="box-shadow:none;font-size:16px;color:black;">{{product.quantity}}</button>
                 
                         <a href="{% url 'carts:item_quantity_plus' product.pk %}" class="btn btn-sm btn-primary add-button" id='id_add_button' style="color:white" data-toggle="tooltip" data-placement="top" title="" data-original-title="+1">+</a>
@@ -130,7 +131,7 @@ section {
                     <!-- Fourth row -->
                     <tr>
                       <td colspan="3">
-                          <a  class="btn btn-primary" href='/'>Continue Shopping
+                          <a  class="btn btn-primary btn-lg font-17" href='/'> <i class="fa fa-chevron-left"></i> Continue Shopping
                           </a>
                       </td>
                       <td>
@@ -145,7 +146,8 @@ section {
                       </td>
                       <td colspan="3" class="text-right">
                         
-                        <a href="{% url 'addresses:shipping_address' %}" class="btn btn-success">Proceed Checkout
+                        <a href="{% url 'addresses:shipping_address' %}" class="btn btn-lg btn-success font-17">Proceed Checkout
+                          <i class="fa fa-chevron-right"></i>
                         </a>
                       </td>
                     </tr>

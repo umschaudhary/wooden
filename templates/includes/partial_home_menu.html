@@ -7,19 +7,32 @@
         </button>
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
                 <ul class="navbar-nav mr-auto">
-                  
                 </ul>
                
                 <ul class="navbar-nav ">
-                    
+                        <li class="">
+                                <form method='GET' action="{% url 'search_products' %}" class="form ">
+    
+                                        <div class='input-group'>
+                                            <input class="form-control" type="text" placeholder="Search" name='q' aria-label="Search"
+                                                   value='{{ request.GET.q }}'>
+                                            <span class='input-group-btn'>
+                                            <button class="btn btn-success btn-lg" type="submit">Search</button>
+                                        </span>
+                                        </div>
+                                    </form>
+                        </li>
                     <li class="nav-item">
                         <a href="{% url 'carts:cart' %}" style="color:white;">
                             <i class="fa fa-cart-plus fa-2x"></i>
                             <span class="badge badge-red">{% if not request.session.item_count == 0%} {{request.session.item_count}}{% else %} {% endif %}</span>
                         </a>
                     </li>
-
+                    <li>
+                    </li>
+                    {% if request.user.is_authenticated %}
                         <li class="nav-item dropdown">
                                 <a style="padding: 0px;
                                         padding-right: 7px;
@@ -35,6 +48,8 @@
                                   <a class="dropdown-item" href="#">Logout</a>
                                 </div>
                               </li>
+                             
+                              {% endif %}
                               
                               
                     </ul>

@@ -49,7 +49,7 @@ pre_save.connect(item_pre_save_receiver, sender=Item)
 class StockRecord(models.Model):
     item = models.OneToOneField(Item, related_name='stock_record', on_delete=models.DO_NOTHING)
     price_excl_tax = models.DecimalField(max_digits=19, decimal_places=2)
-    discount_percentage = models.DecimalField(max_digits=19, decimal_places=2)
+    discount_percentage = models.DecimalField(max_digits=19, decimal_places=2, default=0)
     discounted_price = models.DecimalField(max_digits=19, decimal_places=2, blank=True, null=True)
     quantity = models.PositiveIntegerField()
     is_deleted = models.BooleanField(default=False)
@@ -67,9 +67,11 @@ class StockRecord(models.Model):
 def stock_discount_price_calculation(sender, instance , *args, **kwargs):
     price = instance.price_excl_tax
     discount_percent = instance.discount_percentage
-    if discount_percent:
+    if not discount_percent == 0:
         discount = (discount_percent/100)*price
         instance.discounted_price = price - discount
+    else:
+        instance.discounted_price = price
 
 pre_save.connect(stock_discount_price_calculation, sender=StockRecord)
 

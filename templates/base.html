@@ -34,7 +34,7 @@
         {% include 'includes/partial_home_menu.html' %}
     {% endif %}
 
-    <section class=" ">
+    <section class="{% if request.user.is_authenticated and request.user.is_admin or request.user.is_provider %} content {% endif %}">
            
             {% block breadcrumbHead %}
                 <div class="container-fluid ">
