@@ -23,7 +23,15 @@ class BillingProfileManager(models.Manager):
         elif guest_email_id is not None:
 
             'guest user checkout; auto reloads payment stuff'
-            guest_email_obj = GuestEmail.objects.get(id=guest_email_id)
+            try:
+                guest_email_obj = GuestEmail.objects.get(id=guest_email_id)
+            except GuestEmail.MultipleObjectsReturned:
+                qs = GuestEmail.objects.filter(id=guest_email_id)
+                if qs:
+                    guest_email_obj = qs.last()
+            except GuestEmail.DoesNotExist:
+                guest_email_obj = None
+
 
             obj, created = self.model.objects.get_or_create(
                 email=guest_email_obj.email)

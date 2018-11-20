@@ -1,8 +1,9 @@
 import json
-from django.db.models import Sum
 
+import decimal
 from django.contrib import messages
 from django.core import serializers
+from django.db.models import Sum
 from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse
@@ -11,9 +12,9 @@ from addresses.forms import AddressForm
 from addresses.models import Address
 from billings.models import BillingProfile
 from carts.models import Cart, CartItem
-from orders.models import Order
+from orders.models import Order, OrderItem
 from users.forms import GuestForm, LoginForm
-import decimal
+
 
 # Create your views here.
 
@@ -33,14 +34,13 @@ def cart(request):
         cart_obj.save()
         
 
- 
     template_name = 'carts/cart.html'
     return render(request, template_name, context)
 
 
 def checkout(request):
     context = {}
-
+    print('url = ',request.build_absolute_uri)
     cart_obj, cart_created = Cart.objects.new_or_get(request)
     billing_address_id = request.session.get('billing_address_id', None)
     shipping_address_id = request.session.get('shipping_address_id', None)
@@ -69,14 +69,22 @@ def checkout(request):
         if shipping_address_id:
             print(shipping_address_id)
             order_obj.shipping_address = Address.objects.get(id=shipping_address_id)
-            del request.session["shipping_address_id"]
         if billing_address_id:
             print(billing_address_id)
             order_obj.billing_address = Address.objects.get(id=billing_address_id)
-            del request.session["billing_address_id"]
         if billing_address_id or shipping_address_id:
             order_obj.save()
-            del request.session['cart_id']
+
+            order_item = OrderItem()
+            for item in cart_obj.cart_items.all():
+                order_item = OrderItem()
+                order_item.order = order_obj
+                order_item.item = item.item
+                order_item.quantity = item.quantity
+                order_item.total = item.total
+                order_item.save()
+                
+            cart_obj.cart_items.all().delete()
             del request.session['item_count']
             return redirect("success")
 

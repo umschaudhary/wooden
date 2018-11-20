@@ -45,8 +45,16 @@ Login User | {{block.super}}
                                     <div class="login-form-wrap">
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <form class="login-form" method="POST">
+                                            <form method='POST' action='{% if action_url %}{{ action_url }}{% else %}{% url "users:login_user" %}{% endif %}'>
+                                                {% csrf_token %}
+                                                    {% if next_url %}
+                                                        <input type='hidden' name='next' value='{{ next_url }}'/>
+                                                    {% endif %}
+
                                                     {% csrf_token %}
+                                                {% if next %}
+                                                        <input type="hidden" name="next" value="{{ next }}" />
+                                                {% endif %}
                                                     <div class="form-group {% if form.email.errors %}has-error{% endif %}">
                                                         <div class="input-group input-group-sm">
                                                             <!--<span class="input-group-addon">
@@ -59,8 +67,6 @@ Login User | {{block.super}}
                                                         </div>
                                                     </div>
                                                     
-
-
 
                                                     <div class="form-group {% if form.password.errors %}has-error{% endif %}">
                                                         <div class="input-group input-group-sm">

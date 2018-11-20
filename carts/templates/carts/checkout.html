@@ -18,39 +18,9 @@
                                 <div class="card">
                                     <div class="card-body">
                                         <h5>Continue as Guest : </h5>
-                                        {% url "guest_register" as action_url %}
-                                        <form method='POST' action='{% if action_url %}{{ action_url }}{% else %}{% url "login" %}{% endif %}'>
-                                                {% csrf_token %}
-
-                                                    <div class=" form-group row">
-                                                        <span class="col-lg-4 col-md-2 col-sm-2 col-1"><span
-                                                                class=" float-lg-right float-md-right float-sm-right float-right"> </span></span>
-                        
-                                                        {% if guest_form.email.errors %}
-                                                            <div class="col-lg-4 col-md-2 col-sm-2 col-4">
-                                                                {{ guest_form.email | add_class:"is-invalid" }}
-                                                                <div class="invalid-feedback">
-                                                                    {{ guest_form.email.errors }}
-                                                                </div>
-                                                            </div>
-                                                        {% else %}
-                        
-                                                            <div class="col-lg-10 offset-lg-1 col-md-8 col-sm-8 col-12">
-                                                                    {% render_field guest_form.email class='form-control'  placeholder='' required='required' %}
-                                                                <label for="" class="">{{guest_form.email.label}} <span
-                                                                    class="text-danger">*</span></label>
-                                                            </div>
-                                                        {% endif %}
-                                                    </div>
-
-                                    <div class=" form-group row">
-                                        <div class=" offset-lg-1 col-lg-8 col-md-8 col-sm-8 col-12">
-                                            <button type="submit" class='btn btn-submit btn-lg btn-primary' name="submit">Continue
-                                                
-                                            </button>
-                                        </div>
-                                    </div>
-                                            </form>
+                                        {% url "guest_register" as guest_register_url %}
+                                         {% include 'carts/snippets/guestform.html' with form=guest_form next_url=request.build_absolute_uri action_url=guest_register_url %}
+                                    
                                     </div>
                                 </div>
                             </div>
@@ -59,65 +29,14 @@
                                     <div class="card">
                                             <div class="card-body">
                                                 <h5>Login : </h5>
-                                                <form method='POST' action='{% if action_url %}{{ action_url }}{% else %}{% url "users:login_user" %}{% endif %}'> 
-                                                    {% csrf_token %}
-                                                    <div class=" form-group row">
-                                                            <span class="col-lg-4 col-md-2 col-sm-2 col-1"><span
-                                                                    class=" float-lg-right float-md-right float-sm-right float-right"> </span></span>
-                                                            {% if form.email.errors %}
-                                                                <div class="col-lg-4 col-md-2 col-sm-2 col-4">
-                                                                    {{ form.email | add_class:"is-invalid" }}
-                                                                    <div class="invalid-feedback">
-                                                                        {{ form.email.errors }}
-                                                                    </div>
-                                                                </div>
-                                                            {% else %}
-                            
-                                                                <div class="col-lg-10 offset-lg-1 col-md-8 col-sm-8 col-12">
-                                                                        {% render_field form.email class='form-control'  placeholder='' required='required' %}
-                                                                    <label for="" class="">{{form.email.label}} <span
-                                                                        class="text-danger">*</span></label>
-                                                                </div>
-                                                            {% endif %}
-                                                        </div>
-
-                                                        <div class=" form-group row">
-                                                                <span class="col-lg-4 col-md-2 col-sm-2 col-1"><span
-                                                                        class=" float-lg-right float-md-right float-sm-right float-right"> </span></span>
-                                
-                                                                {% if form.password.errors %}
-                                                                    <div class="col-lg-4 col-md-2 col-sm-2 col-4">
-                                                                        {{ form.password | add_class:"is-invalid" }}
-                                                                        <div class="invalid-feedback">
-                                                                            {{ form.password.errors }}
-                                                                        </div>
-                                                                    </div>
-                                                                {% else %}
-                                
-                                                                    <div class="col-lg-10 offset-lg-1 col-md-8 col-sm-8 col-12">
-                                                                            {% render_field form.password class='form-control'  placeholder='' required='required' %}
-                                                                        <label for="" class="">{{form.password.label}} <span
-                                                                            class="text-danger">*</span></label>
-                                                                    </div>
-                                                                {% endif %}
-                                                            </div>
-                                                            <div class=" form-group row">
-                                                                    <div class=" offset-lg-1 col-lg-8 col-md-8 col-sm-8 col-12">
-                                                                        <button type="submit" class='btn btn-lg btn-primary' name="submit">Continue
-                                                                    
-                                                                        </button>
-                                                                    </div>
-                                                                    <div class=" ">
-                                                                            <a href="" class="btn btn-success btn-lg ">Register Now </a>
-                                                                        </div>
-                                                                </div>
-                                                </form>
+                                                
+                                                {% include 'carts/snippets/loginform.html' with form=form next_url=request.build_absolute_uri %}
                                             </div>
                                         </div>
                             </div>
                 {% else %}
 
-                           
+
                                 <div class="col-lg-8 offset-lg-2">
                     
                                         <div class="card">

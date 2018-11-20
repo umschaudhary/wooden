@@ -9,21 +9,27 @@ from django.contrib import messages
 
 def shipping_address(request):
     context = {}
-   
     shipping_address_id = request.session.get('shipping_address_id', None)
     billing_profile, billing_profile_created = BillingProfile.objects.new_or_get(request)
-
-    if billing_profile_created:
-        return redirect('carts:checkout')
     try:
-        address_instance = Address.objects.get(is_deleted=False,address_type='shipping',billing_profile=billing_profile)
+        if request.user.is_authenticated:
+            address_instance = Address.objects.get(is_deleted=False,address_type='shipping',billing_profile=billing_profile)
+        else:
+            address_instance = Address.objects.get(is_deleted=False,address_type='shipping',billing_profile=billing_profile, id=shipping_address_id)
+
     except Address.DoesNotExist:
         address_instance = None
     except Address.MultipleObjectsReturned:
-        qs = Address.objects.filter(is_deleted=False,address_type='shipping',billing_profile=billing_profile)
-        address_instance = qs.last()
+        if request.user.is_authenticated:
+            qs = Address.objects.filter(is_deleted=False,address_type='shipping',billing_profile=billing_profile)
+            address_instance = qs.last()
+        else:
+            qs = Address.objects.filter(is_deleted=False,address_type='shipping',billing_profile=billing_profile, id=shipping_address_id)
+            address_instance = qs.last()
+
 
     form = AddressForm(request.POST or None, instance=address_instance or None)
+        
     if billing_profile is not None:
         if request.method == 'POST':
             if form.is_valid():
@@ -50,10 +56,11 @@ def billing_address(request):
 
     billing_profile, billing_profile_created = BillingProfile.objects.new_or_get(request)
 
+
     try:
-        billing_address_instance = Address.objects.get(is_deleted=False, address_type='billing', billing_profile=billing_profile)
+        billing_address_instance = Address.objects.get(is_deleted=False, address_type='billing', billing_profile=billing_profile,  id=billing_address_id)
     except Address.MultipleObjectsReturned:
-        qs = Address.objects.filter(is_deleted=False,address_type='billing',billing_profile=billing_profile)
+        qs = Address.objects.filter(is_deleted=False,address_type='billing',billing_profile=billing_profile, id=billing_address_id)
         billing_address_instance = qs.last()
     except Address.DoesNotExist:
         billing_address_instance = None

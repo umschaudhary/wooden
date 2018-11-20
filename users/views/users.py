@@ -16,7 +16,9 @@ def login_user(request):
     """
     Login a user
     """
-    next = request.GET.get('next', None)
+    next_ = request.GET.get('next')
+    next_post = request.POST.get('next')
+    redirect_path = next_ or next_post or None
     if request.user.is_authenticated:
         return redirect('/')
 
@@ -34,10 +36,59 @@ def login_user(request):
                 messages.error(request, "Invalid login credentials")
                 return render(request, 'users/login.html', context)
             else:
-                login(request, user)
-                if next:
-                    return redirect(next)
-                return redirect('/')
+                if user.is_active :
+                    if user.is_customer() :
+                        login(request, user)
+                        try:
+                            del request.session['guest_email_id']
+                        except:
+                            pass
+                        if is_safe_url(redirect_path, request.get_host()):
+                            return redirect(redirect_path)
+                        return redirect('/')
+                    else:
+                        messages.error(request, 'Login through admin Panel')
+                else:
+                    messages.error(request, 'Inactive Account, Contact Admin')
+    return render(request, 'users/login.html', context)
+
+
+
+def login_admin(request):
+    """
+    Login a user
+    """
+    next_ = request.GET.get('next')
+    next_post = request.POST.get('next')
+    redirect_path = next_ or next_post or None
+    if request.user.is_authenticated:
+        return redirect('/')
+
+    form = LoginForm(data=request.POST or None)
+    context = {
+        'form': form,
+    }
+
+    if request.method == 'POST':
+        if form.is_valid():
+            email = form.cleaned_data.get('email')
+            password = form.cleaned_data.get('password')
+            user = authenticate(email=email, password=password)
+            if user is None:
+                messages.error(request, "Invalid login credentials")
+                return render(request, 'users/login.html', context)
+            else:
+                if user.is_active:
+                    login(request, user)
+                    try:
+                        del request.session['guest_email_id']
+                    except:
+                        pass
+                    if is_safe_url(redirect_path, request.get_host()):
+                        return redirect(redirect_path)
+                    return redirect('/')
+                else:
+                    messages.error(request, 'Inactive Account, Contact Admin')
     return render(request, 'users/login.html', context)
 
 
@@ -78,10 +129,22 @@ def guest_register_view(request):
     redirect_path = next_ or next_post or None
     if form.is_valid():
         email = form.cleaned_data.get("email")
-        new_guest_email = GuestEmail.objects.create(email=email)
+        try:
+            new_guest_email = GuestEmail.objects.get(email=email)
+
+        except GuestEmail.MultipleObjectsReturned:
+            qs = GuestEmail.objects.create(email=email)
+            if qs:
+                new_guest_email = qs.last()
+        except :
+            new_guest_email = GuestEmail.objects.create(email=email)
+
         request.session['guest_email_id'] = new_guest_email.id
         request.session['guest_email'] = email
-        return redirect("/")
+        if is_safe_url(redirect_path, request.get_host()):
+            return redirect(redirect_path)
+        else:
+            return redirect("carts:checkout")
     return redirect("carts:checkout")
 
 

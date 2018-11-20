@@ -5,6 +5,7 @@ from addresses.models import Address
 from billings.models import BillingProfile
 from carts.models import Cart
 from ecommerce.utils import unique_order_id_generator
+from items.models import Item
 
 ORDER_STATUS_CHOICES = (
     ('created ', 'created'),
@@ -132,3 +133,21 @@ def post_save_order(sender, instance, created, *args, **kwargs):
 
 
 post_save.connect(post_save_order, sender=Order)
+
+
+class OrderItem(models.Model):
+    order = models.ForeignKey(Order, related_name='order_items', on_delete=models.DO_NOTHING)
+    item = models.ForeignKey(Item, related_name='order_items', on_delete=models.DO_NOTHING)
+    quantity = models.PositiveIntegerField()
+    total = models.DecimalField(decimal_places=2, max_digits=19)
+    is_deleted = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'orders_order_item'
+        verbose_name = 'Order Item'
+        verbose_name_plural = 'Order Items'
+
+    def __str__(self):
+        return '{}'.format(self.item.name)

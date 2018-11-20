@@ -1,16 +1,16 @@
 from datetime import date
 
+from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render, reverse
 
+from carts.models import Cart, CartItem
 from categories.models import Category
-from carts.models import Cart
-from items.models import Item
+from items.models import Item, Item as Product
 from settings.models import FiscalYear
 from users.models import Sidebar
-from django.contrib.auth.decorators import login_required
-from django.db.models import Q
-from items.models import Item as Product
+
 
 # Create your views here.
 
@@ -28,6 +28,70 @@ def home(request):
             template_name = 'pages/provider_dashboard.html'
 
         elif user.is_customer():
+            print(request.user.id)
+            cart_id = request.session.get('cart_id', None)
+            print(cart_id)
+            try:
+                cart = Cart.objects.get(id=cart_id, user=None)
+            except Cart.DoesNotExist: 
+                cart = None
+
+            if not cart == None:
+                items = cart.cart_items.all()
+
+            try:
+                cart_obj = Cart.objects.get(user_id=request.user.id)
+                if not cart == None and items.count() > 0:
+                    for item in items:
+                        try:
+                            item_in_cart = CartItem.objects.get(cart=cart_obj, item=item.item)
+                        except CartItem.DoesNotExist:
+                            item_in_cart = None
+
+                        if not item_in_cart == None:
+                            item_in_cart.quantity += item.quantity
+                            item_in_cart.save()
+                        else :
+                            cart_item = CartItem()
+                            cart_item.cart = cart_obj
+                            cart_item.item = item.item
+                            cart_item.total = item.total
+                            cart_item.quantity = item.quantity
+                            cart_item.save()
+                            items.delete()
+                            cart.delete()
+
+                request.session['cart_id'] = cart_obj.id
+                request.session['item_count'] = cart_obj.cart_items.all().count()
+            except Cart.MultipleObjectsReturned:
+                qs = Cart.objects.filter(user_id=request.user.id)
+                if qs:
+                    cart_obj = qs.last()
+                    if not cart == None and items.count() > 0:
+                        for item in items:
+                            try:
+                                item_in_cart = CartItem.objects.get(cart=cart_obj, item=item.item)
+                            except CartItem.DoesNotExist:
+                                item_in_cart = None
+
+                            if not item_in_cart == None:
+                                item_in_cart.quantity += item.quantity
+                                item_in_cart.save()
+                                
+                            else:
+                                cart_item = CartItem()
+                                cart_item.cart = cart_obj
+                                cart_item.item = item.item
+                                cart_item.total = item.total
+                                cart_item.quantity = item.quantity
+                                cart_item.save()
+                                items.delete()
+                                cart.delete()
+                    request.session['cart_id'] = cart_obj.id
+                    request.session['item_count'] = cart_obj.cart_items.all().count()
+            except Cart.DoesNotExist:
+                cart_obj, new_obj = Cart.objects.new_or_get(request)
+
             categories = Category.objects.all_active()
             category_id = request.GET.get('category' ,'None')
             if category_id:
@@ -43,14 +107,8 @@ def home(request):
 
             else:
                 products = Product.objects.all_active()
- 
-
-            cart_obj, new_obj = Cart.objects.new_or_get(request)
-            if cart_obj:
-                items = cart_obj.cart_items.filter(is_deleted=False).count()
-
+            
             context['cart'] = cart_obj
-            context['item_count'] = items
             context['products'] = products
             context['categories'] = categories
             template_name = 'pages/user_dashboard.html'
