@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 {% load staticfiles %}
 {% block title %}
     Select Category | {{ block.super }}
@@ -24,7 +24,7 @@
                     <tr>
                         <th scope="col">S.N.</th>
                         <th scope="col">Category</th>
-                        <th>Item Count</th>
+
                         <th style="max-width:15%"></th>
                     </tr>
                     </thead>
@@ -35,8 +35,8 @@
                             <td scope="row">{{ forloop.counter }}</td>
                             <td> <a href="{% url 'items:list' object.pk %}">{{ object.name }}</a>
                             </td>
-                            <td>{{object.items.all_active.count}}</td>
-                         <td class='text-right'>
+
+                         <td class=''>
                             <a href="{% url 'items:list' object.pk %}">See Items</a>
                             </td> 
 

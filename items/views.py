@@ -22,16 +22,17 @@ def category_select(request):
     categories = Category.objects.all_active()
     template_name = 'items/category_select.html'
     context['objects'] = categories
+    context['count'] = 0
     return render(request, template_name, context)
     
 
 @login_required
 @provider_required
 def item_list(request,pk):
-    context  = {}
+    context = {}
     try:
         category = Category.objects.get(pk=pk, is_deleted=False)
-    except category.DoesNotExist:
+    except Category.DoesNotExist:
         messages.error(request, 'Category Not Found')
         return redirect('/')
 

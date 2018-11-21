@@ -6,6 +6,7 @@ from billings.models import BillingProfile
 from carts.models import Cart
 from ecommerce.utils import unique_order_id_generator
 from items.models import Item
+from settings.models import FiscalYear
 
 ORDER_STATUS_CHOICES = (
     ('created ', 'created'),
@@ -49,6 +50,7 @@ class OrderManager(models.Manager):
 
 
 class Order(models.Model):
+    fiscal_year = models.ForeignKey(FiscalYear,on_delete=models.DO_NOTHING, related_name='orders')
     billing_profile = models.ForeignKey(BillingProfile, on_delete=models.CASCADE, related_name='orders', null=True,
                                         blank=True)
     shipping_address = models.ForeignKey(Address, related_name="shipping_address", null=True, blank=True,
@@ -101,6 +103,7 @@ class Order(models.Model):
 
 
 def pre_save_create_order_id(sender, instance, *args, **kwargs):
+    instance.fiscal_year = FiscalYear.get_active_fiscal_year()
     if not instance.order_id:
         instance.order_id = unique_order_id_generator(instance)
     qs = Order.objects.filter(cart=instance.cart).exclude(billing_profile=instance.billing_profile)

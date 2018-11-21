@@ -14,6 +14,7 @@ def category_list(request):
     context = {}
     objects = Category.objects.all_active()
     template_name ='categories/category_list.html'
+
     context ['objects'] = objects
     return render(request, template_name, context)
 

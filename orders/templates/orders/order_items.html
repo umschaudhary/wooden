@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{%  load humanize %}
 {% load staticfiles %}
 {% block title %}
     Orders | {{ block.super }}
@@ -55,7 +56,7 @@
                     {% endfor %}
                     <tr>
                         <td colspan='5' class='text-right'>
-                          <h4>Total :  {{order.total}}</h1> 
+                          <h4>Total : {{ order_total|floatformat:"2" | intcomma }}</h4>
                         </td>
                     </tr>
 
