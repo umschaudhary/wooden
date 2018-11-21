@@ -14,37 +14,34 @@
             <div class="body table-responsive">
                 <div class="row">
                     <div class="col-lg-4 col-md-6 col-sm-12  col-xs-12 text-left ">
-                        <h5 class="">Orders</h5>
+                        <h5 class="">Ordered Items <small> |order id :  {{order.order_id}}</small></h5>
+
                     </div>
-                   
                 </div>
 
                 <table class="table mt-2">
                     <thead class="thead-light">
                     <tr>
                         <th scope="col">S.N.</th>
-                        <th scope="col">Order ID</th>
-                        <th>E-mail</th>
+                        <th scope="col">Item Name</th>
+                        <th>Price</th>
+                        <th>Qty</th>
                         <th>Total</th>
-                        <th>status</th>
                       
                         <th style="max-width:15%"></th>
                     </tr>
                     </thead>
                     <tbody>
 
-                    {% for object in orders %}
+                    {% for object in objects %}
                         <tr>
                             <td scope="row">{{ forloop.counter }}</td>
-                            <td>{{ object.order_id }}
+                            <td>{{ object.item.name }}
                             </td>
-                            <td>{{object.billing_profile}}</td>
+                            <td>{{object.item.stock_record.discounted_price}}</td>
+                            <td>{{object.quantity}}</td>
                             <td>{{object.total}}</td>
-                            <td>{{object.status}}</td>
-                            
-                         <td class='text-right'>
-                             <a href="{% url 'orders:order_items' object.pk %}" class='btn btn-primary'>Items</a>
-                            </td> 
+                   
 
                         </tr>
                     {% empty %}
@@ -52,10 +49,15 @@
                             {% if request.GET.q %}
                                 <td class="text-danger text-center" colspan="8"><h5>डाटाबेसमा रेकर्ड भेटिएन ।</h5></td>
                             {% else %}
-                                <td class="text-danger text-center" colspan="8"><h5>Nothing on database | </h5></td>
+                                <td class="text-danger text-center" colspan="8"><h5>डाटाबेसमा कुनै डाटा छैन | </h5></td>
                             {% endif %}
                         </tr>
                     {% endfor %}
+                    <tr>
+                        <td colspan='5' class='text-right'>
+                          <h4>Total :  {{order.total}}</h1> 
+                        </td>
+                    </tr>
 
 
                     </tbody>
