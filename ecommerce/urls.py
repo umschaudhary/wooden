@@ -31,6 +31,7 @@ urlpatterns = [
                   path('companies/', include('companies.urls.companies')),
                   path('company_users/', include('companies.urls.company_users')),
                   path('categories/', include('categories.urls')),
+                  path('data-analysis/', include('data_analysis.urls')),
                   path('fiscal-years/', include('settings.urls.fiscal_years')),
                   path('guest_register/', guest_register_view, name='guest_register'),
                   path('items/', include('items.urls')),
@@ -40,5 +41,9 @@ urlpatterns = [
                   path('refunds/', include('refunds.urls')),
                   path('register/', register_page, name='register'),
                   path('success/', success, name='success'),
-                  path('search_products/', views.search_products, name='search_products')
+                  path('search_products/', views.search_products, name='search_products'),
+
+                  # api
+                  path('api/v1/data/', include('data_analysis.api.urls'))
+
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

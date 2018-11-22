@@ -30,7 +30,7 @@ class Company(models.Model):
     )
     email = models.EmailField(validators=[EmailValidator(message="Invalid Email Address")])
 
-    phone_number =  models.CharField(
+    phone_number = models.CharField(
         max_length=15,
         error_messages={
             'max_length': "Length Shouldn't exceed 15 digits "}
@@ -40,9 +40,6 @@ class Company(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    objects = CustomModelManager.from_queryset(CustomModelQuerySet)()
-
-
     def __str__(self):
         return self.name
 
@@ -51,18 +48,21 @@ class Company(models.Model):
         verbose_name = 'Company'
         verbose_name_plural = 'Companies'
 
+
 class CompanyAdmin(models.Model):
-    full_name = models.CharField(max_length=120,error_messages={'max_length':'Length Shouldnot exceed 120 Characters'})
-    user = models.OneToOneField(User, related_name='company_admin', on_delete=models.DO_NOTHING,null=True, blank=True)
-    company = models.ForeignKey(Company,related_name='company_admins', on_delete=models.DO_NOTHING, null=True, blank=True)
+    full_name = models.CharField(max_length=120,
+                                 error_messages={'max_length': 'Length Shouldnot exceed 120 Characters'})
+    user = models.OneToOneField(User, related_name='company_admin', on_delete=models.DO_NOTHING, null=True, blank=True)
+    company = models.ForeignKey(Company, related_name='company_admins', on_delete=models.DO_NOTHING, null=True,
+                                blank=True)
     email = models.EmailField(validators=[EmailValidator(message="Invalid Email Address")])
-    password = models.CharField(max_length = 20)
+    password = models.CharField(max_length=20)
     is_deleted = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     objects = CustomModelManager.from_queryset(CustomModelQuerySet)()
-    
+
     def __str__(self):
         return '{}'.format(self.full_name)
 
@@ -88,4 +88,3 @@ class CompanyCategory(models.Model):
         db_table = 'companies_company_category'
         verbose_name = 'Company Category'
         verbose_name_plural = 'Company Categories'
-    

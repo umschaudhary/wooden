@@ -33,6 +33,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    'data_analysis',
     'refunds',
     'ratings',
     'comments',
@@ -47,6 +48,7 @@ INSTALLED_APPS = [
     'users',
     'pages',
     'widget_tweaks',
+    'rest_framework',
     'django.contrib.humanize',
     'django.contrib.admin',
     'django.contrib.auth',
