@@ -13,6 +13,7 @@ from comments.models import Comment
 from items import forms
 from items.forms import BaseItemModelFormSet
 from items.models import Item, ItemImage
+from ratings.forms import RatingForm
 from settings.models import FiscalYear
 from users.decorators import provider_required
 from users.models import GuestEmail
@@ -112,6 +113,7 @@ def item_detail(request, slug):
 
         form = CommentForm(request.POST or None)
         quantity_form = forms.QuantityForm(request.POST or None)
+        rating_form = RatingForm(request.POST or None)
         if request.method == 'POST':
             if form.is_valid():
                 data = form.save(commit=False)
@@ -148,8 +150,32 @@ def item_detail(request, slug):
                 messages.success(request, 'Item Added to Cart')
                 return redirect('carts:cart')
 
+            if rating_form.is_valid():
+                rating = rating_form.save(commit=False)
+                rating.item = item
+                rating.fiscal_year = FiscalYear.get_active_fiscal_year()
+                if request.user.is_authenticated:
+                    if request.user.is_customer():
+                        rating.user = request.user
+
+                else:
+                    if request.session['guest_email_id']:
+                        guest_email_id = request.session['guest_email_id']
+                        try:
+                            g_mail = GuestEmail.objects.get(id=guest_email_id)
+                        except GuestEmail.MultipleObjectsReturned:
+                            g_mail = GuestEmail.objects.filter(id=guest_email_id).last()
+                        except GuestEmail.DoesNotExist:
+                            g_mail = None
+                        rating.guest_user = g_mail
+
+                rating.save()
+                return HttpResponseRedirect("")
+
         context['form'] = form
+        context['rating_form'] = rating_form
         context['quantity_form'] = quantity_form
+
         try:
             data = CartItem.objects.get(item=item, cart=cart_obj)
             if data:

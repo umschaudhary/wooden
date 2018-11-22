@@ -1,14 +1,13 @@
-
 from django.conf import settings
 from django.db import models
 from django.db.models.signals import post_save
+
 from users.models import GuestEmail
 
 User = settings.AUTH_USER_MODEL
 
 
 class BillingProfileManager(models.Manager):
-
     def new_or_get(self, request):
         user = request.user
         guest_email_id = request.session.get('guest_email_id')
@@ -26,12 +25,9 @@ class BillingProfileManager(models.Manager):
             try:
                 guest_email_obj = GuestEmail.objects.get(id=guest_email_id)
             except GuestEmail.MultipleObjectsReturned:
-                qs = GuestEmail.objects.filter(id=guest_email_id)
-                if qs:
-                    guest_email_obj = qs.last()
+                guest_email_obj = GuestEmail.objects.filter(id=guest_email_id).last()
             except GuestEmail.DoesNotExist:
                 guest_email_obj = None
-
 
             obj, created = self.model.objects.get_or_create(
                 email=guest_email_obj.email)

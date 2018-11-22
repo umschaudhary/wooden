@@ -13,31 +13,31 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
-from django.urls import path , include
-from pages import views
-from users.views import  guest_register_view, register_page , login_admin
-from django.views.generic import TemplateView
-from carts.views import success
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib import admin
+from django.urls import path, include
 
+from carts.views import success
+from pages import views
+from users.views import guest_register_view, register_page, login_admin
 
 urlpatterns = [
-    path('',views.home,name='home'),
-    path('admin/', admin.site.urls),
-    path('addresses/', include('addresses.urls')),
-    path('users/', include('users.urls')),
-    path('cart/', include('carts.urls')),
-    path('companies/', include('companies.urls.companies')),
-    path('company_users/', include('companies.urls.company_users')),
-    path('categories/', include('categories.urls')),
-    path('fiscal-years/', include('settings.urls.fiscal_years')),
-    path('guest_register/', guest_register_view, name='guest_register'),
-    path('items/', include('items.urls')),
-    path('login_admin/',login_admin, name='login_admin'),
-    path('orders/',include('orders.urls')),
-    path('register/', register_page, name='register'),
-    path('success/',success, name='success'),
-    path('search_products/',views.search_products, name='search_products')
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+                  path('', views.home, name='home'),
+                  path('admin/', admin.site.urls),
+                  path('addresses/', include('addresses.urls')),
+                  path('users/', include('users.urls')),
+                  path('cart/', include('carts.urls')),
+                  path('companies/', include('companies.urls.companies')),
+                  path('company_users/', include('companies.urls.company_users')),
+                  path('categories/', include('categories.urls')),
+                  path('fiscal-years/', include('settings.urls.fiscal_years')),
+                  path('guest_register/', guest_register_view, name='guest_register'),
+                  path('items/', include('items.urls')),
+                  path('login_admin/', login_admin, name='login_admin'),
+                  path('orders/', include('orders.urls')),
+                  path('ratings/', include('ratings.urls')),
+                  path('register/', register_page, name='register'),
+                  path('success/', success, name='success'),
+                  path('search_products/', views.search_products, name='search_products')
+              ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

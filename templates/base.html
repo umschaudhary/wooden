@@ -28,7 +28,7 @@
 
 <div class="page-wrapper">
     {% if user.is_authenticated %}
-        {% if user.role == 'admin'%}
+        {% if user.role == 'admin' %}
             {% include 'includes/partial_admin_navigation.html' %}
         {% elif user.role == 'provider' %}
             {% include 'includes/partial_provider_navigation.html' %}
@@ -40,27 +40,26 @@
         {% include 'includes/partial_home_menu.html' %}
     {% endif %}
 
-    <section class="{% if request.user.is_authenticated and request.user.is_admin or request.user.is_provider %} content {% endif %}">
-           
-            {% block breadcrumbHead %}
-                <div class="container-fluid ">
-                    <nav aria-label="breadcrumb" class="bg-shadow">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item ml-1"><a href="">Home</a></li>
-                            {% block breadcrumbLink %}
-                            {% endblock %}
-                        </ol>
-                    </nav>
-                </div>
-            {% endblock %}
-            
-                  
-                        {% block content %}
-            
+    <section
+            class="{% if request.user.is_authenticated and request.user.is_admin or request.user.is_provider %} content {% endif %}">
+
+        {% block breadcrumbHead %}
+            <div class="container-fluid ">
+                <nav aria-label="breadcrumb" class="bg-shadow">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item ml-1"><a href="">Home</a></li>
+                        {% block breadcrumbLink %}
                         {% endblock %}
-                
-            
-       
+                    </ol>
+                </nav>
+            </div>
+        {% endblock %}
+
+
+        {% block content %}
+
+        {% endblock %}
+
 
     </section>
 
@@ -73,12 +72,11 @@
     <script src="{% static 'bower_components/bootstrap/dist/js/bootstrap.min.js' %}"></script>
     <script src="{% static 'js/jquery.slimscroll.js' %}"></script>
     <script src="{% static 'js/admin.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/custom.js'%}"></script>
+    <script type="text/javascript" src="{% static 'js/custom.js' %}"></script>
     <script type="text/javascript" src="{% static 'nepalidatepicker/nepali.datepicker.v2.2.min.js' %}"></script>
     <script>
-        
+
         $(document).ready(function () {
-                
 
 
             $(".alert").delay(5000).fadeOut(500, function () {
@@ -108,7 +106,7 @@
             }
         });
         $(function () {
-          $('[data-toggle="tooltip"]').tooltip();
+            $('[data-toggle="tooltip"]').tooltip();
         });
     </script>
 

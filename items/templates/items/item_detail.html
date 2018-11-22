@@ -117,15 +117,70 @@
         </div> <!-- card.// -->
 
         <hr>
-        <h1>Product Reviews</h1>
-    {%  if request.session.guest_email_id or request.user.is_authenticated %}
+        <div class="product-ratings">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-6">sadf</div>
+                        <div class="col-6">
+                            Rate this product
+                            <form action="" id='id_rating_form' method="post">
+                                {% csrf_token %}
+                                {% render_field rating_form.rating hidden='' %}
+                                <ul class="rating" style=" list-style-type: none;
+                                                margin: 0;
+                                                padding: 0;
+                                                overflow: hidden; ">
+                                    <li class="float-left">
 
-        <form action="" method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-            {%  render_field form.comment class='form-control' placeholder='comment here.....' %}
-            <button type="submit" class="pull-right btn btn-primary">Comment</button>
-        </form>
-    {%  endif %}
+                                        <button id="1" onclick="myFunction(this.id);" type="button">
+                                            <i class="fa fa-star blue-text"></i>
+                                        </button>
+
+                                    </li>
+                                    <li class="float-left">
+
+                                        <button id="2" class="{{ item.slug }}"
+                                                onclick="myFunction(this.id);" type="button">
+                                            <i class="fa fa-star blue-text"></i>
+                                        </button>
+                                    </li>
+                                    <li class="float-left">
+
+                                        <button id="3" onclick="myFunction(this.id);" type="button">
+                                            <i class="fa fa-star blue-text"></i>
+                                        </button>
+                                    </li>
+                                    <li class="float-left">
+
+                                        <button id="4" onclick="myFunction(this.id);" type="button">
+                                            <i class="fa fa-star blue-text"></i>
+                                        </button>
+                                    </li>
+                                    <li class="float-left">
+
+                                        <button id="5" onclick="myFunction(this.id);" type="button">
+                                            <i class="fa fa-star blue-text"></i>
+                                        </button>
+                                    </li>
+                                </ul>
+                            </form>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <h1>Product Reviews</h1>
+        {% if request.session.guest_email_id or request.user.is_authenticated %}
+
+            <form action="" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                {% render_field form.comment class='form-control' placeholder='comment here.....' %}
+                <button type="submit" class="pull-right btn btn-primary">Comment</button>
+            </form>
+        {% endif %}
 
         {% for comment in comments %}
             <div class="row ">
@@ -160,11 +215,14 @@
         {% endfor %}
 
     </div>
+    <div id="output">
 
+    </div>
     <!--container.//-->
 
     {% block extra_script %}
         <script>
+
 
             $(function () {
                 quantity ={{ item_count }};
@@ -172,9 +230,34 @@
                 for (i = 1; i < quantity + 1; i++) {
                     $('#id_quantity').append('<option value="' + i + '">' + i + '</option>');
                 }
+            });
 
 
-            })
+        </script>
+
+        <script>
+            let slug = "{{item.slug}}";
+            function myFunction(id) {
+                $('#id_rating').val(id);
+
+                let iUrl = '/ratings/' + slug;
+                $.ajax({
+                    url: iUrl,
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        'rating': id,
+                        'slug': slug,
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    success: function (data) {
+                        $('#output').html(data); // append to inner html
+
+                    }
+                });
+
+
+            }
         </script>
     {% endblock %}
 
