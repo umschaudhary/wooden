@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import render, redirect
 
 from categories.models import Category
@@ -49,8 +50,15 @@ def refund_policy_create(request, slug=None):
 def refund_request_list(request):
     context = {}
     provider = request.user.company_admin.company
-    refunds = RefundRequest.objects.filter(is_deleted=False, order_item__item__provider=provider)
-
+    refund_list = RefundRequest.objects.filter(is_deleted=False, order_item__item__provider=provider)
+    page = request.GET.get('page', 1)
+    paginator = Paginator(refund_list, 20)
+    try:
+        refunds = paginator.page(page)
+    except PageNotAnInteger:
+        refunds = paginator.page(1)
+    except EmptyPage:
+        refunds = paginator.page(paginator.num_pages)
     template_name = 'refunds/refund_request_list.html'
     context['refunds'] = refunds
     return render(request, template_name, context)

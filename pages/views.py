@@ -6,6 +6,8 @@ from django.shortcuts import render
 from carts.models import Cart, CartItem
 from categories.models import Category
 from items.models import Item as Product
+from orders.models import Order
+from refunds.models import RefundRequest
 from settings.models import FiscalYear
 from users.models import Sidebar
 
@@ -23,6 +25,15 @@ def home(request):
         if user.is_superuser():
             template_name = 'pages/admin_dashboard.html'
         elif user.is_provider():
+            provider = request.user.company_admin.company
+            orders = Order.objects.filter(is_deleted=False,
+                                          order_items__item__provider=provider).order_by("-updated_at").distinct()[:5]
+            requests = RefundRequest.objects.filter(is_deleted=False,
+                                                    order_item__item__provider=provider)[:5]
+
+            context['orders'] = orders
+            context['requests'] = requests
+            context['provider'] = provider
             template_name = 'pages/provider_dashboard.html'
 
         elif user.is_customer():
@@ -34,21 +45,21 @@ def home(request):
             except Cart.DoesNotExist:
                 cart = None
 
-            if not cart == None:
+            if cart:
                 items = cart.cart_items.all()
             else:
                 items = None
 
             try:
                 cart_obj = Cart.objects.get(user_id=request.user.id)
-                if not cart == None and items.count() > 0:
+                if cart and items.count() > 0:
                     for item in items:
                         try:
                             item_in_cart = CartItem.objects.get(cart=cart_obj, item=item.item)
                         except CartItem.DoesNotExist:
                             item_in_cart = None
 
-                        if not item_in_cart == None:
+                        if item_in_cart:
                             item_in_cart.quantity += item.quantity
                             item_in_cart.save()
                         else:
@@ -67,17 +78,15 @@ def home(request):
                 qs = Cart.objects.filter(user_id=request.user.id)
                 if qs:
                     cart_obj = qs.last()
-                    if not cart == None and items.count() > 0:
+                    if cart and items.count() > 0:
                         for item in items:
                             try:
                                 item_in_cart = CartItem.objects.get(cart=cart_obj, item=item.item)
                             except CartItem.DoesNotExist:
                                 item_in_cart = None
-
-                            if not item_in_cart == None:
+                            if item_in_cart:
                                 item_in_cart.quantity += item.quantity
                                 item_in_cart.save()
-
                             else:
                                 cart_item = CartItem()
                                 cart_item.cart = cart_obj
@@ -91,7 +100,6 @@ def home(request):
                     request.session['item_count'] = cart_obj.cart_items.all().count()
             except Cart.DoesNotExist:
                 cart_obj, new_obj = Cart.objects.new_or_get(request)
-
             categories = Category.objects.all_active()
             category_id = request.GET.get('category', 'None')
             if category_id:
@@ -104,10 +112,8 @@ def home(request):
                     products = category.items.all()
                 else:
                     products = Product.objects.all_active()
-
             else:
                 products = Product.objects.all_active()
-
             context['cart'] = cart_obj
             context['products'] = products
             context['categories'] = categories
@@ -131,9 +137,7 @@ def home(request):
                 products = Product.objects.all_active()
         else:
             products = Product.objects.all_active()
-
         cart_obj, new_obj = Cart.objects.new_or_get(request)
-
         if cart_obj:
             items = cart_obj.cart_items.filter(is_deleted=False).count()
 

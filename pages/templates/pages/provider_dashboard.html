@@ -1,1 +1,93 @@
 {% extends "base.html" %}
+{% load staticfiles %}
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="body">
+                        <p>Latest Orders</p>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                <th>Order ID</th>
+                                <th>Order By</th>
+                                <th>sdf</th>
+                                <th>dsa</th>
+                                </thead>
+                                <tbody>
+                                <div class="infinite-container">
+                                    {% for order in orders %}
+                                        <tr>
+                                            <td class="infinite-item">
+                                                {{ order.order_id }}
+                                            </td>
+                                            <td class="infinite-item">{{ order.billing_profile }}</td>
+                                            <td class="infinite-item">{{ order.order_items.count }}</td>
+                                            <td class="infinite-item">{{ order.total }}</td>
+                                        </tr>
+                                    {% empty %}
+                                    {% endfor %}
+                                </div>
+                                </tbody>
+                            </table>
+                        </div>
+                    {% if orders %}
+                        <div>
+                            <a class="pull-left" href="{%  url 'orders:list' %}"> See All</a>
+                        </div>
+                    {%  endif %}
+
+
+                        <div class="loading" style="display: none;">
+                            Loading...
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="body">
+                        <p>Latest Refund Requests</p>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                <th>Billing ID</th>
+                                <th>Item</th>
+                                <th>qty</th>
+
+                                </thead>
+                                <tbody>
+                                {% for req in requests %}
+                                    <tr>
+                                        <td>
+                                            {{ req.billing_profile }}
+                                        </td>
+                                        <td>{{ req.order_item }}</td>
+
+                                        <td>{{ req.quantity }}</td>
+                                    </tr>
+                                {% empty %}
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% if requests %}
+                        <div>
+                            <a class="pull-left" href="{%  url 'refunds:refund_request_list' %}"> See All</a>
+                        </div>
+                    {%  endif %}
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}

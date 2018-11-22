@@ -2,6 +2,7 @@ import decimal
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.forms.models import modelformset_factory
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
@@ -37,10 +38,18 @@ def item_list(request, pk):
     try:
         category = Category.objects.get(pk=pk, is_deleted=False)
     except Category.DoesNotExist:
-        messages.error(request, 'Category Not Found')
-        return redirect('/')
+        category = None
 
     items = Item.objects.filter(is_deleted=False, category=category, provider=request.user.company_admin.company)
+
+    page = request.GET.get('page', 1)
+    paginator = Paginator(items, 20)
+    try:
+        items = paginator.page(page)
+    except PageNotAnInteger:
+        items = paginator.page(1)
+    except EmptyPage:
+        items = paginator.page(paginator.num_pages)
     context['objects'] = items
     context['category'] = category
     template_name = 'items/item_list.html'

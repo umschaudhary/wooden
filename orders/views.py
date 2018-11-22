@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Sum
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
@@ -23,8 +24,17 @@ def order_list(request):
             orders = Order.objects.filter(is_deleted=False)
             context['orders'] = orders
         elif user.is_provider():
-            orders = Order.objects.filter(is_deleted=False,
-                                          order_items__item__provider=user.company_admin.company).distinct()
+            order_list = Order.objects.filter(is_deleted=False,
+                                              order_items__item__provider=user.company_admin.company).distinct().order_by(
+                "-updated_at")
+            page = request.GET.get('page', 1)
+            paginator = Paginator(order_list, 20)
+            try:
+                orders = paginator.page(page)
+            except PageNotAnInteger:
+                orders = paginator.page(1)
+            except EmptyPage:
+                orders = paginator.page(paginator.num_pages)
             context['orders'] = orders
 
         else:
