@@ -1,13 +1,14 @@
 from django import forms
-
-from items.models import Item, StockRecord ,ItemImage
-from carts.models import CartItem, Cart
 from django.forms import BaseModelFormSet, BaseFormSet
+
+from carts.models import CartItem
+from items.models import Item, StockRecord, ItemImage
 
 
 class BaseItemModelFormSet(BaseModelFormSet):
     def clean(self):
         super(BaseItemModelFormSet, self).clean()
+
 
 class BaseItemFormSet(BaseFormSet):
     def save(self, commit=True):
@@ -16,7 +17,7 @@ class BaseItemFormSet(BaseFormSet):
             name = form.cleaned_data.get('name')
             description = form.cleaned_data.get('description', '')
 
-            item = Item(name=name,description=description)
+            item = Item(name=name, description=description)
             item.save()
         return self.forms
 
@@ -31,17 +32,18 @@ class ItemCreateForm(forms.ModelForm):
         ]
 
         widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-control','required':'required','placeholder':''}),
-            'description': forms.Textarea(attrs={'class': 'form-control','required':'required','placeholder':'','row':1}),
-            
+            'name': forms.TextInput(attrs={'class': 'form-control', 'required': 'required', 'placeholder': ''}),
+            'description': forms.Textarea(
+                attrs={'class': 'form-control', 'required': 'required', 'placeholder': '', 'row': 1}),
+
         }
 
         labels = {
-            'name' : 'Item Name' , 
-            'description' : 'Description',
-            'featured' : 'Featured It'
+            'name': 'Item Name',
+            'description': 'Description',
+            'featured': 'Featured It'
         }
-        
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -56,22 +58,22 @@ class StockForm(forms.ModelForm):
         ]
 
         widgets = {
-            'price_excl_tax': forms.TextInput(attrs={'class': 'form-control','required':'required','placeholder':''}),
-            'discount_percentage': forms.TextInput(attrs={'class': 'form-control','required':'required','placeholder':''}),
-            'quantity' : forms.TextInput(attrs={'class':'form-control', 'required':'required','placeholder':''})
-            
+            'price_excl_tax': forms.TextInput(
+                attrs={'class': 'form-control', 'required': 'required', 'placeholder': ''}),
+            'discount_percentage': forms.TextInput(
+                attrs={'class': 'form-control', 'required': 'required', 'placeholder': ''}),
+            'quantity': forms.TextInput(attrs={'class': 'form-control', 'required': 'required', 'placeholder': ''})
+
         }
 
         labels = {
-            'name' : 'Item Name' , 
-            'discount_percentage' : 'Discount Percent',
-            'quantity' : 'Stock Quantity'
+            'name': 'Item Name',
+            'discount_percentage': 'Discount Percent',
+            'quantity': 'Stock Quantity'
         }
-        
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
-
 
 
 class QuantityForm(forms.ModelForm):
@@ -82,14 +84,16 @@ class QuantityForm(forms.ModelForm):
         ]
 
         widgets = {
-            'quantity' : forms.TextInput(attrs={'class':'form-control', 'required':'required','placeholder':'Quantity'})
-            
+            'quantity': forms.Select(
+                attrs={'class': 'form-control', 'required': 'required', 'placeholder': 'Quantity'})
+
         }
 
-        
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        
+
+        self.fields['quantity'].queryset = [1,2,3,4]
+
 
 class ItemImageForm(forms.ModelForm):
     class Meta:
@@ -97,5 +101,3 @@ class ItemImageForm(forms.ModelForm):
         fields = [
             'document',
         ]
-
-

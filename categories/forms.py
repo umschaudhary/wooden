@@ -1,4 +1,5 @@
 from django import forms
+
 from categories.models import Category
 
 
@@ -8,19 +9,19 @@ class CategoryForm(forms.ModelForm):
         fields = [
             'name',
             'description',
-           ]
+        ]
 
         widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-control','required':'required','placeholder':''}),
-            'description': forms.Textarea(attrs={'class': 'form-control','required':'required','placeholder':'Description ...'}),
-           
+            'name': forms.TextInput(attrs={'class': 'form-control', 'required': 'required', 'placeholder': ''}),
+            'description': forms.Textarea(
+                attrs={'class': 'form-control', 'required': 'required', 'placeholder': 'Description ...'}),
+
         }
 
         labels = {
-            'name' : 'Category Name',
-            'description' : 'Description'
+            'name': 'Category Name',
+            'description': 'Description'
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        

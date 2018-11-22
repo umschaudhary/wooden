@@ -1,6 +1,8 @@
 import math
+
 from django.db import models
 from django.db.models.signals import pre_save, post_save
+
 from addresses.models import Address
 from billings.models import BillingProfile
 from carts.models import Cart
@@ -11,7 +13,8 @@ from settings.models import FiscalYear
 ORDER_STATUS_CHOICES = (
     ('created ', 'created'),
     ('paid', 'paid'),
-    ('shipped', 'shipped'),
+    ('delivered', 'delivered'),
+    ('processed', 'processed'),
     ('refunded', 'refunded'),
 )
 
@@ -24,14 +27,14 @@ class OrderManager(models.Manager):
             cart=cart_obj,
             active=True,
             status='created'
-            )
+        )
         if qs.count() == 1:
             obj = qs.first()
         else:
             obj = self.model.objects.create(
                 billing_profile=billing_profile,
                 cart=cart_obj
-                )
+            )
             created = True
         return obj, created
 
@@ -42,15 +45,17 @@ class OrderManager(models.Manager):
             cart=cart_obj,
             active=True,
             status='created'
-            )
+        )
         if qs.count() == 1:
             obj = qs.first()
-            
+        else:
+            obj = None
+
         return obj
 
 
 class Order(models.Model):
-    fiscal_year = models.ForeignKey(FiscalYear,on_delete=models.DO_NOTHING, related_name='orders')
+    fiscal_year = models.ForeignKey(FiscalYear, on_delete=models.DO_NOTHING, related_name='orders')
     billing_profile = models.ForeignKey(BillingProfile, on_delete=models.CASCADE, related_name='orders', null=True,
                                         blank=True)
     shipping_address = models.ForeignKey(Address, related_name="shipping_address", null=True, blank=True,
@@ -143,6 +148,7 @@ class OrderItem(models.Model):
     item = models.ForeignKey(Item, related_name='order_items', on_delete=models.DO_NOTHING)
     quantity = models.PositiveIntegerField()
     total = models.DecimalField(decimal_places=2, max_digits=19)
+    status = models.CharField(max_length=255, choices=ORDER_STATUS_CHOICES, default='created')
     is_deleted = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

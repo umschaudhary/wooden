@@ -1,124 +1,178 @@
 {% extends "base.html" %}
 {% load staticfiles %}
+{% load widget_tweaks %}
 {% block extra_stylesheet %}
-<style>
-    .gallery-wrap .img-big-wrap img {
-    height: 450px;
-    width: 100%;
-    display: inline-block;
-    cursor: zoom-in;
-}
+    <style>
+        .gallery-wrap .img-big-wrap img {
+            height: 450px;
+            width: 100%;
+            display: inline-block;
+            cursor: zoom-in;
+        }
 
+        .gallery-wrap .img-small-wrap .item-gallery {
+            width: 60px;
+            height: 60px;
+            border: 1px solid #ddd;
+            margin: 7px 2px;
+            display: inline-block;
+            overflow: hidden;
+        }
 
-.gallery-wrap .img-small-wrap .item-gallery {
-    width: 60px;
-    height: 60px;
-    border: 1px solid #ddd;
-    margin: 7px 2px;
-    display: inline-block;
-    overflow: hidden;
-}
+        .gallery-wrap .img-small-wrap {
+            text-align: center;
+        }
 
-.gallery-wrap .img-small-wrap {
-    text-align: center;
-}
-.gallery-wrap .img-small-wrap img {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: cover;
-    border-radius: 4px;
-    cursor: zoom-in;
-}
-</style>
+        .gallery-wrap .img-small-wrap img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: cover;
+            border-radius: 4px;
+            cursor: zoom-in;
+        }
+    </style>
 
 {% endblock %}
 {% block content %}
 
 
 
-<div class="container">
-<div class="card">
-	<div class="row">
-		<aside class="col-sm-5 border-right">
-<article class="gallery-wrap"> 
-<div class="img-big-wrap">
-        {% for image in item.item_images.all %}
-        {% if forloop.first %}
-        {% if image.document %}
-        <div> <a href="#"><img src="{{ image.document.url }}" class="img-responsive" ></a></div>
-       
-    {% endif %}
-    {% endif %}
-    {% empty %}
+    <div class="container">
+        <div class="card">
+            <div class="row">
+                <aside class="col-sm-5 border-right">
+                    <article class="gallery-wrap">
+                        <div class="img-big-wrap">
+                            {% for image in item.item_images.all %}
+                                {% if forloop.first %}
+                                    {% if image.document %}
+                                        <div><a href="#"><img src="{{ image.document.url }}" class="img-responsive"></a>
+                                        </div>
 
-<div> <a href="#"><img src="{% static 'images/default.jpg' %}" class="img-responsive" ></a></div>
-{% endfor %}
-  
-</div> <!-- slider-product.// -->
+                                    {% endif %}
+                                {% endif %}
+                            {% empty %}
 
-<div class="img-small-wrap">{% for image in item.item_images.all %}
-    <div class="item-gallery"> <img src="{{image.document.url}}" > </div>
-    {% empty %}
+                                <div><a href="#"><img src="{% static 'images/default.jpg' %}"
+                                                      class="img-responsive"></a></div>
+                            {% endfor %}
 
-    <div class="item-gallery"><img src="{% static 'images/default.jpg' %}"></div>
-    {% endfor %}
-  </div> 
+                        </div> <!-- slider-product.// -->
+
+                        <div class="img-small-wrap">{% for image in item.item_images.all %}
+                            <div class="item-gallery"><img src="{{ image.document.url }}"></div>
+                        {% empty %}
+
+                            <div class="item-gallery"><img src="{% static 'images/default.jpg' %}"></div>
+                        {% endfor %}
+                        </div>
 
 
-<!-- slider-nav.// -->
-</article> <!-- gallery-wrap .end// -->
-		</aside>
-		<aside class="col-sm-7">
-<article class="card-body p-5">
-	<h3 class="title mb-3">{{item.name}}</h3>
+                        <!-- slider-nav.// -->
+                    </article> <!-- gallery-wrap .end// -->
+                </aside>
+                <aside class="col-sm-7">
+                    <article class="card-body p-5">
+                        <h3 class="title mb-3">{{ item.name }}</h3>
 
-<p class="price-detail-wrap"> 
+                        <p class="price-detail-wrap">
 	<span class="price h3 text-warning"> 
-		<span class="currency">Rs</span><span class="num">{{item.stock_record.price_excl_tax}}</span>
-	</span> 
-	<span></span> 
-</p> <!-- price-detail-wrap .// -->
-<dl class="item-property">
-  <dt>Description</dt>
-  <dd><p>{{item.description}}</p></dd>
-</dl>
+		<span class="currency">Rs</span><span class="num">{{ item.stock_record.price_excl_tax }}</span>
+	</span>
+                            <span></span>
+                        </p> <!-- price-detail-wrap .// -->
+                        <dl class="item-property">
+                            <dt>comment</dt>
+                            <dd><p>{{ item.comment }}</p></dd>
+                        </dl>
 
 
-<hr>
-	<div class="row">
-		<div class="col-sm-5">
-			<dl class="param param-inline">
-			 
-              {% if data == 0 %}
-              {% if item_count > 0 %} 
-              <dt>Quantity: </dt>
-                      <form action="" method="POST">
-                          {% csrf_token %}
-                          <select name="quantity" id="id_quantity">
-                              {% for i in quantity %}
-                              <option value="{{i}}">{{i}}</option>
-                              {% endfor %}
-                          </select>
-                          <button type="submit" class="btn btn-primary"> Add to Cart</button>
-                          {% else %}
-                          
-                            <p class="text-danger">Item Out Of Stock</p>
-                           
-                      </form>
-              {% endif %}
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-5">
+                                <dl class="param param-inline">
 
-          {% else %}
-          <a href="{% url 'carts:cart' %}" class="btn btn-primary">Go To Cart</a>
-          {% endif %}
-			</dl>  <!-- item-property .// -->
-		</div> <!-- col.// -->
-	</div> <!-- row.// -->
-	
-</article> <!-- card-body.// -->
-		</aside> <!-- col.// -->
-	</div> <!-- row.// -->
-</div> <!-- card.// -->
-</div>
-<!--container.//-->
+                                    {% if data == 0 %}
+                                        {% if item_count > 0 %}
+                                            <form action="" method="POST" enctype="multipart/form-data">
+                                                {% csrf_token %}
+                                                {{ quantity_form }}
+                                                <button type="submit">Comment</button>
+                                            </form>
+                                        {% else %}
+                                            <p class="text-danger">Item Out Of Stock</p>
+
+                                        {% endif %}
+
+                                    {% else %}
+                                        <a href="{% url 'carts:cart' %}" class="btn btn-primary">Go To Cart</a>
+                                    {% endif %}
+                                </dl>  <!-- item-property .// -->
+                            </div> <!-- col.// -->
+                        </div> <!-- row.// -->
+
+                    </article> <!-- card-body.// -->
+                </aside> <!-- col.// -->
+            </div> <!-- row.// -->
+        </div> <!-- card.// -->
+
+        <hr>
+        <h1>Product Reviews</h1>
+        <form action="" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Comment</button>
+        </form>
+
+        {% for comment in comments %}
+            <div class="row ">
+                <!--Image column-->
+
+                <div class="col-lg-2  col-sm-2 col-12 mb-2">
+                    <img src="https://mdbootstrap.com/img/Photos/Avatars/img (8).jpg" alt="sample image"
+                         class="img-fluid rounded-circle z-depth-1-half">
+                </div>
+                <!--/.Image column-->
+
+                <!--Content column-->
+                <div class="col-lg-8 offset-lg-1 col-sm-10 col-12">
+                    <a>
+                        <h5 class="user-name font-weight-bold">{% if not comment.user.full_name == None %}
+                            {{ comment.user.full_name }}  {% else %} Authorised User {% endif %}</h5>
+                    </a>
+                    <!-- Rating -->
+
+                    <div class="card-data">
+                        <ul class="list-unstyled mb-1">
+                            <li class="comment-date font-small grey-text">
+                                <i class="fa fa-clock-o"></i> {{ comment.created_at }}
+                            </li>
+                        </ul>
+                    </div>
+                    <p class="dark-grey-text article">{{ comment.comment }}</p>
+                </div>
+                <!--/.Content column-->
+            </div>
+            <hr>
+        {% endfor %}
+
+    </div>
+
+    <!--container.//-->
+
+    {% block extra_script %}
+        <script>
+
+            $(function () {
+                quantity ={{ item_count }};
+
+                for (i = 1; i < quantity + 1; i++) {
+                    $('#id_quantity').append('<option value="' + i + '">' + i + '</option>');
+                }
+
+
+            })
+        </script>
+    {% endblock %}
 
 {% endblock content %}

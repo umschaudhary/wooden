@@ -1,13 +1,11 @@
 from datetime import date
 
-from django.contrib.auth.decorators import login_required
 from django.db.models import Q
-from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import redirect, render, reverse
+from django.shortcuts import render
 
 from carts.models import Cart, CartItem
 from categories.models import Category
-from items.models import Item, Item as Product
+from items.models import Item as Product
 from settings.models import FiscalYear
 from users.models import Sidebar
 
@@ -19,8 +17,8 @@ def home(request):
     context = {}
     user = request.user
     active_fiscal_year = FiscalYear.get_active_fiscal_year()
-    
-    if user.is_authenticated :
+
+    if user.is_authenticated:
         sidebar_obj, new_obj = Sidebar.objects.new_or_get(request)
         if user.is_superuser():
             template_name = 'pages/admin_dashboard.html'
@@ -33,11 +31,13 @@ def home(request):
             print(cart_id)
             try:
                 cart = Cart.objects.get(id=cart_id, user=None)
-            except Cart.DoesNotExist: 
+            except Cart.DoesNotExist:
                 cart = None
 
             if not cart == None:
                 items = cart.cart_items.all()
+            else:
+                items = None
 
             try:
                 cart_obj = Cart.objects.get(user_id=request.user.id)
@@ -51,7 +51,7 @@ def home(request):
                         if not item_in_cart == None:
                             item_in_cart.quantity += item.quantity
                             item_in_cart.save()
-                        else :
+                        else:
                             cart_item = CartItem()
                             cart_item.cart = cart_obj
                             cart_item.item = item.item
@@ -77,7 +77,7 @@ def home(request):
                             if not item_in_cart == None:
                                 item_in_cart.quantity += item.quantity
                                 item_in_cart.save()
-                                
+
                             else:
                                 cart_item = CartItem()
                                 cart_item.cart = cart_obj
@@ -93,12 +93,12 @@ def home(request):
                 cart_obj, new_obj = Cart.objects.new_or_get(request)
 
             categories = Category.objects.all_active()
-            category_id = request.GET.get('category' ,'None')
+            category_id = request.GET.get('category', 'None')
             if category_id:
                 try:
                     category = Category.objects.get(slug=category_id)
-                except : 
-                    category = None 
+                except:
+                    category = None
 
                 if category:
                     products = category.items.all()
@@ -107,7 +107,7 @@ def home(request):
 
             else:
                 products = Product.objects.all_active()
-            
+
             context['cart'] = cart_obj
             context['products'] = products
             context['categories'] = categories
@@ -115,15 +115,15 @@ def home(request):
         else:
             pass
 
-# user is not authenticated down from here
+            # user is not authenticated down from here
     else:
         categories = Category.objects.all_active()
         category_id = request.GET.get('category')
         if category_id:
             try:
                 category = Category.objects.get(slug=category_id)
-            except : 
-                category = None 
+            except:
+                category = None
 
             if category:
                 products = category.items.all()
@@ -146,15 +146,14 @@ def home(request):
     return render(request, template_name, context)
 
 
-
 def search_products(request):
     context = {}
     categories = Category.objects.all_active()
     query = request.GET.get('q')
     if query is not None:
         lookups = Q(name__icontains=query) | \
-        Q(slug__icontains=query) | \
-        Q(description__icontains=query)
+                  Q(slug__icontains=query) | \
+                  Q(description__icontains=query)
         products = Product.objects.filter(lookups, is_deleted=False)
     else:
         products = Product.objects.all_active()

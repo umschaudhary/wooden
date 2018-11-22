@@ -1,10 +1,8 @@
-from companies.models import Company
 from django.db import models
 from django.db.models.signals import pre_save
-from django.urls import reverse
-from ecommerce import settings
-import os
+
 from categories.models import Category
+from companies.models import Company
 from ecommerce.utils import CustomModelManager, CustomModelQuerySet, \
     unique_slug_generator
 
@@ -15,11 +13,12 @@ class Item(models.Model):
     provider = models.ForeignKey(Company, related_name='items', on_delete=models.DO_NOTHING)
     category = models.ForeignKey(Category, related_name='items', on_delete=models.DO_NOTHING)
     slug = models.SlugField(max_length=100, blank=True, null=True)
-    name = models.CharField(max_length=120,error_messages={'max_length':'Length Shouldnot be longer than 120 characters'})
+    name = models.CharField(max_length=120,
+                            error_messages={'max_length': 'Length Shouldnot be longer than 120 characters'})
     description = models.TextField()
     available = models.BooleanField(default=True)
     featured = models.BooleanField(default=False)
-    
+
     is_deleted = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -33,9 +32,8 @@ class Item(models.Model):
     def __str__(self):
         return self.name
 
-    # def get_absolute_url(self, *args, **kwargs):
-    #     return reverse('items:item_detail_slug', kwargs={"slug": self.slug})
-
+        # def get_absolute_url(self, *args, **kwargs):
+        #     return reverse('items:item_detail_slug', kwargs={"slug": self.slug})
 
 
 def item_pre_save_receiver(sender, instance, *args, **kwargs):
@@ -55,7 +53,7 @@ class StockRecord(models.Model):
     is_deleted = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
- 
+
     class Meta:
         db_table = 'items_stock_record'
         verbose_name = 'Stock Record'
@@ -64,17 +62,18 @@ class StockRecord(models.Model):
     def __str__(self):
         return self.item.name
 
-def stock_discount_price_calculation(sender, instance , *args, **kwargs):
+
+def stock_discount_price_calculation(sender, instance, *args, **kwargs):
     price = instance.price_excl_tax
     discount_percent = instance.discount_percentage
     if not discount_percent == 0:
-        discount = (discount_percent/100)*price
+        discount = (discount_percent / 100) * price
         instance.discounted_price = price - discount
     else:
         instance.discounted_price = price
 
-pre_save.connect(stock_discount_price_calculation, sender=StockRecord)
 
+pre_save.connect(stock_discount_price_calculation, sender=StockRecord)
 
 
 class ItemImage(models.Model):
@@ -88,4 +87,3 @@ class ItemImage(models.Model):
 
     def __str__(self):
         return self.item.name
-
