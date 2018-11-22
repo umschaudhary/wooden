@@ -118,11 +118,14 @@
 
         <hr>
         <h1>Product Reviews</h1>
+    {%  if request.session.guest_email_id or request.user.is_authenticated %}
+
         <form action="" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Comment</button>
+            {%  render_field form.comment class='form-control' placeholder='comment here.....' %}
+            <button type="submit" class="pull-right btn btn-primary">Comment</button>
         </form>
+    {%  endif %}
 
         {% for comment in comments %}
             <div class="row ">

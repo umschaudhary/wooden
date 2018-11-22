@@ -15,9 +15,7 @@ from items.forms import BaseItemModelFormSet
 from items.models import Item, ItemImage
 from settings.models import FiscalYear
 from users.decorators import provider_required
-
-
-# Create your views here.
+from users.models import GuestEmail
 
 
 @login_required
@@ -119,7 +117,21 @@ def item_detail(request, slug):
                 data = form.save(commit=False)
                 data.item = item
                 data.fiscal_year = FiscalYear.get_active_fiscal_year()
-                data.user = request.user
+                if request.user.is_authenticated:
+                    if request.user.is_customer():
+                        data.user = request.user
+
+                else:
+                    if request.session['guest_email_id']:
+                        guest_email_id = request.session['guest_email_id']
+                        try:
+                            g_mail = GuestEmail.objects.get(id=guest_email_id)
+                        except GuestEmail.MultipleObjectsReturned:
+                            g_mail = GuestEmail.objects.filter(id=guest_email_id).last()
+                        except GuestEmail.DoesNotExist:
+                            g_mail = None
+                        data.guest_user = g_mail
+
                 data.save()
                 return HttpResponseRedirect("")
 
@@ -154,7 +166,7 @@ def item_detail(request, slug):
             else:
                 context['data'] = 0
 
-        comments = Comment.objects.all_active()
+        comments = Comment.objects.filter(item=item).order_by('-created_at')
         context['comments'] = comments
 
     context['item'] = item
