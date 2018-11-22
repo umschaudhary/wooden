@@ -37,6 +37,7 @@ urlpatterns = [
                   path('login_admin/', login_admin, name='login_admin'),
                   path('orders/', include('orders.urls')),
                   path('ratings/', include('ratings.urls')),
+                  path('refunds/', include('refunds.urls')),
                   path('register/', register_page, name='register'),
                   path('success/', success, name='success'),
                   path('search_products/', views.search_products, name='search_products')

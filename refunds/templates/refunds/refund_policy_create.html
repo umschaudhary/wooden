@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load widget_tweaks %}
+{% block title %}
+    Item Creates | {{ block.super }}
+{% endblock %}
+{% block extra_stylesheet %}
+
+{% endblock %}
+{% block breadcrumbLink %}
+    {% if request.user.is_authenticated %}
+        <li class="breadcrumb-item"><a href="{% url 'items:list' category.pk %}">
+            Items
+        </a></li> {% endif %}
+    <li class="breadcrumb-item active">New</li>
+{% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="table-responsive">
+            <div class="card ">
+                <div class="card-body">
+                    {% if form.non_field_errors %}
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="alert alert-danger">
+                                    <ul>
+                                        {% for error in form.non_field_errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                    <div class="row ">
+                        <div class="col-lg-10 col-md-12 col-sm-12 col-12">
+                            <form name='item-form' id='item-form' method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+
+                                <div class=" form-group row">
+                                <span class="col-lg-4 col-md-2 col-sm-2 col-1"><span
+                                        class=" float-lg-right float-md-right float-sm-right float-right"> </span>
+                                </span>
+
+                                    {% if form.validity.errors %}
+                                        <div class="col-lg-4 col-md-2 col-sm-2 col-4 col-1">
+                                            {{ form.validity | add_class:"is-invalid" }}
+                                            <div class="invalid-feedback">
+                                                {{ form.validity.errors }}
+                                            </div>
+                                        </div>
+                                    {% else %}
+
+                                        <div class="col-lg-6 col-md-8 col-sm-8 col-12">
+                                            {%  render_field form.validity class='form-control' %}
+                                            <label for="" class="">Valid Period (days) <span
+                                                    class="text-danger">*</span></label>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class=" form-group row">
+                                        <span class="col-lg-4 col-md-2 col-sm-2 col-1"><span
+                                                class=" float-lg-right float-md-right float-sm-right float-right"> </span></span>
+
+                                    {% if form.cover.errors %}
+                                        <div class="col-lg-4 col-md-2 col-sm-2 col-4">
+                                            {{ form.cover | add_class:"is-invalid" }}
+                                            <div class="invalid-feedback">
+                                                {{ form.cover.errors }}
+                                            </div>
+                                        </div>
+                                    {% else %}
+
+                                        <div class="col-lg-6 col-md-8 col-sm-8 col-12">
+                                           {%  render_field form.cover class='form-control' %}
+                                            <label for="" class="">Damage Covers <span
+                                                    class="text-danger">*</span></label>
+                                        </div>
+                                    {% endif %}
+                                </div>
+
+                                <div class=" form-group row">
+                                    <span class="col-lg-4 col-md-2 col-sm-2 col-1"><span
+                                            class=" float-lg-right float-md-right float-sm-right float-right"> </span></span>
+
+                                    {% if form.description.errors %}
+                                        <div class="col-lg-4 col-md-2 col-sm-2 col-4">
+                                            {{ form.address | add_class:"is-invalid" }}
+                                            <div class="invalid-feedback">
+                                                {{ form.description.errors }}
+                                            </div>
+                                        </div>
+                                    {% else %}
+
+                                        <div class="col-lg-6 col-md-8 col-sm-8 col-12">
+                                           {%  render_field form.description class='form-control' %}
+                                            <label for="" class="">{{ form.description.label }} <span
+                                                    class="text-danger">*</span></label>
+                                        </div>
+                                    {% endif %}
+                                </div>
+
+
+                                <div class=" form-group row">
+                                        <span class="col-lg-4 col-md-2 col-sm-2 col-1"><span
+                                                class=" float-lg-right float-md-right float-sm-right float-right"> </span></span>
+
+                                    {% if form.type_acceptance.errors %}
+                                        <div class="col-lg-4 col-md-2 col-sm-2 col-4">
+                                            {{ form.type_acceptance | add_class:"is-invalid" }}
+                                            <div class="invalid-feedback">
+                                                {{ form.type_acceptance.errors }}
+                                            </div>
+                                        </div>
+                                    {% else %}
+
+                                        <div class="col-lg-6 col-md-8 col-sm-8 col-12">
+                                            {%  render_field form.type_acceptance class='form-control' %}
+                                            <label for="" class="">{{ form.type_acceptance.label }} <span
+                                                    class="text-danger">*</span></label>
+                                        </div>
+                                    {% endif %}
+                                </div>
+
+
+                                <div class=" form-group row">
+                                    <div class="offset-sm-2 offset-lg-4 col-lg-6 col-md-8 col-sm-8 col-12">
+                                        <button type="submit" class='btn btn-submit btn-block btn-primary'
+                                                name="submit">Save
+
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}

@@ -16,6 +16,7 @@ ORDER_STATUS_CHOICES = (
     ('delivered', 'delivered'),
     ('processed', 'processed'),
     ('refunded', 'refunded'),
+    ('cancelled','cancelled'),
 )
 
 

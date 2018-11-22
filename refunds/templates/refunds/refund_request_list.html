@@ -1,11 +1,11 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% load staticfiles %}
 {% block title %}
-    Select Category | {{ block.super }}
+    Items | {{ block.super }}
 {% endblock %}
 {% block breadcrumbLink %}
     {% if request.user.is_authenticated %}
-        <li class="breadcrumb-item active">Select Category</li> {% endif %}
+        <li class="breadcrumb-item active">Items - {{category.name}}</li> {% endif %}
 {% endblock %}
 {% block content %}
 
@@ -13,10 +13,8 @@
         <div class="card">
             <div class="body table-responsive">
                 <div class="row">
-                    <div class="col-lg-12 col-md-12 col-sm-12  col-xs-12 text-left ">
-                        <h5 class="">Category |
-                            <small>Select Category to see items inside the category</small>
-                        </h5>
+                    <div class="col-lg-4 col-md-6 col-sm-12  col-xs-12 text-left ">
+                        <h5 class="">Items | <small>{{category.name}}</small></h5>
                     </div>
 
                 </div>
@@ -25,26 +23,30 @@
                     <thead class="thead-light">
                     <tr>
                         <th scope="col">S.N.</th>
-                        <th scope="col">Category</th>
+                        <th scope="col">Billing Profile</th>
+                        <th>item</th>
+                        <th>Qty</th>
+                        <th>Order Id</th>
+
 
                         <th style="max-width:15%"></th>
-                        <th></th>
                     </tr>
                     </thead>
                     <tbody>
 
-                    {% for object in objects %}
+                    {% for object in refunds %}
                         <tr>
                             <td scope="row">{{ forloop.counter }}</td>
-                            <td><a href="{% url 'items:list' object.pk %}">{{ object.name }}</a>
+                            <td>{{ object.billing_profile }}
                             </td>
+                            <td>{{object.order_item}}</td>
 
-                            <td class=''>
-                                <a href="{% url 'items:list' object.pk %}">See Items</a>
+                            <td>{{object.quantity}}</td>
+                            <td>{{ object.order_item.order }}</td>
 
-                            </td>
-                            <td>
-                                <a href="{%  url 'refunds:create' object.slug %}">Refund Policy</a>
+                         <td class='text-right'>
+
+
                             </td>
 
                         </tr>
@@ -53,8 +55,7 @@
                             {% if request.GET.q %}
                                 <td class="text-danger text-center" colspan="8"><h5>No Record Found ।</h5></td>
                             {% else %}
-                                <td class="text-danger text-center" colspan="8"><h5>No any Data on Database Yet</h5>
-                                </td>
+                                <td class="text-danger text-center" colspan="8"><h5>No any Data on Database Yet</h5></td>
                             {% endif %}
                         </tr>
                     {% endfor %}

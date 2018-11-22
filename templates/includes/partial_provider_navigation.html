@@ -76,7 +76,7 @@
                     <hr style="margin:0;padding:0;">
 
                 </li>
-                <li id="companies">
+                <li id="items">
                         <a href="{% url 'items:category_select' %}" class="">
                             {% comment %} <i class="fa fa-dashboard mt-2"></i> {% endcomment %}
                             <span>Items</span>
@@ -85,7 +85,7 @@
                         
                     </li>
 
-                    <li id="companies">
+                    <li id="orders">
                             <a href="{% url 'orders:list' %}" class="">
                                 
                                 <span>Orders</span>
@@ -93,6 +93,14 @@
                             </a>
                             
                         </li>
+                 <li id="refunds">
+                        <a href="{% url 'refunds:refund_request_list' %}" class="">
+                            {% comment %} <i class="fa fa-dashboard mt-2"></i> {% endcomment %}
+                            <span>Refund Requests</span>
+
+                        </a>
+
+                    </li>
 
                 <!-- <li id="id_parent">
                         <a href="javascript:void(0);" class="menu-toggle">

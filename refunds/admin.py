@@ -1,3 +1,6 @@
 from django.contrib import admin
 
-# Register your models here.
+from refunds.models import RefundPolicy, RefundRequest
+
+admin.site.register(RefundPolicy)
+admin.site.register(RefundRequest)
