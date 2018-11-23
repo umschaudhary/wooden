@@ -1,71 +1,215 @@
 {% extends 'base.html' %}
 {% load widget_tweaks %}
+{% load staticfiles %}
+{% block extra_stylesheet %}
+    <style>
+        body {
+            background-color: white;
+        }
+    </style>
+{% endblock %}
 {% block  content %}
 
     <div class="container-fluid">
-        <div class="row">
+        <div class="row mt-4">
 
-            {% for message in messages %}
-            <div class="alert alert-{{ message.tags }} alert-dismissable">
-                <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
-                <strong></strong> {{ message }}
+
+            {% if not billing_profile %}
+                <div class="col-lg-6 col-md-6 col-sm-12 col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5>Continue as Guest : </h5>
+                            {% url "guest_register" as guest_register_url %}
+                            {% include 'carts/snippets/guestform.html' with form=guest_form next_url=request.build_absolute_uri action_url=guest_register_url %}
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+
+                    <div class="card">
+                        <div class="card-body">
+                            <h5>Login : </h5>
+
+                            {% include 'carts/snippets/loginform.html' with form=form next_url=request.build_absolute_uri %}
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="col-lg-12">
+                    <h1>Finalize Checkout : </h1>
+                </div>
+
+                <div class="col-lg-8 ">
+
+
+                <section class="section ">
+
+                    <div class="card ">
+                        <div class="card-body">
+
+                            <!-- Shopping Cart table -->
+                            <div class="table-responsive">
+
+                                <table class="table product-table">
+
+                                    <!-- Table head -->
+                                    <thead class="thead-light">
+                                    <tr>
+                                        <th></th>
+                                        <th class="font-weight-bold">
+                                            <strong>Product</strong>
+                                        </th>
+                                        <!-- <th class="font-weight-bold">
+                                          <strong>Color</strong>
+                                        </th> -->
+                                        <th></th>
+                                        <th class="font-weight-bold">
+                                            <strong>Price</strong>
+                                        </th>
+                                        <th class="font-weight-bold">
+                                            <strong>QTY</strong>
+                                        </th>
+                                        <th class="font-weight-bold">
+                                            <strong>Amount</strong>
+                                        </th>
+                                        <th></th>
+                                    </tr>
+                                    </thead>
+                                    <!-- /.Table head -->
+
+                                    <!-- Table body -->
+                                    <tbody class="">
+
+                                    <!-- First row -->
+                                    {% for product in cart.cart_items.all %}
+
+                                        <tr>
+                                            <th scope="row">
+
+                                                {% for i in product.item.item_images.all %}
+                                                    {% if forloop.first %}
+                                                        {% if i.document %}
+                                                            <img src="{{ i.document.url }}" height="40px" width="100px"
+                                                                 class="img-fluid "
+                                                                 alt='product image here'>
+                                                        {% endif %}
+                                                    {% endif %}
+                                                {% empty %}
+                                                    <img src="{% static 'images/default.jpg' %}" height="40px"
+                                                         class="img-fluid " alt='product image here'>
+
+                                                {% endfor %}
+                                            </th>
+                                            <td>
+                                                <h5 class="">
+                                                    <strong>{{ product.item.name }}</strong>
+                                                </h5>
+                                                <p class="text-muted">{{ product.item.provider }}</p>
+                                            </td>
+                                            <!-- <td>White</td> -->
+                                            <td></td>
+                                            <td>{{ product.item.stock_record.discounted_price }}</td>
+
+                                            <td class="text-center text-md-left">
+
+
+                                                <button class="btn "
+                                                        style="box-shadow:none;font-size:16px;color:black;">{{ product.quantity }}</button>
+
+
+                                            </td>
+                                            <td class="font-weight-bold">
+                                                <strong>{{ product.total }}</strong>
+                                            </td>
+
+                                        </tr>
+                                    {% empty %}
+                                        <tr>
+                                            <td colspan="8" class="text-center text-warning">
+                                                <h3>Cart is Empty</h3>
+                                            </td>
+                                        </tr>
+
+                                    {% endfor %}
+                                    <!-- /.First row -->
+
+
+                                    <!-- Fourth row -->
+                                    <tr>
+                                        <td colspan="3">
+                                            <a class="btn btn-primary btn-lg font-17" href='/'>
+                                                {% if cart.cart_items.all.count >= 1 %}Continue
+                                                    Shopping {% else %} Start Shopping {% endif %}
+                                            </a>
+                                        </td>
+
+                                        <td>
+                                            <h4 class="mt-2">
+                                                <strong>Total</strong>
+                                            </h4>
+                                        </td>
+
+                                        <td class="text-right">
+                                            <h4 class="mt-2">
+                                                <strong>{{ cart.total }}</strong>
+                                            </h4>
+                                        </td>
+                                        <td colspan="3" class="text-right">
+
+                                            <form class="form" method="post">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-success btn-lg">Checkout
+                                                </button>
+                                            </form>
+                                        </td>
+
+                                    </tr>
+                                    <!-- Fourth row -->
+
+                                    </tbody>
+                                    <!-- /.Table body -->
+
+                                </table>
+
+                            </div>
+                            <!-- /.Shopping Cart table -->
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+
+            {% endif %}
+
 
             </div>
-            {% endfor %}
+            <div class="col-lg-4">
 
-                {% if not billing_profile %}
-                            <div class="col-lg-6 col-md-6 col-sm-12 col-12">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <h5>Continue as Guest : </h5>
-                                        {% url "guest_register" as guest_register_url %}
-                                         {% include 'carts/snippets/guestform.html' with form=guest_form next_url=request.build_absolute_uri action_url=guest_register_url %}
-                                    
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                    
-                                    <div class="card">
-                                            <div class="card-body">
-                                                <h5>Login : </h5>
-                                                
-                                                {% include 'carts/snippets/loginform.html' with form=form next_url=request.build_absolute_uri %}
-                                            </div>
-                                        </div>
-                            </div>
-                {% else %}
+                <div class="card">
+                    <div class="card-body">
+
+                        <h1>Addresses</h1>
+                        <hr>
+                        <p>Shipping Address: {{ shipping_address.get_address }}</p>
+                        <p>Billing Address: {{ billing_address.get_address }}</p>
+                        <hr>
+                        <p>Cart Total: {{ cart.total }}</p>
+                        <p>Shipping Total: Free</p>
+                        <p>Order Total: {{ cart.total }}</p>
 
 
-                                <div class="col-lg-8 offset-lg-2">
-                    
-                                        <div class="card">
-                                                <div class="card-body">
-                                                    {{cart.id}}
-                                                        <h1>Finalize Checkout</h1>
-                                                        <p>Cart Items:
-                                                            {% for product in cart.cart_items.all %}{{ product }}{% if not forloop.last %},
-                                                            {% endif %}{% endfor %}</p>
-                                                        <p>Shipping Address: {{ shipping_address.get_address }}</p>
-                                                        <p>Billing Address: {{ billing_address.get_address }}</p>
-                                                        <p>Cart Total: {{ cart.total }}</p>
-                                                        <p>Shipping Total: Free</p>
-                                                        <p>Order Total: {{ cart.total }}</p>
-                                                        <form class="form" method="post">
-                                                                {% csrf_token %}
-                                                                <button type="submit" class="btn btn-success btn-lg">Checkout</button>
-                                                            </form>
-                
-                                                </div>
-                                            </div>
-                                   
-                         
+                    </div>
+                </div>
 
-                {% endif %}
- 
+            </div>
 
+        </div>
     </div>
-</div>
+
 
 
 

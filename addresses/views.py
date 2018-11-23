@@ -1,10 +1,9 @@
-from .forms import AddressForm
+from django.contrib import messages
 from django.shortcuts import redirect, render
-from django.utils.http import is_safe_url
 
 from addresses.models import Address
 from billings.models import BillingProfile
-from django.contrib import messages
+from .forms import AddressForm
 
 
 def shipping_address(request):
@@ -13,23 +12,25 @@ def shipping_address(request):
     billing_profile, billing_profile_created = BillingProfile.objects.new_or_get(request)
     try:
         if request.user.is_authenticated:
-            address_instance = Address.objects.get(is_deleted=False,address_type='shipping',billing_profile=billing_profile)
+            address_instance = Address.objects.get(is_deleted=False, address_type='shipping',
+                                                   billing_profile=billing_profile)
         else:
-            address_instance = Address.objects.get(is_deleted=False,address_type='shipping',billing_profile=billing_profile, id=shipping_address_id)
+            address_instance = Address.objects.get(is_deleted=False, address_type='shipping',
+                                                   billing_profile=billing_profile, id=shipping_address_id)
 
     except Address.DoesNotExist:
         address_instance = None
     except Address.MultipleObjectsReturned:
         if request.user.is_authenticated:
-            qs = Address.objects.filter(is_deleted=False,address_type='shipping',billing_profile=billing_profile)
+            qs = Address.objects.filter(is_deleted=False, address_type='shipping', billing_profile=billing_profile)
             address_instance = qs.last()
         else:
-            qs = Address.objects.filter(is_deleted=False,address_type='shipping',billing_profile=billing_profile, id=shipping_address_id)
+            qs = Address.objects.filter(is_deleted=False, address_type='shipping', billing_profile=billing_profile,
+                                        id=shipping_address_id)
             address_instance = qs.last()
 
-
     form = AddressForm(request.POST or None, instance=address_instance or None)
-        
+
     if billing_profile is not None:
         if request.method == 'POST':
             if form.is_valid():
@@ -47,6 +48,7 @@ def shipping_address(request):
     context['address_form'] = form
     return render(request, 'addresses/shipping_address.html', context)
 
+
 def billing_address(request):
     context = {}
     next_ = request.GET.get('next')
@@ -56,11 +58,12 @@ def billing_address(request):
 
     billing_profile, billing_profile_created = BillingProfile.objects.new_or_get(request)
 
-
     try:
-        billing_address_instance = Address.objects.get(is_deleted=False, address_type='billing', billing_profile=billing_profile,  id=billing_address_id)
+        billing_address_instance = Address.objects.get(is_deleted=False, address_type='billing',
+                                                       billing_profile=billing_profile, id=billing_address_id)
     except Address.MultipleObjectsReturned:
-        qs = Address.objects.filter(is_deleted=False,address_type='billing',billing_profile=billing_profile, id=billing_address_id)
+        qs = Address.objects.filter(is_deleted=False, address_type='billing', billing_profile=billing_profile,
+                                    id=billing_address_id)
         billing_address_instance = qs.last()
     except Address.DoesNotExist:
         billing_address_instance = None

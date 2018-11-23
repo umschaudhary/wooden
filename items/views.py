@@ -15,6 +15,7 @@ from items import forms
 from items.forms import BaseItemModelFormSet
 from items.models import Item, ItemImage
 from ratings.forms import RatingForm
+from ratings.models import Rating
 from settings.models import FiscalYear
 from users.decorators import provider_required
 from users.models import GuestEmail
@@ -131,6 +132,7 @@ def item_detail(request, slug):
                 if request.user.is_authenticated:
                     if request.user.is_customer():
                         data.user = request.user
+                        is_rated = Rating.objects.get(is_deleted=False, item=item, user=request.user)
 
                 else:
                     if request.session['guest_email_id']:
@@ -142,6 +144,7 @@ def item_detail(request, slug):
                         except GuestEmail.DoesNotExist:
                             g_mail = None
                         data.guest_user = g_mail
+                        is_rated = Rating.objects.get(is_deleted=False, item=item, guest_user=g_mail)
 
                 data.save()
                 return HttpResponseRedirect("")
@@ -202,7 +205,45 @@ def item_detail(request, slug):
                 context['data'] = 0
 
         comments = Comment.objects.filter(item=item).order_by('-created_at')
+        related_products = Item.objects.filter(is_deleted=False, category=item.category)
+        context['related_products'] = related_products
         context['comments'] = comments
+        ratings5 = Rating.objects.filter(is_deleted=False, item=item, rating=5).count()
+        ratings4 = Rating.objects.filter(is_deleted=False, item=item, rating=4).count()
+        ratings3 = Rating.objects.filter(is_deleted=False, item=item, rating=3).count()
+        ratings2 = Rating.objects.filter(is_deleted=False, item=item, rating=2).count()
+        ratings1 = Rating.objects.filter(is_deleted=False, item=item, rating=1).count()
+        context['ratings5'] = ratings5
+        context['ratings4'] = ratings4
+        context['ratings3'] = ratings3
+        context['ratings2'] = ratings2
+        context['ratings1'] = ratings1
+        if request.user.is_authenticated:
+            if request.user.is_customer():
+                try:
+                    is_rated = Rating.objects.get(is_deleted=False, item=item, user=request.user)
+                except:
+                    is_rated = None
+                if is_rated:
+                    context['rate'] = is_rated
+                    context['is_rated'] = True
+
+        else:
+            if request.session['guest_email_id']:
+                guest_email_id = request.session['guest_email_id']
+                try:
+                    g_mail = GuestEmail.objects.get(id=guest_email_id)
+                except GuestEmail.MultipleObjectsReturned:
+                    g_mail = GuestEmail.objects.filter(id=guest_email_id).last()
+                except GuestEmail.DoesNotExist:
+                    g_mail = None
+                try:
+                    is_rated = Rating.objects.get(is_deleted=False, item=item, guest_user=g_mail)
+                except:
+                    is_rated = None
+                if is_rated:
+                    context['rate'] = is_rated
+                    context['is_rated'] = True
 
     context['item'] = item
     template_name = 'items/item_detail.html'

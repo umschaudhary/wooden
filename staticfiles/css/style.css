@@ -355,27 +355,7 @@ a:hover {
     width: 85px;
     padding: 5px!important;
   }
-
-  .item td .biggha{
-    width: 85px;
-  }
-
-  .item td .map-sheet-no, .item td .kitta-no{
-    width: 60px;
-  }
-
-  .item td .kattha, .item td .dhur{
-    width: 50px;
-  }
-
-  .item td .new-name{
-    width: 110px;
-  }
-
-  .item td .estimated-cost{
-    width: 115px;
-  }
-
+  
   .form-table thead tr td {
      vertical-align: middle;
      background-color: #e9ecef!important;
@@ -458,4 +438,7 @@ background: #0f0f0fe6 !important;
 .bg-grey-dark{
 background: #141415 !important;
 }
+
+
+
 

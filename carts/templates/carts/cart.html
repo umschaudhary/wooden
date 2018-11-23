@@ -1,170 +1,196 @@
 {% extends "base.html" %}
 {% load staticfiles %}
-{% block title %}Cart | {{block.super}} {% endblock title %}
+{% block title %}Cart | {{ block.super }} {% endblock title %}
 
 {% block extra_stylesheet %}
-<style>
-.btn-rounded{
-    border-radius: 10em
-}
-.product-table img {
-    max-height: 150px;
-    min-width: 50px;
-}
-section {
-    display: block;
-}
-.input-sm{
-    max-width: 50px;
-    text-align: center; 
-}
+    <style>
+        .btn-rounded {
+            border-radius: 10em
+        }
 
-</style>
+        .product-table img {
+            max-height: 150px;
+            min-width: 50px;
+        }
+
+        section {
+            display: block;
+        }
+
+        .input-sm {
+            max-width: 50px;
+            text-align: center;
+        }
+
+    </style>
 {% endblock %}
 {% block content %}
-<div class="container">
+    <div class="container">
         <div class="row">
             <div class="col-12">
                 <div class="django-messages mt-2">
-                  {% if messages %}
-                      {% for message in messages %}
-                          <div class="alert alert-{{ message.tags }} alert-dismissable">
-                              <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
-                              <strong></strong> {{ message }}
-                          </div>
-                      {% endfor %}
-                  {% endif %}
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }} alert-dismissable">
+                                <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
+                                <strong></strong> {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
                 </div>
             </div>
         </div>
     </div>
 
-<div class="container">
+    <div class="container">
         <!-- Section cart -->
         <section class="section mt-2 pb-5">
-  
-          <div class="card ">
-            <div class="card-body">
-  
-              <!-- Shopping Cart table -->
-              <div class="table-responsive">
-  
-                <table class="table product-table">
-  
-                  <!-- Table head -->
-                  <thead class="thead-light">
-                    <tr>
-                      <th>{{cart.id}}</th>
-                      <th class="font-weight-bold">
-                        <strong>Product</strong>
-                      </th>
-                      <!-- <th class="font-weight-bold">
-                        <strong>Color</strong>
-                      </th> -->
-                      <th></th>
-                      <th class="font-weight-bold">
-                        <strong>Price</strong>
-                      </th>
-                      <th class="font-weight-bold">
-                        <strong>QTY</strong>
-                      </th>
-                      <th class="font-weight-bold">
-                        <strong>Amount</strong>
-                      </th>
-                      <th></th>
-                    </tr>
-                  </thead>
-                  <!-- /.Table head -->
-  
-                  <!-- Table body -->
-                  <tbody class="">
-  
-                    <!-- First row -->
-                    {% for product in objects %}
-                    
-                    <tr>
-                      <th scope="row">
-                            
-                            {% for i in product.item.item_images.all %}
-                                {% if forloop.first %}
-                                    {% if i.document %}
-                                    <img src="{{ i.document.url }}" height="40px" class="img-fluid " alt='product image here'>
-                                    {% endif %}
-                                {% endif %}
+
+            <div class="card ">
+                <div class="card-body">
+
+                    <!-- Shopping Cart table -->
+                    <div class="table-responsive">
+
+                        <table class="table product-table">
+
+                            <!-- Table head -->
+                            <thead class="thead-light">
+                            <tr>
+                                <th></th>
+                                <th class="font-weight-bold">
+                                    <strong>Product</strong>
+                                </th>
+                                <!-- <th class="font-weight-bold">
+                                  <strong>Color</strong>
+                                </th> -->
+                                <th></th>
+                                <th class="font-weight-bold">
+                                    <strong>Price</strong>
+                                </th>
+                                <th class="font-weight-bold">
+                                    <strong>QTY</strong>
+                                </th>
+                                <th class="font-weight-bold">
+                                    <strong>Amount</strong>
+                                </th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <!-- /.Table head -->
+
+                            <!-- Table body -->
+                            <tbody class="">
+
+                            <!-- First row -->
+                            {% for product in objects %}
+
+                                <tr>
+                                    <th scope="row">
+
+                                        {% for i in product.item.item_images.all %}
+                                            {% if forloop.first %}
+                                                {% if i.document %}
+                                                    <img src="{{ i.document.url }}" height="40px" class="img-fluid "
+                                                         alt='product image here'>
+                                                {% endif %}
+                                            {% endif %}
+                                        {% empty %}
+                                            <img src="{% static 'images/default.jpg' %}" height="40px"
+                                                 class="img-fluid " alt='product image here'>
+
+                                        {% endfor %}
+                                    </th>
+                                    <td>
+                                        <h5 class="">
+                                            <strong>{{ product.item.name }}</strong>
+                                        </h5>
+                                        <p class="text-muted">{{ product.item.provider }}</p>
+                                    </td>
+                                    <!-- <td>White</td> -->
+                                    <td></td>
+                                    <td>{{ product.item.stock_record.discounted_price }}</td>
+
+                                    <td class="text-center text-md-left">
+
+                                        <a href="{% url 'carts:item_quantity_minus' product.pk %} "
+                                           class="btn btn-sm btn-warning minus-button {% if product.quantity == 1 %} disabled  {% endif %}"
+                                           name='minus_button' style='color:white;' data-toggle="tooltip"
+                                           data-placement="top" title="" data-original-title="-1">-</a>
+
+                                        <button class="btn "
+                                                style="box-shadow:none;font-size:16px;color:black;">{{ product.quantity }}</button>
+
+                                        <a href="{% url 'carts:item_quantity_plus' product.pk %}"
+                                           class="btn btn-sm btn-primary add-button" id='id_add_button'
+                                           style="color:white" data-toggle="tooltip" data-placement="top" title=""
+                                           data-original-title="+1">+</a>
+
+                                    </td>
+                                    <td class="font-weight-bold">
+                                        <strong>{{ product.total }}</strong>
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'carts:item_remove_cart' product.pk %}"
+                                           class="btn btn-sm btn-danger add-button" id='id_add_button'
+                                           style="color:white" data-toggle="tooltip" data-placement="top" title=""
+                                           data-original-title="Remove Item">X</a>
+                                    </td>
+                                </tr>
                             {% empty %}
-                                    <img src="{% static 'images/default.jpg' %}" height="40px" class="img-fluid " alt='product image here'>
-                            
+                                <tr>
+                                    <td colspan="8" class="text-center text-warning">
+                                        <h3>Cart is Empty</h3>
+                                    </td>
+                                </tr>
+
                             {% endfor %}
-                            </th>
-                      <td>
-                        <h5 class="">
-                          <strong>{{product.item.name}}</strong>
-                        </h5>
-                        <p class="text-muted">{{product.item.provider}}</p>
-                      </td>
-                      <!-- <td>White</td> -->
-                      <td></td>
-                      <td>{{product.item.stock_record.discounted_price}}</td>
-
-                      <td class="text-center text-md-left">
-                          
-                        <a href="{% url 'carts:item_quantity_minus' product.pk %} "class="btn btn-sm btn-warning minus-button {% if product.quantity == 1 %} disabled  {% endif %}" name='minus_button' style='color:white;' data-toggle="tooltip" data-placement="top" title="" data-original-title="-1">-</a>
-                       
-                           <button class="btn " style="box-shadow:none;font-size:16px;color:black;">{{product.quantity}}</button>
-                
-                        <a href="{% url 'carts:item_quantity_plus' product.pk %}" class="btn btn-sm btn-primary add-button" id='id_add_button' style="color:white" data-toggle="tooltip" data-placement="top" title="" data-original-title="+1">+</a>
-                  
-                      </td>
-                      <td class="font-weight-bold">
-                        <strong>{{product.total}}</strong>
-                      </td>
-                      <td>
-                            <a href="{% url 'carts:item_remove_cart' product.pk %}" class="btn btn-sm btn-danger add-button" id='id_add_button' style="color:white" data-toggle="tooltip" data-placement="top" title="" data-original-title="Remove Item">X</a>
-                      </td>
-                    </tr>
-                    {% empty %}
-
-                    {% endfor %}
-                    <!-- /.First row -->
+                            <!-- /.First row -->
 
 
-                    <!-- Fourth row -->
-                    <tr>
-                      <td colspan="3">
-                          <a  class="btn btn-primary btn-lg font-17" href='/'> <i class="fa fa-chevron-left"></i> Continue Shopping
-                          </a>
-                      </td>
-                      <td>
-                        <h4 class="mt-2">
-                          <strong>Total</strong>
-                        </h4>
-                      </td>
-                      <td class="text-right">
-                        <h4 class="mt-2">
-                          <strong>{{cart.total}}</strong>
-                        </h4>
-                      </td>
-                      <td colspan="3" class="text-right">
-                        
-                        <a href="{% url 'addresses:shipping_address' %}" class="btn btn-lg btn-success font-17">Proceed Checkout
-                          <i class="fa fa-chevron-right"></i>
-                        </a>
-                      </td>
-                    </tr>
-                    <!-- Fourth row -->
-  
-                  </tbody>
-                  <!-- /.Table body -->
-  
-                </table>
-  
-              </div>
-              <!-- /.Shopping Cart table -->
-  
+                            <!-- Fourth row -->
+                            <tr>
+                                <td colspan="3">
+                                    <a class="btn btn-primary btn-lg font-17" href='/'> <i
+                                            class="fa fa-chevron-left"></i> {% if objects.count >= 1 %}Continue
+                                        Shopping {% else %} Start Shopping {% endif %}
+                                    </a>
+                                </td>
+                                {% if objects.count >= 1 %}
+                                    <td>
+                                        <h4 class="mt-2">
+                                            <strong>Total</strong>
+                                        </h4>
+                                    </td>
+
+                                    <td class="text-right">
+                                        <h4 class="mt-2">
+                                            <strong>{{ cart.total }}</strong>
+                                        </h4>
+                                    </td>
+                                    <td colspan="3" class="text-right">
+
+                                        <a href="{% url 'addresses:shipping_address' %}"
+                                           class="btn btn-lg btn-success font-17">Proceed Checkout
+                                            <i class="fa fa-chevron-right"></i>
+                                        </a>
+                                    </td>
+                                {% endif %}
+                            </tr>
+                            <!-- Fourth row -->
+
+                            </tbody>
+                            <!-- /.Table body -->
+
+                        </table>
+
+                    </div>
+                    <!-- /.Shopping Cart table -->
+
+                </div>
+
             </div>
-  
-          </div>
-  
+
         </section>
         <!-- /Section cart -->
 

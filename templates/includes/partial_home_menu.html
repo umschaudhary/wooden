@@ -1,59 +1,61 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-deep-blue">
-        <a class="navbar-brand" href="/">Wooden </a>
-        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
-                data-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+    <a class="navbar-brand" href="/">Wooden </a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
 
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
 
-                <ul class="navbar-nav mr-auto">
-                </ul>
-               
-                <ul class="navbar-nav ">
-                        <li class="">
-                                <form method='GET' action="{% url 'search_products' %}" class="form ">
-    
-                                        <div class='input-group'>
-                                            <input class="form-control" type="text" placeholder="Search" name='q' aria-label="Search"
-                                                   value='{{ request.GET.q }}'>
-                                            <span class='input-group-btn'>
-                                            <button class="btn btn-success btn-lg" type="submit">Search</button>
-                                        </span>
-                                        </div>
-                                    </form>
-                        </li>
-                    <li class="nav-item">
-                        <a href="{% url 'carts:cart' %}" style="color:white;">
-                            <i class="fa fa-shopping-cart fa-2x"></i>
-                            <span class="badge badge-red">{% if not request.session.item_count == 0%} {{request.session.item_count}}{% else %} {% endif %}</span>
-                        </a>
-                    </li>
-                    <li>
-                    </li>
-                    {% if request.user.is_authenticated %}
-                        <li class="nav-item dropdown">
-                                <a style="padding: 0px;
-                                        padding-right: 7px;
-                                        padding-left: 0px;
-                                      margin-top:0px;
-                                        margin-left: 5px;color:white"class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                  <i class="fa fa-user fa-2x"></i>
-                                </a>
-                                <div style="left: -90px !important;" class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                  <a class="dropdown-item" href="{% url 'users:profile' %}">Profile {{user.email}}</a>
-                                    <a href="{% url 'orders:order_history' %}" class="dropdown-item" >Order History</a>
-                                  
-                                  <div class="dropdown-divider"></div>
-                                  <a class="dropdown-item" href="{% url 'users:logout_user' %}">Logout</a>
-                                </div>
-                              </li>
-                             
-                              {% endif %}
-                              
-                              
-                    </ul>
-              </div>
-        
+
+        <ul class="navbar-nav " style="width:70%;">
+            <li class="nav-item">
+                <form method='GET' action="{% url 'search_products' %}" class='ml-5'>
+                    <div class="input-group">
+                        <input type="text" value="{{ request.GET.q }}" name="q" placeholder="Search.."
+                               class="form-control" aria-label="search">
+                        <div class="input-group-append ">
+                            <button class="btn " id="basic-addon2" type="submit"><i class="fa fa-search"></i></button>
+                        </div>
+                    </div>
+                </form>
+            </li>
+        </ul>
+
+
+        <ul class="navbar-nav ml-auto ">
+            <li class="nav-item">
+                <a href="{% url 'carts:cart' %}" style="color:white;">
+                    <i class="fa fa-shopping-cart fa-2x"></i>
+                    <span class="badge badge-red">{% if not request.session.item_count == 0 %}
+                        {{ request.session.item_count }}{% else %} {% endif %}</span>
+                </a>
+            </li>
+            <li>
+            </li>
+            {% if request.user.is_authenticated %}
+                <li class="nav-item dropdown">
+                    <a style="
+                                padding-right: 7px;
+                                padding-left: 0px;
+                              margin-top:0px;
+                                        margin-left: 5px;color:white" class="nav-link dropdown-toggle" href="#"
+                       id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true"
+                       aria-expanded="false">
+                        <i class="fa fa-user fa-2x"></i>
+                    </a>
+                    <div style="left: -90px !important;" class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="{% url 'users:profile' %}">Profile </a>
+                        <a href="{% url 'orders:order_history' %}" class="dropdown-item">Order History</a>
+
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{% url 'users:logout_user' %}">Logout</a>
+                    </div>
+                </li>
+
+            {% endif %}
+        </ul>
+
+    </div>
 </nav>

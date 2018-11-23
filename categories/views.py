@@ -1,9 +1,8 @@
-
-from categories import forms
-from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 
+from categories import forms
 from categories.models import Category
 from users.decorators import admin_required
 
@@ -13,9 +12,9 @@ from users.decorators import admin_required
 def category_list(request):
     context = {}
     objects = Category.objects.all_active()
-    template_name ='categories/category_list.html'
+    template_name = 'categories/category_list.html'
 
-    context ['objects'] = objects
+    context['objects'] = objects
     return render(request, template_name, context)
 
 
@@ -33,3 +32,18 @@ def category_create(request):
     context['form'] = form
     return render(request, 'categories/category_create.html', context)
 
+
+def items_category(request, slug):
+    context = {}
+    try:
+        category = Category.objects.get(slug=slug)
+    except Category.MultipleObjectsReturned:
+        category = Category.objects.filter(slug=slug).first()
+    except Category.DoesNotExist:
+        category = None
+    if category:
+        items = category.items.all_active()
+    context['products'] = items
+    context['categories'] = Category.objects.all_active()
+    template_name = 'categories/items_category.html'
+    return render(request, template_name, context)

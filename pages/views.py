@@ -5,8 +5,8 @@ from django.shortcuts import render
 
 from carts.models import Cart, CartItem
 from categories.models import Category
-from items.models import Item as Product
-from orders.models import Order
+from items.models import Item as Product, Item
+from orders.models import Order, OrderItem
 from refunds.models import RefundRequest
 from settings.models import FiscalYear
 from users.models import Sidebar
@@ -109,14 +109,34 @@ def home(request):
                     category = None
 
                 if category:
-                    products = category.items.all()
+                    products = category.items.all()[:6]
+                    best_sellers = OrderItem.objects.filter(is_deleted=False, item__category=category).distinct()[:3]
+                    latest_products = Item.objects.filter(is_deleted=False, category=category).order_by("-created_at")[
+                                      :3]
+                    top_offers = Item.objects.filter(is_deleted=False,
+                                                     stock_record__discount_percentage__isnull=False,
+                                                     category=category).distinct()[:3]
                 else:
-                    products = Product.objects.all_active()
+                    products = Product.objects.all_active()[:6]
+                    best_sellers = OrderItem.objects.filter(is_deleted=False).distinct()[:3]
+                    latest_products = Item.objects.filter(is_deleted=False).order_by("-created_at")[:3]
+                    top_offers = Item.objects.filter(is_deleted=False,
+                                                     stock_record__discount_percentage__isnull=False).distinct()[:3]
+
             else:
-                products = Product.objects.all_active()
+                products = Product.objects.all_active()[:6]
+                best_sellers = OrderItem.objects.filter(is_deleted=False).distinct()[:3]
+                latest_products = Item.objects.filter(is_deleted=False).order_by("-created_at")[:3]
+                top_offers = Item.objects.filter(is_deleted=False,
+                                                 stock_record__discount_percentage__isnull=False).distinct()[:3]
+
             context['cart'] = cart_obj
+
             context['products'] = products
             context['categories'] = categories
+            context['best_sellers'] = best_sellers
+            context['latest_products'] = latest_products
+            context['top_offers'] = top_offers
             template_name = 'pages/user_dashboard.html'
         else:
             pass
@@ -132,16 +152,32 @@ def home(request):
                 category = None
 
             if category:
-                products = category.items.all()
+                products = category.items.all()[:6]
+                best_sellers = OrderItem.objects.filter(is_deleted=False, item__category=category).distinct()[:3]
+                latest_products = Item.objects.filter(is_deleted=False, category=category).order_by("-created_at")[:3]
+                top_offers = Item.objects.filter(is_deleted=False,
+                                                 stock_record__discount_percentage__isnull=False,
+                                                 category=category).distinct()[:3]
             else:
-                products = Product.objects.all_active()
+                products = Product.objects.all_active()[:6]
+                best_sellers = OrderItem.objects.filter(is_deleted=False).distinct()[:3]
+                latest_products = Item.objects.filter(is_deleted=False).order_by("-created_at")[:3]
+                top_offers = Item.objects.filter(is_deleted=False,
+                                                 stock_record__discount_percentage__isnull=False).distinct()[:3]
         else:
-            products = Product.objects.all_active()
+            products = Product.objects.all_active()[:6]
+            best_sellers = OrderItem.objects.filter(is_deleted=False).distinct()[:3]
+            top_offers = Item.objects.filter(is_deleted=False,
+                                             stock_record__discount_percentage__isnull=False).distinct()[:3]
+            latest_products = Item.objects.filter(is_deleted=False).order_by("-created_at")[:3]
         cart_obj, new_obj = Cart.objects.new_or_get(request)
         if cart_obj:
             items = cart_obj.cart_items.filter(is_deleted=False).count()
 
         context['cart'] = cart_obj
+        context['best_sellers'] = best_sellers
+        context['latest_products'] = latest_products
+        context['top_offers'] = top_offers
         context['item_count'] = items
         context['products'] = products
         context['categories'] = categories

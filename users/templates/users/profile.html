@@ -2,202 +2,284 @@
 {% load staticfiles %}
 {% load widget_tweaks %}
 {% block title %}
-Profile User | {{block.super}}
+    Profile User | {{ block.super }}
 
 {% endblock title %}
+{% block extra_stylesheet %}
+    <style>
+        body {
+            background-color: white;
+        }
+    </style>
 
+{% endblock %}
 {% block content %}
 
-            <div class="container-fluid">
-                    {% if messages %}
-                        <div class="row">
-                            <div class="offset-md-4 col-md-4">
-                                {% for message in messages %}
-                                    <div class="alert alert-dismissible alert-danger" role="alert">
-                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span></button>
-                                        {{ message }}
-                                    </div>
-                                {% endfor %}
-                            </div>
-                        </div>
-                    {% endif %}
+    <div class="container">
 
+    {% if messages %}
+        <div class="row">
+            <div class="col-md-12 mt-2">
+
+                {% for message in messages %}
+                    <div class="alert alert-dismissible alert-{{ message.tags }}" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span></button>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="container">
+    <div class="row mt-5">
+
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xs-offset-0 col-sm-offset-0 col-md-offset-3 col-lg-offset-3 ">
+
+
+            <div class="card ">
+                <div class="header">
+                    <h3 class="">{{ user.full_name }}</h3>
+                </div>
+                <div class="body">
                     <div class="row">
-                        <div class="offset-md-3 col-md-6 ">
-                            <div class="card ">
+                        <div class="col-md-3 col-lg-3 " align="center">
+                            {% if user.userprofile.pic %}
+                                <img alt="User Pic"
+                                     src="{{ user.userprofile.pic.url }}"
+                                     class="img-circle img-responsive img-fluid"
+                                     style="border-radius: 50%; height:100px;border:2px solid gray;"></div>
+                            {% else %}
+                                <img src="{% static 'images/default.jpg' %}" alt="default image">
+                            {% endif %}
 
-                                <div class="card-body">
-                                    <h5 class="card-title">Profile </h5>
+                        <div class=" col-md-9 col-lg-9 ">
+                            <table class="table table-user-information">
+                                <tbody>
+                                <tr>
+                                    <td>Address Line 1:</td>
+                                    <td>{{ profile.address_line_1 }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Address Line 2:</td>
+                                    <td>{{ profile.address_line_2 }}</td>
+                                </tr>
+                                <tr>
+                                    <td>City</td>
+                                    <td>{{ profile.city }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Postal</td>
+                                    <td>{{ profile.postal_code }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Joined</td>
+                                    <td>{{ user.timestamp }}</td>
+                                </tr>
 
-                                    <div class="login-form-wrap">
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <form class="login-form" method="POST"  enctype="multipart/form-data" >
-                                                    {% csrf_token %}
-                                                    <div class=" form-group row">
-                                                            <span class="col-lg-4 col-md-2 col-sm-2 col-1"><span
-                                                                    class=" float-lg-right float-md-right float-sm-right float-right"> </span></span>
-                            
-                                                            {% if form.pic.errors %}
-                                                                <div class="col-lg-4 col-md-2 col-sm-2 col-4">
-                                                                    {{ form.pic | add_class:'is-invalid' }}
-                                                                    <div class="invalid-feedback">
-                                                                        {{ form.pic.errors }}
-                                                                    </div>
-                                                                </div>
-                                                            {% else %}
-                            
-                                                                <div class="col-lg-10 offset-lg-1 col-md-8 col-sm-8 col-12">
-                                                                        {% render_field form.pic class='form-control'  placeholder='' required='required' %}
-                                                                    <label for="" class="">{{form.pic.label}} <span
-                                                                        class="text-danger">*</span></label>
-                                                                </div>
-                                                            {% endif %}
-                                                        </div>
+                                <tr>
+                                <tr>
+                                    <td>Gender</td>
+                                    <td>{{ profile.gender }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Home Address</td>
+                                    <td>Kathmandu,Nepal</td>
+                                </tr>
+                                <tr>
+                                    <td>Email</td>
+                                    <td><a href="mailto:{{ user.email }}">{{ user.email }}</a></td>
+                                </tr>
+                                {#                                    <td>Phone Number</td>#}
+                                {#                                    <td>123-4567-890(Landline)<br><br>555-4567-890(Mobile)#}
+                                {#                                    </td>#}
 
-                                                    <div class=" form-group row">
-                                                            <span class="col-lg-4 col-md-2 col-sm-2 col-1"><span
-                                                                    class=" float-lg-right float-md-right float-sm-right float-right"> </span></span>
-                            
-                                                            {% if form.gender.errors %}
-                                                                <div class="col-lg-4 col-md-2 col-sm-2 col-4">
-                                                                    {{ form.gender | add_class:'is-invalid' }}
-                                                                    <div class="invalid-feedback">
-                                                                        {{ form.gender.errors }}
-                                                                    </div>
-                                                                </div>
-                                                            {% else %}
-                            
-                                                                <div class="col-lg-10 offset-lg-1 col-md-8 col-sm-8 col-12">
-                                                                        {% render_field form.gender class='form-control'  placeholder='' required='required' %}
-                                                                    <label for="" class="mt-2">{{form.gender.label}} <span
-                                                                        class="text-danger">*</span></label>
-                                                                </div>
-                                                            {% endif %}
-                                                        </div>
+                                </tr>
 
-                                                    <div class=" form-group row">
-                                                            <span class="col-lg-4 col-md-2 col-sm-2 col-1"><span
-                                                                    class=" float-lg-right float-md-right float-sm-right float-right"> </span></span>
-                            
-                                                            {% if form.address_line_1.errors %}
-                                                                <div class="col-lg-4 col-md-2 col-sm-2 col-4">
-                                                                    {{ form.address_line_1 | add_class:"is-invalid" }}
-                                                                    <div class="invalid-feedback">
-                                                                        {{ form.address_line_1.errors }}
-                                                                    </div>
-                                                                </div>
-                                                            {% else %}
-                            
-                                                                <div class="col-lg-10 offset-lg-1 col-md-8 col-sm-8 col-12">
-                                                                        {% render_field form.address_line_1 class='form-control'  placeholder='' required='required' %}
-                                                                    <label for="" class="">{{form.address_line_1.label}} <span
-                                                                        class="text-danger">*</span></label>
-                                                                </div>
-                                                            {% endif %}
-                                                        </div>
-                    
-                                                        <div class=" form-group row">
-                                                                <span class="col-lg-4 col-md-2 col-sm-2 col-1"><span
-                                                                        class=" float-lg-right float-md-right float-sm-right float-right"> </span></span>
-                                
-                                                                {% if form.address_line_2.errors %}
-                                                                    <div class="col-lg-4 col-md-2 col-sm-2 col-4">
-                                                                        {{ form.address_line_2 | add_class:"is-invalid" }}
-                                                                        <div class="invalid-feedback">
-                                                                            {{ form.address_line_2.errors }}
-                                                                        </div>
-                                                                    </div>
-                                                                {% else %}
-                                
-                                                                    <div class="col-lg-10 offset-lg-1 col-md-8 col-sm-8 col-12">
-                                                                            {% render_field form.address_line_2 class='form-control'  placeholder='' required='required' %}
-                                                                        <label for="" class="">{{form.address_line_2.label}} </label>
-                                                                    </div>
-                                                                {% endif %}
-                                                        </div>
+                                </tbody>
+                            </table>
 
-                                                        <div class=" form-group row">
-                                                                <span class="col-lg-4 col-md-2 col-sm-2 col-1"><span
-                                                                        class=" float-lg-right float-md-right float-sm-right float-right"> </span></span>
-                                
-                                                                {% if form.city.errors %}
-                                                                    <div class="col-lg-4 col-md-2 col-sm-2 col-4">
-                                                                        {{ form.city | add_class:"is-invalid" }}
-                                                                        <div class="invalid-feedback">
-                                                                            {{ form.city.errors }}
-                                                                        </div>
-                                                                    </div>
-                                                                {% else %}
-                                
-                                                                    <div class="col-lg-10 offset-lg-1 col-md-8 col-sm-8 col-12">
-                                                                            {% render_field form.city class='form-control'  placeholder='' required='required' %}
-                                                                        <label for="" class="">{{form.city.label}} <span
-                                                                            class="text-danger">*</span></label>
-                                                                    </div>
-                                                                {% endif %}
-                                                        </div>
-
-                                                        <div class=" form-group row">
-                                                                <span class="col-lg-4 col-md-2 col-sm-2 col-1"><span
-                                                                        class=" float-lg-right float-md-right float-sm-right float-right"> </span></span>
-                                
-                                                                {% if form.country.errors %}
-                                                                    <div class="col-lg-4 col-md-2 col-sm-2 col-4">
-                                                                        {{ form.country | add_class:"is-invalid" }}
-                                                                        <div class="invalid-feedback">
-                                                                            {{ form.country.errors }}
-                                                                        </div>
-                                                                    </div>
-                                                                {% else %}
-                                
-                                                                    <div class="col-lg-10 offset-lg-1 col-md-8 col-sm-8 col-12">
-                                                                            {% render_field form.country class='form-control'  placeholder='Country' required='required' %}
-                                                                    
-                                                                    </div>
-                                                                {% endif %}
-                                                        </div>
-
-                                                        
-                                                        <div class=" form-group row">
-                                                                <span class="col-lg-4 col-md-2 col-sm-2 col-1"><span
-                                                                        class=" float-lg-right float-md-right float-sm-right float-right"> </span></span>
-                                
-                                                                {% if form.postal_code.errors %}
-                                                                    <div class="col-lg-4 col-md-2 col-sm-2 col-4">
-                                                                        {{ form.postal_code | add_class:"is-invalid" }}
-                                                                        <div class="invalid-feedback">
-                                                                            {{ form.postal_code.errors }}
-                                                                        </div>
-                                                                    </div>
-                                                                {% else %}
-                                
-                                                                    <div class="col-lg-10 offset-lg-1 col-md-8 col-sm-8 col-12">
-                                                                            {% render_field form.postal_code class='form-control'  placeholder='' required='required' %}
-                                                                        <label for="" class="">{{form.postal_code.label}} <span
-                                                                            class="text-danger">*</span></label>
-                                                                    </div>
-                                                                {% endif %}
-                                                        </div>
-
-                                                    <div class="form-group mt-2">
-                                                        <button class="btn btn-success btn-lg  btn-block" name="submit"
-                                                                type="submit">
-                                                            <em class="fa fa-save"></em> Save
-                                                        </button>
-                                                        
-                                                    </div>
-                                                </form>
-                                </div>
-                            </div>
 
                         </div>
                     </div>
-
-                   
                 </div>
-           
+
+            </div>
+        </div>
+        <div class=" col-md-6 ">
+
+            <div class="card ">
+
+                <div class="card-body">
+                    <h5 class="card-title">Edit Profile </h5>
+
+                    <div class="login-form-wrap">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <form class="login-form" method="POST" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    <div class=" form-group row">
+                            <span class="col-lg-4 col-md-2 col-sm-2 col-1"><span
+                                    class=" float-lg-right float-md-right float-sm-right float-right"> </span></span>
+
+                                        {% if form.pic.errors %}
+                                            <div class="col-lg-4 col-md-2 col-sm-2 col-4">
+                                                {{ form.pic | add_class:'is-invalid' }}
+                                                <div class="invalid-feedback">
+                                                    {{ form.pic.errors }}
+                                                </div>
+                                            </div>
+                                        {% else %}
+
+                                            <div class="col-lg-10 offset-lg-1 col-md-8 col-sm-8 col-12">
+                                                {% render_field form.pic class='form-control' placeholder='' %}
+
+                                            </div>
+                                        {% endif %}
+                                    </div>
+
+                                    <div class=" form-group row">
+                                                            <span class="col-lg-4 col-md-2 col-sm-2 col-1"><span
+                                                                    class=" float-lg-right float-md-right float-sm-right float-right"> </span></span>
+
+                                        {% if form.gender.errors %}
+                                            <div class="col-lg-4 col-md-2 col-sm-2 col-4">
+                                                {{ form.gender | add_class:'is-invalid' }}
+                                                <div class="invalid-feedback">
+                                                    {{ form.gender.errors }}
+                                                </div>
+                                            </div>
+                                        {% else %}
+
+                                            <div class="col-lg-10 offset-lg-1 col-md-8 col-sm-8 col-12">
+                                                {% render_field form.gender class='form-control' placeholder='gender' required='required' %}
+
+                                            </div>
+                                        {% endif %}
+                                    </div>
+
+                                    <div class=" form-group row">
+                                                            <span class="col-lg-4 col-md-2 col-sm-2 col-1"><span
+                                                                    class=" float-lg-right float-md-right float-sm-right float-right"> </span></span>
+
+                                        {% if form.address_line_1.errors %}
+                                            <div class="col-lg-4 col-md-2 col-sm-2 col-4">
+                                                {{ form.address_line_1 | add_class:"is-invalid" }}
+                                                <div class="invalid-feedback">
+                                                    {{ form.address_line_1.errors }}
+                                                </div>
+                                            </div>
+                                        {% else %}
+
+                                            <div class="col-lg-10 offset-lg-1 col-md-8 col-sm-8 col-12">
+                                                {% render_field form.address_line_1 class='form-control' placeholder='address line 1' required='required' %}
+
+                                            </div>
+                                        {% endif %}
+                                    </div>
+
+                                    <div class=" form-group row">
+                                                                <span class="col-lg-4 col-md-2 col-sm-2 col-1"><span
+                                                                        class=" float-lg-right float-md-right float-sm-right float-right"> </span></span>
+
+                                        {% if form.address_line_2.errors %}
+                                            <div class="col-lg-4 col-md-2 col-sm-2 col-4">
+                                                {{ form.address_line_2 | add_class:"is-invalid" }}
+                                                <div class="invalid-feedback">
+                                                    {{ form.address_line_2.errors }}
+                                                </div>
+                                            </div>
+                                        {% else %}
+
+                                            <div class="col-lg-10 offset-lg-1 col-md-8 col-sm-8 col-12">
+                                                {% render_field form.address_line_2 class='form-control' placeholder='address line 2' %}
+
+                                            </div>
+                                        {% endif %}
+                                    </div>
+
+                                    <div class=" form-group row">
+                                                                <span class="col-lg-4 col-md-2 col-sm-2 col-1"><span
+                                                                        class=" float-lg-right float-md-right float-sm-right float-right"> </span></span>
+
+                                        {% if form.city.errors %}
+                                            <div class="col-lg-4 col-md-2 col-sm-2 col-4">
+                                                {{ form.city | add_class:"is-invalid" }}
+                                                <div class="invalid-feedback">
+                                                    {{ form.city.errors }}
+                                                </div>
+                                            </div>
+                                        {% else %}
+
+                                            <div class="col-lg-10 offset-lg-1 col-md-8 col-sm-8 col-12">
+                                                {% render_field form.city class='form-control' placeholder='city' required='required' %}
+
+                                            </div>
+                                        {% endif %}
+                                    </div>
+
+                                    <div class=" form-group row">
+                                                                <span class="col-lg-4 col-md-2 col-sm-2 col-1"><span
+                                                                        class=" float-lg-right float-md-right float-sm-right float-right"> </span></span>
+
+                                        {% if form.country.errors %}
+                                            <div class="col-lg-4 col-md-2 col-sm-2 col-4">
+                                                {{ form.country | add_class:"is-invalid" }}
+                                                <div class="invalid-feedback">
+                                                    {{ form.country.errors }}
+                                                </div>
+                                            </div>
+                                        {% else %}
+
+                                            <div class="col-lg-10 offset-lg-1 col-md-8 col-sm-8 col-12">
+                                                {% render_field form.country class='form-control' placeholder='Country' required='required' %}
+
+                                            </div>
+                                        {% endif %}
+                                    </div>
+
+
+                                    <div class=" form-group row">
+                                                                <span class="col-lg-4 col-md-2 col-sm-2 col-1"><span
+                                                                        class=" float-lg-right float-md-right float-sm-right float-right"> </span></span>
+
+                                        {% if form.postal_code.errors %}
+                                            <div class="col-lg-4 col-md-2 col-sm-2 col-4">
+                                                {{ form.postal_code | add_class:"is-invalid" }}
+                                                <div class="invalid-feedback">
+                                                    {{ form.postal_code.errors }}
+                                                </div>
+                                            </div>
+                                        {% else %}
+
+                                            <div class="col-lg-10 offset-lg-1 col-md-8 col-sm-8 col-12">
+                                                {% render_field form.postal_code class='form-control' placeholder='Postal Code' required='required' %}
+
+                                            </div>
+                                        {% endif %}
+                                    </div>
+
+
+                                    <div class="form-group mt-2">
+                                        <button class="btn btn-success btn-lg  btn-block" name="submit"
+                                                type="submit">
+                                            <em class="fa fa-save"></em> Save
+                                        </button>
+
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
 {% endblock %}
 {% block extra_script %}
     <script>

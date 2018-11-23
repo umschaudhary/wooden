@@ -18,6 +18,9 @@
         <link rel="stylesheet" href="{% static 'css/material.css' %}">
         <link rel="stylesheet" href="{% static 'css/style.css' %}">
     {% endblock %}
+    <style>
+
+    </style>
     {% block extra_stylesheet %}
     {% endblock %}
 
@@ -40,9 +43,7 @@
         {% include 'includes/partial_home_menu.html' %}
     {% endif %}
 
-    <section
-            class="{% if request.user.is_authenticated and request.user.is_admin or request.user.is_provider %} content {% endif %}">
-
+    <section class=" {%  if request.user.is_authenticated and request.user.role == 'provider' %}content {% endif %} ">
         {% block breadcrumbHead %}
             <div class="container-fluid ">
                 <nav aria-label="breadcrumb" class="bg-shadow">

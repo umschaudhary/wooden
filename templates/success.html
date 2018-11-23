@@ -1,6 +1,138 @@
 {% extends 'base.html' %}
-
+{% load staticfiles %}
+{% block extra_stylesheet %}
+    <style>
+        body {
+            background-color: white;
+        }
+    </style>
+{% endblock %}
 {% block content %}
-    <h1>Successfully order placed</h1>
-    <p>Order Id : {{order.order_id}}</p>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1>Order Placed Successfully</h1>
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="header">
+                        <h2>Order Id : <strong style="color:red">{{ order.order_id }}</strong></h2>
+                    </div>
+                    <div class="body">
+                        <div class="table-responsive">
+
+                            <table class="table product-table">
+
+                                <!-- Table head -->
+                                <thead class="thead-light">
+                                <tr>
+                                    <th></th>
+                                    <th class="font-weight-bold">
+                                        <strong>Product</strong>
+                                    </th>
+                                    <!-- <th class="font-weight-bold">
+                                      <strong>Color</strong>
+                                    </th> -->
+                                    <th></th>
+                                    <th class="font-weight-bold">
+                                        <strong>Price</strong>
+                                    </th>
+                                    <th class="font-weight-bold">
+                                        <strong>QTY</strong>
+                                    </th>
+                                    <th class="font-weight-bold">
+                                        <strong>Amount</strong>
+                                    </th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <!-- /.Table head -->
+
+                                <!-- Table body -->
+                                <tbody class="">
+
+                                <!-- First row -->
+                                {% for product in order.order_items.all %}
+
+                                    <tr>
+                                        <th scope="row">
+
+                                            {% for i in product.item.item_images.all %}
+                                                {% if forloop.first %}
+                                                    {% if i.document %}
+                                                        <img src="{{ i.document.url }}" height="40px" width="100px"
+                                                             class="img-fluid "
+                                                             alt='product image here'>
+                                                    {% endif %}
+                                                {% endif %}
+                                            {% empty %}
+                                                <img src="{% static 'images/default.jpg' %}" height="40px"
+                                                     class="img-fluid " alt='product image here'>
+
+                                            {% endfor %}
+                                        </th>
+                                        <td>
+                                            <h5 class="">
+                                                <strong>{{ product.item.name }}</strong>
+                                            </h5>
+                                            <p class="text-muted">{{ product.item.provider }}</p>
+                                        </td>
+                                        <!-- <td>White</td> -->
+                                        <td></td>
+                                        <td>{{ product.item.stock_record.discounted_price }}</td>
+
+                                        <td class="text-center text-md-left">
+
+
+                                            <button class="btn "
+                                                    style="box-shadow:none;font-size:16px;color:black;">{{ product.quantity }}</button>
+
+
+                                        </td>
+                                        <td class="font-weight-bold">
+                                            <strong>{{ product.total }}</strong>
+                                        </td>
+
+                                    </tr>
+                                {% empty %}
+                                    <tr>
+                                        <td colspan="8" class="text-center text-warning">
+                                            <h3>Cart is Empty</h3>
+                                        </td>
+                                    </tr>
+
+                                {% endfor %}
+                                <!-- /.First row -->
+
+
+                                <!-- Fourth row -->
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td colspan="4" class="text-right">
+                                        <h4 class="mt-2">
+                                            <strong>Total : </strong> <strong>{{ order.total }}</strong>
+                                        </h4>
+                                    </td>
+
+
+                                </tr>
+                                <!-- Fourth row -->
+
+                                </tbody>
+                                <!-- /.Table body -->
+
+                            </table>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 {% endblock %}

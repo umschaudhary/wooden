@@ -1,67 +1,76 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
 {% block title %}
-Orders | {{ block.super }}
+    Orders | {{ block.super }}
+{% endblock %}
+{% block extra_stylesheet %}
+    <style>
+        body {
+            background-color: white;
+        }
+    </style>
 {% endblock %}
 {% block content %}
 
-<div class="container-fluid">
-    <div class="card">
-        <div class="body table-responsive">
-            <div class="row">
-                <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12 text-left">
-                    <h5 class="">Orders</h5>
+    <div class="container-fluid">
+        <div class="row mt-5">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="body table-responsive">
+                        <div class="row">
+                            <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12 text-left">
+                                <h5 class="">Orders History : </h5>
+                            </div>
+
+                        </div>
+
+                        <table class="table mt-2">
+                            <thead class="thead-light">
+                            <tr>
+                                <th scope="col">S.N.</th>
+                                <th scope="col">Order ID</th>
+                                <th>Date</th>
+
+                                <th ></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            {% for object in orders %}
+                                <tr>
+                                    <td scope="row">{{ forloop.counter }}</td>
+                                    <td>{{ object.order_id }}
+                                    </td>
+                                    <td>{{ object.created_at }}</td>
+
+
+                                    <td class=''>
+                                        <a href="{% url 'orders:order_item_customer' object.pk %}"
+                                           class='btn btn-primary'>See Items</a>
+                                    </td>
+
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    {% if request.GET.q %}
+                                        <td class="text-danger text-center" colspan="8"><h5>डाटाबेसमा
+                                            रेकर्ड भेटिएन ।</h5></td>
+                                    {% else %}
+                                        <td class="text-danger text-center" colspan="8"><h5>Nothing
+                                            on database | </h5></td>
+                                    {% endif %}
+                                </tr>
+                            {% endfor %}
+
+
+                            </tbody>
+                        </table>
+
+                    </div>
                 </div>
-
             </div>
-
-            <table class="table mt-2">
-                <thead class="thead-light">
-                    <tr>
-                        <th scope="col">S.N.</th>
-                        <th scope="col">Order ID</th>
-                        <th>E-mail</th>
-
-                        <th>status</th>
-
-                        <th style="max-width:15%"></th>
-                    </tr>
-                </thead>
-                <tbody>
-
-                    {% for object in orders %}
-                    <tr>
-                        <td scope="row">{{ forloop.counter }}</td>
-                        <td>{{ object.order_id }}
-                        </td>
-                        <td>{{object.billing_profile}}</td>
-
-                        <td>{{object.status}}</td>
-
-                        <td class='text-right'>
-                            <a href="{% url 'orders:order_item_customer' object.pk %}"
-                                class='btn btn-primary'>Items</a>
-                        </td>
-
-                    </tr>
-                    {% empty %}
-                    <tr>
-                        {% if request.GET.q %}
-                        <td class="text-danger text-center" colspan="8"><h5>डाटाबेसमा
-                                रेकर्ड भेटिएन ।</h5></td>
-                        {% else %}
-                        <td class="text-danger text-center" colspan="8"><h5>Nothing
-                                on database | </h5></td>
-                        {% endif %}
-                    </tr>
-                    {% endfor %}
-
-
-                </tbody>
-            </table>
-            {% include 'snippets/pagination.html' with datas=fiscal_years %}
         </div>
+
     </div>
-</div>
 
 {% endblock %}

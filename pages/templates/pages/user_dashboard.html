@@ -1,155 +1,883 @@
 {% extends "base.html" %}
 {% load staticfiles %}
 {% load widget_tweaks %}
+
 {% block extra_stylesheet %}
-<style>
-    body{
-        background: white;
-        width: 100%;
-  
-    }
-        .medium-up--one-fifth {
-            width: 20%;
+    <style>
+        body {
+            background: white;
+            width: 100%;
+
         }
-        .grid__item {
-            float: left;
-           
+
+        input[type=text] {
             width: 100%;
         }
-        .list--nav {
-            list-style: none;
+
+        .view {
+            position: relative;
+            cursor: default;
         }
-        .list--nav li.site-nav__item{
-            border-bottom: 1px solid gainsboro;
-            padding:10px;
+
+        .view, .view .mask, .waves-effect {
+            overflow: hidden;
         }
-        .medium-up--hide {
-            display: none !important;
+
+        .hoverable:hover {
+            -webkit-box-shadow: 0 8px 17px 0 rgba(0, 0, 0, .2), 0 6px 20px 0 rgba(0, 0, 0, .19);
+            box-shadow: 0 8px 17px 0 rgba(0, 0, 0, .2), 0 6px 20px 0 rgba(0, 0, 0, .19);
+            -webkit-transition: all .55s ease-in-out;
+            -o-transition: all .55s ease-in-out;
+            transition: all .55s ease-in-out;
         }
-       
-</style>
+
+        .nav-justified .nav-item {
+            -ms-flex-preferred-size: 0;
+            flex-basis: 0;
+            -ms-flex-positive: 1;
+            flex-grow: 1;
+            text-align: center;
+        }
+
+        .md-tabs .nav-item.open .nav-link, .md-tabs .nav-link.active {
+            background-color: rgba(0, 0, 0, .2);
+            color: #fff;
+            -webkit-transition: all 1s;
+            -o-transition: all 1s;
+            transition: all 1s;
+            -webkit-border-radius: .25rem;
+            border-radius: .25rem;
+        }
+
+        .md-tabs .nav-link {
+            -webkit-transition: all .4s;
+            -o-transition: all .4s;
+            transition: all .4s;
+            border: 0;
+            color: #fff;
+        }
+
+        .dark-grey-text, .dark-grey-text:focus, .dark-grey-text:hover {
+            color: #4f4f4f !important;
+        }
+
+        .font-weight-bold {
+            font-weight: 700 !important;
+        }
+
+        .grey.lighten-3 {
+            background-color: #eee !important;
+        }
+
+        .view .mask {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            background-attachment: fixed;
+        }
+
+        .z-depth-1 {
+            -webkit-box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .16), 0 2px 10px 0 rgba(0, 0, 0, .12);
+            box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .16), 0 2px 10px 0 rgba(0, 0, 0, .12);
+        }
+
+        .md-tabs {
+            box-shadow: 0 5px 11px 0 rgba(0, 0, 0, .18), 0 4px 15px 0 rgba(0, 0, 0, .15);
+            border: 0;
+            padding: .7rem;
+            margin-left: 1rem;
+            margin-right: 1rem;
+            margin-bottom: -20px;
+            background-color: #2bbbad;
+            z-index: 1;
+            position: relative;
+            -webkit-border-radius: .25rem;
+            border-radius: .25rem;
+        }
+
+        .rating {
+            color: #ffa000;
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .rating li, .side-nav .social li {
+            display: inline-block;
+        }
+    </style>
+
 {% endblock extra_stylesheet %}
 {% block content %}
-<div class="container-fluid">
-            <div class="row mt-5">
-                <div class="col-lg-3">
-                        <nav class="grid__item small--text-center medium-up--one-fifth" role="navigation">
-                                <hr class="hr--small medium-up--hide">
-                                <button id="ToggleMobileMenu" class="mobile-menu-icon medium-up--hide" aria-haspopup="true" aria-owns="SiteNav">
-                                  <span class="line"></span>
-                                  <span class="line"></span>
-                                  <span class="line"></span>
-                                  <span class="line"></span>
-                                  <span class="icon__fallback-text">Menu</span>
-                                </button>
-                                <div id="SiteNav" class="site-nav" role="menu">
-                                  <ul class="list--nav">
-                                        <li class="site-nav__item site-nav--active">
-                                          <a href="/" class="site-nav__link" aria-current="page">Home</a>
-                                        </li>
-                                        <li>
-                                            <form action="" method="GET" ></form>
-                                            <select name="category" id="id_category">
-                                                <option value="">select </option>
-                                                {% for category in categories %}
-                                                    <option value="{{category.slug}}">{{category.name}}</option>
-                                                {% endfor %}
-                                            </select>
-                                        </form>
-                                        </li>
-                                      
-                                  </ul>
-                                </div>
-                              </nav>
+    <div class="container">
+        <!-- Grid row -->
+        <div class="row pt-4">
 
-                </div>
-                <div class="col-lg-9 col-md-12 col-sm-12 col-12">
-                        <div class="row">
-                                {% for product in products %} 
-                                <div class="col-lg-4 col-md-12 mb-4">
+            <!-- Content -->
+            <div class="col-lg-12">
+
+                <!-- Categories & Adv -->
+                <section class="">
+
+                    <!-- Grid row -->
+                    <div class="row">
+
+                        <!--Grid column-->
+                        <div class="col-lg-3 col-md-12 mb-4">
+
+                            <!-- Section: Categories -->
+                            <section class="section">
+
+                                <ul class="list-group z-depth-1">
+                                    {% for category in categories %}
+                                        <li class="list-group-item d-flex
+                                    justify-content-between align-items-center">
+                                            <a class="dark-grey-text font-small"
+                                               href="{% url 'categories:items_category' category.slug %}"
+                                               style="color:black;">
+
+                                                {{ category }}</a>
+                                            <a href=""></a>
+                                            <span class="badge badge-danger badge-pill">{{ category.items.count }}</span>
+                                        </li>
+                                    {% endfor %}
+
+                                </ul>
+                            </section>
+                            <!-- Section: Categories -->
+
+                        </div>
+                        <!--Grid column-->
+
+                        <!--Grid column-->
+                        <div class="col-lg-9 col-md-12 pb-lg-5 mb-4">
+                            <!--Image -->
+                            <div class="row">
+                                {% for product in products %}
+                                    <div class="col-lg-4 col-md-12 mb-4">
                                         <!--Card-->
-                                        <a href="{% url 'items:detail' product.slug %}">
+
                                         <div class="card">
                                             <!--Card image-->
                                             <div class="view ">
-                                                    {% for i in product.item_images.all %}
-                                                            {% if forloop.last %}
-                                                                {% if i.document %}
-                                                                <img src="{{ i.document.url }}" height="40px" class="img-fluid " alt='product image here'>
-                                                                {% endif %}
-                                                            {% endif %}
-                                                    {% empty %}
-                                                    <img src="{% static 'images/default.jpg' %}" height="40px" class="img-fluid " alt='product image here'>
-                                                    
-                                        {% endfor %}
-                                               
-                                        
+                                                {% for i in product.item_images.all %}
+                                                    {% if forloop.last %}
+                                                        {% if i.document %}
+                                                            <a href="{% url 'items:detail' product.slug %}"> <img
+                                                                    src="{{ i.document.url }}" height="40px"
+                                                                    class="img-fluid " alt='product image here'> </a>
+                                                        {% endif %}
+                                                    {% endif %}
+                                                {% empty %}
+                                                    <img src="{% static 'images/default.jpg' %}" height="40px"
+                                                         class="img-fluid " alt='product image here'>
+
+                                                {% endfor %}
+
+
                                                 <a>
                                                     <div class="mask rgba-white-slight waves-effect waves-light"></div>
                                                 </a>
                                             </div>
                                             <!--Card image-->
-        
+
                                             <!--Card content-->
                                             <div class="card-body">
                                                 <!--Category & Title-->
-        
+
                                                 <h5 class="card-title mb-1">
                                                     <strong>
-                                                        <a href="" class="dark-grey-text">{{product.name}}</a>
+                                                        <a href="{% url 'items:detail' product.slug %}"> {{ product.name }}</a>
                                                     </strong>
                                                 </h5>
-                                                <span class="badge badge-danger mb-2">bestseller</span>
-                                                <span class="badge badge-success mb-2 ml-2">SALE</span>
-                                                <!-- Rating -->
-                                                <ul class="rating" style=" list-style-type: none;
-                                                margin: 0;
-                                                padding: 0;
-                                                overflow: hidden; ">
-                                                    <li class="float-left"><i class="fa fa-star blue-text"></i></li>
-                                                    <li class="float-left"><i class="fa fa-star blue-text"></i></li>
-                                                    <li class="float-left"><i class="fa fa-star blue-text"></i></li>
-                                                    <li class="float-left"><i class="fa fa-star blue-text"></i></li>
-                                                    <li class="float-left"><i class="fa fa-star blue-text"></i></li>
-                                                </ul>
-        
+
+
                                                 <!--Card footer-->
                                                 <div class="card-footer pb-0">
-                                                        <div class="row mb-0">
-                                                            <h5 class="mb-0 pb-0 mt-1 font-weight-bold"><span class="red-text"><strong>Rs {{product.stock_record.discounted_price}}</strong></span>
-                                                            {% if product.stock_record.discounted_price != product.stock_record.price_excl_tax %}    <span class="grey-text"><small><s>{{product.stock_record.price_excl_tax}}</s></small></span>
-                                                            {% endif %}    
+                                                    <div class="row mb-0">
+                                                        <h5 class="mb-0 pb-0 mt-1 font-weight-bold"><span
+                                                                class="red-text"><strong>Rs {{ product.stock_record.discounted_price }}</strong></span>
+                                                            {% if product.stock_record.discounted_price != product.stock_record.price_excl_tax %}
+                                                                <span class="grey-text"><small><s>{{ product.stock_record.price_excl_tax }}</s></small></span>
+                                                            {% endif %}
                                                         </h5>
-        
-                                                            <!-- <span class="float-right">
-        
-                                                            <a href=" {% url 'items:detail' product.slug %}" class="" data-toggle="tooltip" data-placement="top" title="" data-original-title="Add to Cart"><i class="fa fa-shopping-cart ml-3"></i></a>
-                                                            </span> -->
-                                                        </div>
                                                     </div>
-        
-        
+                                                </div>
+
+
                                             </div>
                                             <!--Card content-->
-        
+
                                         </div>
-                                    </a>
+
                                         <!--Card-->
                                     </div>
-                                    {% endfor %} 
+                                {% endfor %}
+                            </div>
+
+                            <!--Image -->
                         </div>
-                </div>
+                        <!--Grid column-->
+
+                    </div>
+                    <!--Grid row-->
+
+                </section>
+                <!-- Categories & Adv -->
+
+
+                <!--Section: product list-->
+                <section class="">
+                    <div class="row">
+                        <!-- New Products-->
+                        <div class="col-lg-4 col-md-12 col-12 ">
+                            <hr>
+                            <h5 class="text-center font-weight-bold dark-grey-text">
+                                <strong>New Products</strong>
+                            </h5>
+                            <hr>
+                            <!-- First row -->
+                            {% for product in latest_products %}
+                                <div class="row mt-5 py-2 mb-4 hoverable
+                            align-items-center">
+
+                                    <div class="col-6">
+                                        <a href="{% url 'items:detail' product.slug %}">
+                                            {% for i in product.item_images.all %}
+                                                {% if forloop.last %}
+                                                    {% if i.document %}
+                                                        <img src="{{ i.document.url }}" height="40px" class="img-fluid "
+                                                             alt='product image here'>
+                                                    {% endif %}
+                                                {% endif %}
+                                            {% empty %}
+                                                <img src="{% static 'images/default.jpg' %}" height="40px"
+                                                     class="img-fluid " alt='product image here'>
+
+                                            {% endfor %}
+
+                                        </a>
+                                    </div>
+                                    <div class="col-6">
+
+                                        <!-- Title -->
+                                        <a class="pt-5">
+                                            <strong>{{ product.name }}</strong>
+                                        </a>
+
+                                        <!-- Rating -->
+                                        <ul class="rating inline-ul">
+                                            <li>
+                                                <i class="fa fa-star blue-text"></i>
+                                            </li>
+                                            <li>
+                                                <i class="fa fa-star blue-text"></i>
+                                            </li>
+                                            <li>
+                                                <i class="fa fa-star blue-text"></i>
+                                            </li>
+                                            <li>
+                                                <i class="fa fa-star blue-text"></i>
+                                            </li>
+                                            <li>
+                                                <i class="fa fa-star grey-text"></i>
+                                            </li>
+                                        </ul>
+
+                                        <!-- Price -->
+                                        <h6 class="">
+
+                                                <span class="red-text">
+                                                    <strong>
+                                                        Rs {{ product.stock_record.discounted_price }}
+                                                    </strong>
+                                                </span>
+                                            {% if product.stock_record.discounted_price != product.stock_record.price_excl_tax %}
+                                                <span class="" style="color:red;">
+                                                                <small><s>Rs{{ product.stock_record.price_excl_tax }}</s>
+                                                                </small>
+                                                            </span>
+                                            {% endif %}
+
+                                        </h6>
+
+                                    </div>
+
+                                </div>
+                            {% endfor %}
+                            <!-- /.First row -->
+
+
+                        </div>
+                        <!-- /.New Products-->
+
+                        <!-- Top Sellers-->
+                        <div class="col-lg-4 col-md-12">
+
+                            <hr>
+                            <h5 class="text-center font-weight-bold dark-grey-text">
+                                <strong>Top Sellers</strong>
+                            </h5>
+                            <hr>
+
+                            <!-- First row -->
+                            {% for product in best_sellers %}
+                                <div class="row mt-5 py-2 mb-4 hoverable
+                            align-items-center">
+
+                                    <div class="col-6">
+                                        <a>
+                                            {% for i in product.item.item_images.all %}
+                                                {% if forloop.last %}
+                                                    {% if i.document %}
+                                                        <img src="{{ i.document.url }}" height="40px" class="img-fluid "
+                                                             alt='product image here'>
+                                                    {% endif %}
+                                                {% endif %}
+                                            {% empty %}
+                                                <img src="{% static 'images/default.jpg' %}" height="40px"
+                                                     class="img-fluid " alt='product image here'>
+
+                                            {% endfor %}
+
+                                        </a>
+                                    </div>
+                                    <div class="col-6">
+
+                                        <!-- Title -->
+                                        <a>
+                                            <strong>{{ product.item.name }}</strong>
+                                        </a>
+
+                                        <!-- Rating -->
+                                        <ul class="rating inline-ul">
+                                            <li>
+                                                <i class="fa fa-star blue-text"></i>
+                                            </li>
+                                            <li>
+                                                <i class="fa fa-star blue-text"></i>
+                                            </li>
+                                            <li>
+                                                <i class="fa fa-star blue-text"></i>
+                                            </li>
+                                            <li>
+                                                <i class="fa fa-star blue-text"></i>
+                                            </li>
+                                            <li>
+                                                <i class="fa fa-star blue-text"></i>
+                                            </li>
+                                        </ul>
+
+                                        <!-- Price -->
+                                        <h6 class="h6-responsive font-weight-bold  ">
+                                            <h6 class="">
+
+                                                <span class="red-text">
+                                                    <strong>
+                                                        Rs {{ product.item.stock_record.discounted_price }}
+                                                    </strong>
+                                                </span>
+                                                {% if product.item.stock_record.discounted_price != product.item.stock_record.price_excl_tax %}
+                                                    <span class="" style="color:red;">
+                                                                <small><s>Rs{{ product.item.stock_record.price_excl_tax }}</s>
+                                                                </small>
+                                                            </span>
+                                                {% endif %}
+
+                                            </h6>
+                                        </h6>
+
+                                    </div>
+
+                                </div>
+                            {% endfor %}
+                            <!-- /.First row -->
+
+                        </div>
+                        <!-- /.Top Sellers -->
+
+                        <!-- Random Products-->
+                        <div class="col-lg-4 col-md-12 ">
+
+                            <hr>
+                            <h5 class="text-center font-weight-bold dark-grey-text">
+                                <strong>Top offers</strong>
+                            </h5>
+                            <hr>
+
+                            <!-- First row -->
+                            {% for product in top_offers %}
+                                <div class="row mt-5 py-2 mb-4 hoverable
+                            align-items-center">
+
+                                    <div class="col-6">
+                                        <a>
+                                            {% for i in product.item_images.all %}
+                                                {% if forloop.last %}
+                                                    {% if i.document %}
+                                                        <img src="{{ i.document.url }}" height="40px" class="img-fluid "
+                                                             alt='product image here'>
+                                                    {% endif %}
+                                                {% endif %}
+                                            {% empty %}
+                                                <img src="{% static 'images/default.jpg' %}" height="40px"
+                                                     class="img-fluid " alt='product image here'>
+
+                                            {% endfor %}
+
+                                        </a>
+                                    </div>
+                                    <div class="col-6">
+
+                                        <!-- Title -->
+                                        <a>
+                                            <strong>{{ product.name }}</strong>
+                                        </a>
+
+                                        <!-- Rating -->
+                                        <ul class="rating inline-ul">
+                                            <li>
+                                                <i class="fa fa-star blue-text"></i>
+                                            </li>
+                                            <li>
+                                                <i class="fa fa-star blue-text"></i>
+                                            </li>
+                                            <li>
+                                                <i class="fa fa-star blue-text"></i>
+                                            </li>
+                                            <li>
+                                                <i class="fa fa-star blue-text"></i>
+                                            </li>
+                                            <li>
+                                                <i class="fa fa-star grey-text"></i>
+                                            </li>
+                                        </ul>
+
+                                        <!-- Price -->
+                                        <h6 class="h6-responsive font-weight-bold
+                                    ">
+                                            <h6 class="">
+
+                                                <span class="red-text">
+                                                    <strong>
+                                                        Rs {{ product.stock_record.discounted_price }}
+                                                    </strong>
+                                                </span>
+                                                {% if product.stock_record.discounted_price != product.stock_record.price_excl_tax %}
+                                                    <span class="" style="color:red;">
+                                                                <small><s>Rs{{ product.stock_record.price_excl_tax }}</s>
+                                                                </small>
+                                                            </span>
+                                                {% endif %}
+
+                                            </h6>
+                                        </h6>
+
+                                    </div>
+
+                                </div>
+                            {% endfor %}
+                            <!-- /.First row -->
+
+                        </div>
+                        <!-- /.Random Products -->
+                    </div>
+
+                </section>
+                <!--/Section: product list-->
+
+                <!--Section: Last items-->
+                <section>
+
+                    <h4 class="font-weight-bold mt-4 dark-grey-text">
+                        <strong>LAST ITEMS</strong>
+                    </h4>
+                    <hr class="mb-5">
+
+                    <!-- Grid row -->
+                    <div class="row">
+
+                        <!--Grid column-->
+                        <div class="col-lg-3 col-md-6 mb-4">
+
+                            <!--Card-->
+                            <div class="card card-ecommerce">
+
+                                <!--Card image-->
+                                <div class="view overlay">
+                                    <img
+                                            src="https://mdbootstrap.com/img/Photos/Horizontal/E-commerce/Products/12.jpg"
+                                            class="img-fluid" alt="sample image">
+                                    <a>
+                                        <div class="mask rgba-white-slight
+                                        waves-effect waves-light"></div>
+                                    </a>
+                                </div>
+                                <!--Card image-->
+
+                                <!--Card content-->
+                                <div class="card-body">
+                                    <!--Category & Title-->
+
+                                    <h5 class="card-title mb-1">
+                                        <strong>
+                                            <a href="" class="dark-grey-text">Headphones</a>
+                                        </strong>
+                                    </h5>
+                                    <span class="badge badge-danger mb-2">bestseller</span>
+                                    <!-- Rating -->
+                                    <ul class="rating">
+                                        <li>
+                                            <i class="fa fa-star blue-text"></i>
+                                        </li>
+                                        <li>
+                                            <i class="fa fa-star blue-text"></i>
+                                        </li>
+                                        <li>
+                                            <i class="fa fa-star blue-text"></i>
+                                        </li>
+                                        <li>
+                                            <i class="fa fa-star blue-text"></i>
+                                        </li>
+                                        <li>
+                                            <i class="fa fa-star blue-text"></i>
+                                        </li>
+                                    </ul>
+
+                                    <!--Card footer-->
+                                    <div class="card-footer pb-0">
+                                        <div class="row mb-0">
+                                        <span class="float-left">
+                                            <strong>1439$</strong>
+                                        </span>
+                                            <span class="float-right">
+
+                                            <a class="" data-toggle="tooltip"
+                                               data-placement="top" title=""
+                                               data-original-title="Add to
+                                                Cart">
+                                                <i class="fa fa-shopping-cart
+                                                    ml-3"></i>
+                                            </a>
+                                        </span>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <!--Card content-->
+
+                            </div>
+                            <!--Card-->
+
+                        </div>
+                        <!--Grid column-->
+
+                        <!--Grid column-->
+                        <div class="col-lg-3 col-md-6 mb-4">
+
+                            <!--Card-->
+                            <div class="card card-ecommerce">
+
+                                <!--Card image-->
+                                <div class="view overlay">
+                                    <img
+                                            src="https://mdbootstrap.com/img/Photos/Horizontal/E-commerce/Products/16.jpg"
+                                            class="img-fluid" alt="sample image">
+                                    <a>
+                                        <div class="mask rgba-white-slight
+                                        waves-effect waves-light"></div>
+                                    </a>
+                                </div>
+                                <!--Card image-->
+
+                                <!--Card content-->
+                                <div class="card-body">
+                                    <!--Category & Title-->
+
+                                    <h5 class="card-title mb-1">
+                                        <strong>
+                                            <a href="" class="dark-grey-text">Headphones</a>
+                                        </strong>
+                                    </h5>
+                                    <span class="badge badge-danger mb-2">bestseller</span>
+                                    <!-- Rating -->
+                                    <ul class="rating">
+                                        <li>
+                                            <i class="fa fa-star blue-text"></i>
+                                        </li>
+                                        <li>
+                                            <i class="fa fa-star blue-text"></i>
+                                        </li>
+                                        <li>
+                                            <i class="fa fa-star blue-text"></i>
+                                        </li>
+                                        <li>
+                                            <i class="fa fa-star blue-text"></i>
+                                        </li>
+                                        <li>
+                                            <i class="fa fa-star blue-text"></i>
+                                        </li>
+                                    </ul>
+
+                                    <!--Card footer-->
+                                    <div class="card-footer pb-0">
+                                        <div class="row mb-0">
+                                        <span class="float-left">
+                                            <strong>1439$</strong>
+                                        </span>
+                                            <span class="float-right">
+
+                                            <a class="" data-toggle="tooltip"
+                                               data-placement="top" title=""
+                                               data-original-title="Add to
+                                                Cart">
+                                                <i class="fa fa-shopping-cart
+                                                    ml-3"></i>
+                                            </a>
+                                        </span>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <!--Card content-->
+
+                            </div>
+                            <!--Card-->
+
+                        </div>
+                        <!--Grid column-->
+
+                        <!--Grid column-->
+                        <div class="col-lg-3 col-md-6 mb-4">
+                            <!--Card-->
+                            <div class="card card-ecommerce">
+
+                                <!--Card image-->
+                                <div class="view overlay">
+                                    <img
+                                            src="https://mdbootstrap.com/img/Photos/Horizontal/E-commerce/Products/11.jpg"
+                                            class="img-fluid" alt="sample image">
+                                    <a>
+                                        <div class="mask rgba-white-slight
+                                        waves-effect waves-light"></div>
+                                    </a>
+                                </div>
+                                <!--Card image-->
+
+                                <!--Card content-->
+                                <div class="card-body">
+                                    <!--Category & Title-->
+
+                                    <h5 class="card-title mb-1">
+                                        <strong>
+                                            <a href="" class="dark-grey-text">iPhone</a>
+                                        </strong>
+                                    </h5>
+                                    <span class="badge badge-info mb-2">new</span>
+                                    <!-- Rating -->
+                                    <ul class="rating">
+                                        <li>
+                                            <i class="fa fa-star blue-text"></i>
+                                        </li>
+                                        <li>
+                                            <i class="fa fa-star blue-text"></i>
+                                        </li>
+                                        <li>
+                                            <i class="fa fa-star blue-text"></i>
+                                        </li>
+                                        <li>
+                                            <i class="fa fa-star blue-text"></i>
+                                        </li>
+                                        <li>
+                                            <i class="fa fa-star blue-text"></i>
+                                        </li>
+                                    </ul>
+
+                                    <!--Card footer-->
+                                    <div class="card-footer pb-0">
+                                        <div class="row mb-0">
+                                        <span class="float-left">
+                                            <strong>1439$</strong>
+                                        </span>
+                                            <span class="float-right">
+
+                                            <a class="" data-toggle="tooltip"
+                                               data-placement="top" title=""
+                                               data-original-title="Add to
+                                                Cart">
+                                                <i class="fa fa-shopping-cart
+                                                    ml-3"></i>
+                                            </a>
+                                        </span>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <!--Card content-->
+
+                            </div>
+                            <!--Card-->
+
+                        </div>
+                        <!--Grid column-->
+
+                        <!--Grid column-->
+                        <div class="col-lg-3 col-md-6 mb-4">
+
+                            <!--Card-->
+                            <div class="card card-ecommerce">
+
+                                <!--Card image-->
+                                <div class="view overlay">
+                                    <img
+                                            src="https://mdbootstrap.com/img/Photos/Horizontal/E-commerce/Products/3.jpg"
+                                            class="img-fluid" alt="sample image">
+                                    <a>
+                                        <div class="mask rgba-white-slight
+                                        waves-effect waves-light"></div>
+                                    </a>
+                                </div>
+                                <!--Card image-->
+
+                                <!--Card content-->
+                                <div class="card-body">
+                                    <!--Category & Title-->
+
+                                    <h5 class="card-title mb-1">
+                                        <strong>
+                                            <a href="" class="dark-grey-text">iMac</a>
+                                        </strong>
+                                    </h5>
+                                    <span class="badge badge-danger mb-2">bestseller</span>
+                                    <!-- Rating -->
+                                    <ul class="rating">
+                                        <li>
+                                            <i class="fa fa-star blue-text"></i>
+                                        </li>
+                                        <li>
+                                            <i class="fa fa-star blue-text"></i>
+                                        </li>
+                                        <li>
+                                            <i class="fa fa-star blue-text"></i>
+                                        </li>
+                                        <li>
+                                            <i class="fa fa-star blue-text"></i>
+                                        </li>
+                                        <li>
+                                            <i class="fa fa-star grey-text"></i>
+                                        </li>
+                                    </ul>
+
+                                    <!--Card footer-->
+                                    <div class="card-footer pb-0">
+                                        <div class="row mb-0">
+                                        <span class="float-left">
+                                            <strong>1439$</strong>
+                                        </span>
+                                            <span class="float-right">
+
+                                            <a class="" data-toggle="tooltip"
+                                               data-placement="top" title=""
+                                               data-original-title="Add to
+                                                Cart">
+                                                <i class="fa fa-shopping-cart
+                                                    ml-3"></i>
+                                            </a>
+                                        </span>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <!--Card content-->
+
+                            </div>
+                            <!--Card-->
+
+                        </div>
+                        <!--Grid column-->
+
+                    </div>
+                    <!--Grid row-->
+
+                    <!--Grid row-->
+                    <div class="row justify-content-center mb-4">
+
+                        <!--Pagination -->
+                        <nav class="mb-4">
+                            <ul class="pagination pagination-circle pg-blue mb-0">
+                                <!--First-->
+                                <li class="page-item disabled clearfix d-none
+                                d-md-block">
+                                    <a class="page-link waves-effect waves-effect">First</a>
+                                </li>
+
+                                <!--Arrow left-->
+                                <li class="page-item disabled">
+                                    <a class="page-link waves-effect waves-effect"
+                                       aria-label="Previous">
+                                        <span aria-hidden="true">«</span>
+                                        <span class="sr-only">Previous</span>
+                                    </a>
+                                </li>
+
+                                <!--Numbers-->
+                                <li class="page-item active">
+                                    <a class="page-link waves-effect waves-effect">1</a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link waves-effect waves-effect">2</a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link waves-effect waves-effect">3</a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link waves-effect waves-effect">4</a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link waves-effect waves-effect">5</a>
+                                </li>
+
+                                <!--Arrow right-->
+                                <li class="page-item">
+                                    <a class="page-link waves-effect waves-effect"
+                                       aria-label="Next">
+                                        <span aria-hidden="true">»</span>
+                                        <span class="sr-only">Next</span>
+                                    </a>
+                                </li>
+
+                                <!--First-->
+                                <li class="page-item clearfix d-none d-md-block">
+                                    <a class="page-link waves-effect waves-effect">Last</a>
+                                </li>
+
+                            </ul>
+                        </nav>
+                        <!--/Pagination -->
+
+                    </div>
+                    <!--Grid row-->
+                </section>
+                <!-- /.Section: Last items -->
+
             </div>
+            <!-- /.Content -->
+
         </div>
-   
-{% block extra_script %}
-<script>
-   $(function(){
-       $('#id_category').on('change', function(){
-           catgoryId = $(this).val()
-           location.href = '/?category='+ catgoryId
-       })
-   })
-</script>
+        <!-- /Grid row -->
+    </div>
+
+    {% block extra_script %}
+        <script>
+            $(function () {
+                $('#id_category').on('change', function () {
+                    catgoryId = $(this).val();
+                    location.href = '/?category=' + catgoryId
+                })
+            })
+        </script>
+    {% endblock %}
 {% endblock %}
-{% endblock  %}
