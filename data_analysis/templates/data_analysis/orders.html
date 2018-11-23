@@ -17,9 +17,9 @@
     {% block extra_script %}
         <script src="{% static 'js/Chart.min.js' %}"></script>
         <script>
-            var endpoint = '/api/v1/data/orders/';
-            var defaultData = []
-            var labelData = []
+            let endpoint = '/api/v1/data/orders/';
+            let defaultData = [];
+            let labelData = [];
             $.ajax({
                 method: 'GET',
                 url: endpoint,
