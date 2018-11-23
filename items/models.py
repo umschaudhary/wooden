@@ -16,6 +16,7 @@ class Item(models.Model):
     name = models.CharField(max_length=120,
                             error_messages={'max_length': 'Length Shouldnot be longer than 120 characters'})
     description = models.TextField()
+    specification = models.TextField()
     available = models.BooleanField(default=True)
     featured = models.BooleanField(default=False)
 

@@ -29,11 +29,14 @@ class ItemCreateForm(forms.ModelForm):
             'name',
             'description',
             'featured',
+            'specification'
         ]
 
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control', 'required': 'required', 'placeholder': ''}),
             'description': forms.Textarea(
+                attrs={'class': 'form-control', 'required': 'required', 'placeholder': '', 'row': 1}),
+            'specification': forms.Textarea(
                 attrs={'class': 'form-control', 'required': 'required', 'placeholder': '', 'row': 1}),
 
         }

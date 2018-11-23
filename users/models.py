@@ -18,7 +18,7 @@ GENDER_TYPES = Choices(
 
 
 class UserManager(BaseUserManager):
-    def create_user(self, email, full_name=None, password=None, active=True, staff=False, admin=False):
+    def create_user(self, email, full_name=None, password=None):
         if not email:
             raise ValueError("Users must have an email address")
         if not password:
@@ -29,9 +29,6 @@ class UserManager(BaseUserManager):
             full_name=full_name
         )
         user_obj.set_password(password)  # change user password
-        user_obj.is_staff = staff
-        user_obj.is_admin = admin
-        user_obj.is_active = active
         user_obj.save(using=self._db)
         return user_obj
 
@@ -40,9 +37,9 @@ class UserManager(BaseUserManager):
             email,
             full_name=full_name,
             password=password,
-            is_staff=True,
-           
+
         )
+        user.role = 'provider'
         return user
 
     def create_superuser(self, email, full_name=None, password=None):
@@ -50,11 +47,11 @@ class UserManager(BaseUserManager):
             email,
             full_name=full_name,
             password=password,
-            is_staff=True,
-            is_admin=True,
-          
 
         )
+
+        user.is_staff = True
+        user.is_admin = True
         user.role = 'admin'
         user.save()
         return user
@@ -95,10 +92,10 @@ class User(AbstractBaseUser):
 
     def has_module_perms(self, app_label):
         return True
-    
+
     def has_permission(self):
         return self.active and self.staff
-    
+
     def is_superuser(self):
         return self.role == USER_ROLES.admin
 
@@ -108,9 +105,6 @@ class User(AbstractBaseUser):
     def is_customer(self):
         return self.role == USER_ROLES.customer
 
-    
-     
-    
     class Meta:
         db_table = 'users_user'
 
@@ -128,10 +122,7 @@ class GuestEmail(models.Model):
         db_table = 'users_guest_email'
 
 
-
-
 class SideBarManager(models.Manager):
-
     def new_or_get(self, request, ):
         sidebar_id = request.session.get('sidebar_id', None)
         qs = self.get_queryset().filter(id=sidebar_id)
@@ -158,8 +149,8 @@ class SideBarManager(models.Manager):
 
 
 class Sidebar(models.Model):
-    user = models.ForeignKey(User,on_delete=models.CASCADE)
-    is_opened = models.BooleanField(default = True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    is_opened = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     objects = SideBarManager()
@@ -171,9 +162,9 @@ class Sidebar(models.Model):
         db_table = 'users_sidebar'
 
 
-
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, default=None)
+    phone_number = models.CharField(max_length=10, error_messages={'max_length': 'Only 10 Digits Allowed'})
     pic = models.ImageField()
     gender = models.CharField(max_length=100, choices=GENDER_TYPES, default=GENDER_TYPES.confidential)
     address_line_1 = models.CharField(max_length=120)

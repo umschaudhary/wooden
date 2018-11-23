@@ -19,7 +19,14 @@
         <link rel="stylesheet" href="{% static 'css/style.css' %}">
     {% endblock %}
     <style>
-
+    .align-items-center {
+    -ms-flex-align: center !important;
+    align-items: center !important;
+}
+footer.page-footer {
+    bottom: 0;
+    color: #fff;
+}
     </style>
     {% block extra_stylesheet %}
     {% endblock %}
@@ -43,7 +50,26 @@
         {% include 'includes/partial_home_menu.html' %}
     {% endif %}
 
-    <section class=" {%  if request.user.is_authenticated and request.user.role == 'provider' %}content {% endif %} ">
+    <section
+            class="{% if request.user.is_authenticated and request.user.is_admin or request.user.is_provider %} content {% endif %}">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="django-messages">
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div class="alert alert-{{ message.tags }} alert-dismissable">
+                                    <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
+                                    <strong></strong> {{ message }}
+
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
         {% block breadcrumbHead %}
             <div class="container-fluid ">
                 <nav aria-label="breadcrumb" class="bg-shadow">
@@ -60,7 +86,13 @@
         {% block content %}
 
         {% endblock %}
+        {% if request.user.role == 'customer' %}
+            {% block footer %}
 
+            {% endblock %}
+        {% else %}
+
+        {% endif %}
 
     </section>
 

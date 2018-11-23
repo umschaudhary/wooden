@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load staticfiles %}
+{% load humanize %}
 {% block title %}Cart | {{ block.super }} {% endblock title %}
 
 {% block extra_stylesheet %}
@@ -25,8 +26,10 @@
     </style>
 {% endblock %}
 {% block content %}
+    {% block breadcrumbHead %}
+    {% endblock %}
     <div class="container">
-        <div class="row">
+        <div class="row mt-5">
             <div class="col-12">
                 <div class="django-messages mt-2">
                     {% if messages %}
@@ -165,7 +168,7 @@
 
                                     <td class="text-right">
                                         <h4 class="mt-2">
-                                            <strong>{{ cart.total }}</strong>
+                                            <strong>{{ cart.total|intcomma }}</strong>
                                         </h4>
                                     </td>
                                     <td colspan="3" class="text-right">

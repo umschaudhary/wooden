@@ -5,8 +5,8 @@
 {% endblock %}
 {% block breadcrumbLink %}
     {% if request.user.is_authenticated %}
-    <li class="breadcrumb-item"><a href="{% url 'items:category_select' %}">Select Category</a></li>
-        <li class="breadcrumb-item active">Items - {{category.name}}</li> {% endif %}
+        <li class="breadcrumb-item"><a href="{% url 'items:category_select' %}">Select Category</a></li>
+        <li class="breadcrumb-item active">Items - {{ category.name }}</li> {% endif %}
 {% endblock %}
 {% block content %}
 
@@ -15,10 +15,13 @@
             <div class="body table-responsive">
                 <div class="row">
                     <div class="col-lg-4 col-md-6 col-sm-12  col-xs-12 text-left ">
-                        <h5 class="">Items | <small>{{category.name}}</small></h5>
+                        <h5 class="">Items |
+                            <small>{{ category.name }}</small>
+                        </h5>
                     </div>
                     <div class=" offset-lg-5  col-lg-3 col-md-6 col-sm-12 col-xs-12  text-right float-right ">
-                        <a href="{% url 'items:create' category.pk %}" class="btn btn-primary btn-circle-lg ">  <i class="fa fa-plus"></i></a>
+                        <a href="{% url 'items:create' category.pk %}" class="btn btn-primary btn-circle-lg "> <i
+                                class="fa fa-plus"></i></a>
 
                     </div>
                 </div>
@@ -32,7 +35,7 @@
                         <th>Discount %</th>
                         <th>Discounted Price</th>
                         <th>Stock</th>
-                      
+
                         <th style="max-width:15%"></th>
                     </tr>
                     </thead>
@@ -43,14 +46,14 @@
                             <td scope="row">{{ forloop.counter }}</td>
                             <td>{{ object.name }}
                             </td>
-                            <td>{{object.stock_record.price_excl_tax}}</td>
-                            <td>{{object.stock_record.discount_percentage}}</td>
-                            <td>{{object.stock_record.discounted_price }}</td>
-                            <td>{{object.stock_record.quantity}}</td>
-                            
-                         <td class='text-right'>
-                             <a href="{% url 'items:update' object.slug %}" class='btn btn-primary'>Edit</a>
-                        
+                            <td>{{ object.stock_record.price_excl_tax }}</td>
+                            <td>{{ object.stock_record.discount_percentage }}</td>
+                            <td>{{ object.stock_record.discounted_price }}</td>
+                            <td>{{ object.stock_record.quantity }}</td>
+
+                            <td class='text-right'>
+                                <a href="{% url 'items:update' object.slug %}" class='btn btn-primary'>Edit</a>
+
                             </td>
 
                         </tr>
@@ -59,7 +62,8 @@
                             {% if request.GET.q %}
                                 <td class="text-danger text-center" colspan="8"><h5>No Record Found ।</h5></td>
                             {% else %}
-                                <td class="text-danger text-center" colspan="8"><h5>No any Data on Database Yet</h5></td>
+                                <td class="text-danger text-center" colspan="8"><h5>No any Data on Database Yet</h5>
+                                </td>
                             {% endif %}
                         </tr>
                     {% endfor %}

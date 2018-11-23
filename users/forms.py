@@ -1,9 +1,10 @@
-from django import forms
-from django.conf import settings
-from django.contrib.auth import password_validation
 import re
+
+from django import forms
+from django.contrib.auth import password_validation
+
 from .models import User, UserProfile
-from users.models import USER_ROLES
+
 
 class RegisterForm(forms.ModelForm):
     """
@@ -11,13 +12,13 @@ class RegisterForm(forms.ModelForm):
     """
     password = forms.CharField(
         label='Password',
-        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': '','required':'required'}),
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': '', 'required': 'required'}),
         strip=False,
     )
 
     confirm_password = forms.CharField(
         label='Confirm Password',
-        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': '','required':'required'}),
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': '', 'required': 'required'}),
         strip=False,
     )
 
@@ -30,16 +31,16 @@ class RegisterForm(forms.ModelForm):
             'confirm_password'
         ]
         widgets = {
-          
-            'full_name': forms.TextInput(attrs={'class': 'form-control','required':'required', 'placeholder': ''}),
-            'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': '','required':'required'}),
-            
+
+            'full_name': forms.TextInput(attrs={'class': 'form-control', 'required': 'required', 'placeholder': ''}),
+            'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': '', 'required': 'required'}),
+
         }
 
     def clean_confirm_password(self):
         password = self.cleaned_data['password']
         confirm_password = self.cleaned_data['confirm_password']
-        
+
         full_name = self.cleaned_data['full_name']
 
         if password and confirm_password and password != confirm_password:
@@ -69,17 +70,17 @@ class LoginForm(forms.Form):
     """
     email = forms.CharField(
         label='Email',
-        widget=forms.TextInput(attrs={'class': 'form-control','required':"required", 'placeholder':" "}),
+        widget=forms.TextInput(attrs={'class': 'form-control', 'required': "required", 'placeholder': " "}),
     )
 
     password = forms.CharField(
         label='Password',
-        widget=forms.PasswordInput(attrs={'class': 'form-control','required':"required", 'placeholder':" "}),
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'required': "required", 'placeholder': " "}),
         strip=False,
     )
 
     def clean_(self):
-        email= self.cleaned_data.get('')
+        email = self.cleaned_data.get('')
 
         try:
             user = User.objects.get(email=email)
@@ -182,25 +183,28 @@ class GuestForm(forms.Form):
     email = forms.EmailField()
 
 
-
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
         fields = [
-           'address_line_1',
-           'address_line_2',
-           'gender',
-           'pic',
-           'city',
-           'postal_code',
-           'country'
+            'address_line_1',
+            'address_line_2',
+            'gender',
+            'pic',
+            'city',
+            'postal_code',
+            'country',
+            'phone_number'
         ]
         widgets = {
-          
-            'address_line_1': forms.TextInput(attrs={'class': 'form-control','required':'required', 'placeholder': ''}),
-            'address_line_2': forms.TextInput(attrs={'class': 'form-control','required':'required', 'placeholder': ''}),
-            'gender': forms.Select(attrs={'class': 'form-control','required':'required', 'placeholder': ''}),
-            'city': forms.TextInput(attrs={'class': 'form-control','required':'required', 'placeholder': ''}),
-            'postal_code': forms.TextInput(attrs={'class': 'form-control','required':'required', 'placeholder': ''}),
-            'country': forms.TextInput(attrs={'class': 'form-control','required':'required', 'placeholder': ''}),
+
+            'address_line_1': forms.TextInput(
+                attrs={'class': 'form-control', 'required': 'required', 'placeholder': ''}),
+            'address_line_2': forms.TextInput(
+                attrs={'class': 'form-control', 'required': 'required', 'placeholder': ''}),
+            'gender': forms.Select(attrs={'class': 'form-control', 'required': 'required', 'placeholder': ''}),
+            'city': forms.TextInput(attrs={'class': 'form-control', 'required': 'required', 'placeholder': ''}),
+            'postal_code': forms.TextInput(attrs={'class': 'form-control', 'required': 'required', 'placeholder': ''}),
+            'country': forms.TextInput(attrs={'class': 'form-control', 'required': 'required', 'placeholder': ''}),
+            'phone_number': forms.NumberInput(attrs={'class': 'form-control', 'required': 'required', 'placeholder': ''}),
         }

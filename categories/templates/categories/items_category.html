@@ -141,7 +141,7 @@
 
                                                 {{ category }}</a>
                                             <a href=""></a>
-   <span class="badge badge-danger badge-pill">{{ category.items.count }}</span>
+                                            <span class="badge badge-danger badge-pill">{{ category.items.count }}</span>
                                         </li>
                                     {% endfor %}
 
@@ -163,7 +163,7 @@
                                     <div class="col-lg-4 col-md-12 mb-4">
                                         <!--Card-->
 
-                                        <div class="card">
+                                        <div class="card" style="height: 320px;">
                                             <!--Card image-->
                                             <div class="view ">
                                                 {% for i in product.item_images.all %}

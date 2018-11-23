@@ -87,33 +87,7 @@
             display: inline-block;
         }
 
-        .carousel-multi-item {
-            margin-bottom: 5rem;
-        }
 
-        .carousel, .carousel-inner, .carousel-item {
-            position: relative;
-        }
-
-        .carousel-multi-item .carousel-indicators {
-            margin-bottom: -2em;
-        }
-
-        .carousel-indicators {
-            position: absolute;
-            right: 0;
-            bottom: 10px;
-            left: 0;
-            z-index: 15;
-            display: -ms-flexbox;
-            display: flex;
-            -ms-flex-pack: center;
-            justify-content: center;
-            padding-left: 0;
-            margin-right: 15%;
-            margin-left: 15%;
-            list-style: none;
-        }
     </style>
 
 {% endblock %}
@@ -127,7 +101,9 @@
             <div class="row mt-5">
                 <div class="col-lg-6">
                     <div class="row mx-2">
+
                         <!--Carousel Wrapper-->
+
                         <div id="carousel-thumb" class="carousel slide carousel-fade carousel-thumbnails "
                              data-ride="carousel">
 
@@ -136,15 +112,15 @@
 
 
                                 {% for image in item.item_images.all %}
-                                    {% if forloop.last %}
-                                        <div class="carousel-item   {% if forloop.last %} active {% endif %}">
-                                            {% if image.document %}
-                                                <div><a href="#"><img src="{{ image.document.url }}"
-                                                                      class="img-fluid"></a>
-                                                </div>
-                                            {% endif %}
-                                        </div>
-                                    {% endif %}
+
+                                    <div class="carousel-item   {% if forloop.last %} active {% endif %}">
+                                        {% if image.document %}
+                                            <div><a href="#"><img src="{{ image.document.url }}"
+                                                                  class="img-fluid"></a>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+
                                 {% empty %}
 
                                     <div class="carousel-item  active">
@@ -190,8 +166,11 @@
                             </span>
                     </h3>
 
-                    <p class="ml-xl-0 ml-4">
+                    <p class="ml-xl-0 ml-4"><strong>Description:</strong>
                         {{ item.description }}
+                    </p>
+                    <p class="ml-xl-0 ml-4"><strong>Specification:</strong>
+                        {{ item.specification }}
                     </p>
 
 
@@ -342,59 +321,71 @@
 
                     </div>
                     <div class="col-6">
-                        {% if not is_rated %}
-                            <div class="pull-right">
-                                Rate this product
-                                <form action="" id='id_rating_form' method="post">
-                                    {% csrf_token %}
-                                    {% render_field rating_form.rating hidden='' %}
-                                    <ul class="rating" style=" list-style-type: none;
+                        {% if request.user.is_authenticated %}
+                            {% if not is_rated %}
+                                <div class="pull-right" id="id_rating">
+                                    Rate this product
+                                    <form action="" id='id_rating_form' method="post">
+                                        {% csrf_token %}
+                                        {% render_field rating_form.rating hidden='' %}
+                                        <ul class="rating" style=" list-style-type: none;
                                                 margin: 0;
                                                 padding: 0;
                                                 overflow: hidden; height:50px;">
-                                        <li class="float-left">
+                                            <li class="float-left">
 
-                                            <button id="1" onclick="myFunction(this.id);" type="button">
-                                                <i class="fa fa-star blue-text"></i>
-                                            </button>
+                                                <button id="1" onclick="myFunction(this.id);" type="button">
+                                                    <i class="fa fa-star blue-text"></i>
+                                                </button>
 
-                                        </li>
-                                        <li class="float-left">
+                                            </li>
+                                            <li class="float-left">
 
-                                            <button id="2" class="{{ item.slug }}"
-                                                    onclick="myFunction(this.id);" type="button">
-                                                <i class="fa fa-star blue-text"></i>
-                                            </button>
-                                        </li>
-                                        <li class="float-left">
+                                                <button id="2" class="{{ item.slug }}"
+                                                        onclick="myFunction(this.id);" type="button">
+                                                    <i class="fa fa-star blue-text"></i>
+                                                </button>
+                                            </li>
+                                            <li class="float-left">
 
-                                            <button id="3" onclick="myFunction(this.id);" type="button">
-                                                <i class="fa fa-star blue-text"></i>
-                                            </button>
-                                        </li>
-                                        <li class="float-left">
+                                                <button id="3" onclick="myFunction(this.id);" type="button">
+                                                    <i class="fa fa-star blue-text"></i>
+                                                </button>
+                                            </li>
+                                            <li class="float-left">
 
-                                            <button id="4" onclick="myFunction(this.id);" type="button">
-                                                <i class="fa fa-star blue-text"></i>
-                                            </button>
-                                        </li>
-                                        <li class="float-left">
+                                                <button id="4" onclick="myFunction(this.id);" type="button">
+                                                    <i class="fa fa-star blue-text"></i>
+                                                </button>
+                                            </li>
+                                            <li class="float-left">
 
-                                            <button id="5" onclick="myFunction(this.id);" type="button">
-                                                <i class="fa fa-star blue-text"></i>
-                                            </button>
-                                        </li>
-                                    </ul>
-                                </form>
+                                                <button id="5" onclick="myFunction(this.id);" type="button">
+                                                    <i class="fa fa-star blue-text"></i>
+                                                </button>
+                                            </li>
+                                        </ul>
+                                    </form>
 
-                            </div>
+                                </div>
+                            {% else %}
+                                <div class="pull-right">
+                                    <p id="id_rating_plot">
+                                        Thank you for rating {{ rate.rating }} stars
+                                    </p>
+
+
+                                </div>
+
+                            {% endif %}
                         {% else %}
                             <div class="pull-right">
-                                Thank you for rating
-                            {{ rate.rating }} stars
+                                <p id="id_rating_plot">
+                                    Need to be logged in for rating a product
+                                </p>
+
 
                             </div>
-
                         {% endif %}
 
 
@@ -404,7 +395,7 @@
             </div>
         </div>
 
-        {% if request.session.guest_email_id or request.user.is_authenticated %}
+        {% if request.user.is_authenticated %}
 
             <form action="" method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
@@ -421,28 +412,33 @@
 
 
             <!--Main wrapper-->
-            <div class="comments-list text-center mt-2 text-md-left">
+            <div class="comments-list text-center mt-3 text-md-left">
 
                 <!--First row-->
                 {% for comment in comments %}
                     <div class="row mb-5">
                         <!--Image column-->
-                        <div class="col-sm-2 col-12 mb-3">
 
-                            {% if comment.user.userprofile.pic %}
-                                <img src="{{ comment.user.userprofile.pic.url }}" alt="sample image"
-                                     class="avatar rounded-circle z-depth-1-half">
-                            {% else %}
-                                <img src="https://mdbootstrap.com/img/Photos/Avatars/img (8).jpg" alt="sample image"
-                                     class="avatar rounded-circle z-depth-1-half">
-                            {% endif %}
+                        <div class="col-sm-2 col-12 mb-2">
+                            <ul>
+                                <li style="display: inline-block"> {% if comment.user.userprofile.pic %}
+                                    <img src="{{ comment.user.userprofile.pic.url }}" alt="sample image"
+                                         class="avatar rounded-circle z-depth-1-half">
+                                {% else %}
+                                    <img src="{% static 'images/default.jpg' %}" alt="sample image"
+                                         class="avatar rounded-circle z-depth-1-half">
+                                {% endif %}</li>
+                                <li style="display: inline-block">
+                                </li>
+
+                            </ul>
+
                         </div>
                         <!--/.Image column-->
 
                         <!--Content column-->
-                        <div class="col-sm-10 col-12">
+                        <div class="col-sm-10 col-12 pull-left">
                             <a>
-
                                 <h5 class="user-name font-weight-bold">
 
                                     {% if not comment.user.full_name == None %}
@@ -465,6 +461,8 @@
 
 
                     <hr>
+                {% empty %}
+                    <p class="text-center">No Reviews Yet</p>
                 {% endfor %}
 
 
@@ -515,7 +513,10 @@
 
                     },
                     error: function (data) {
-                        alert('already voted')
+
+                        $('#id_rating').html("Thank you for Rating");
+
+
                     }
 
                 });

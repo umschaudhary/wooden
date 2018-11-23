@@ -1,15 +1,13 @@
-
-from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.http import Http404, HttpResponse
+from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.utils.http import is_safe_url
 
 from users.forms import GuestForm, LoginForm, PasswordChangeForm, \
     RegisterForm
-from users.models import GuestEmail, Sidebar, User, USER_ROLES
+from users.models import GuestEmail, Sidebar, USER_ROLES
 
 
 def login_user(request):
@@ -36,8 +34,8 @@ def login_user(request):
                 messages.error(request, "Invalid login credentials")
                 return render(request, 'users/login.html', context)
             else:
-                if user.is_active :
-                    if user.is_customer() :
+                if user.is_active:
+                    if user.is_customer():
                         login(request, user)
                         try:
                             del request.session['guest_email_id']
@@ -48,12 +46,12 @@ def login_user(request):
                         return redirect('/')
                     else:
                         messages.error(request, 'Login through admin Panel')
+                        return redirect('login_admin')
                 else:
                     messages.error(request, 'Inactive Account, Contact Admin')
     return render(request, 'users/login.html', context)
 
-
-
+3
 def login_admin(request):
     """
     Login a user
@@ -89,7 +87,7 @@ def login_admin(request):
                     return redirect('/')
                 else:
                     messages.error(request, 'Inactive Account, Contact Admin')
-                    
+
     return render(request, 'users/login.html', context)
 
 
@@ -110,6 +108,7 @@ def user_password_change(request):
     }
     return render(request, 'users/change_password.html', context)
 
+
 @login_required
 def logout_user(request):
     """
@@ -117,7 +116,6 @@ def logout_user(request):
     """
     logout(request)
     return redirect("users:login_user")
-
 
 
 def guest_register_view(request):
@@ -137,7 +135,7 @@ def guest_register_view(request):
             qs = GuestEmail.objects.create(email=email)
             if qs:
                 new_guest_email = qs.last()
-        except :
+        except:
             new_guest_email = GuestEmail.objects.create(email=email)
 
         request.session['guest_email_id'] = new_guest_email.id
@@ -171,11 +169,9 @@ def register_page(request):
     return render(request, "users/register.html", context)
 
 
-
-
 def change_sidebar_status(request):
     user = request.user
-    if user.is_authenticated :
+    if user.is_authenticated:
         sidebar_obj, new_obj = Sidebar.objects.new_or_get(request)
         sidebar_obj.is_opened = not sidebar_obj.is_opened
         sidebar_obj.save()

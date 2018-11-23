@@ -1,8 +1,23 @@
 {% extends 'base.html' %}
 {% load widget_tweaks %}
 {% block  content %}
-
+    {% block breadcrumbHead %}
+    {% endblock %}
     <div class="container">
+        <div class="row mt-5">
+            <div class="col-12">
+                <div class="django-messages mt-2">
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }} alert-dismissable">
+                                <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
+                                <strong></strong> {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
 
         <div class="row mt-5">
             <div class="col-lg-6 offset-lg-3">

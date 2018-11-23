@@ -132,7 +132,6 @@ def item_detail(request, slug):
                 if request.user.is_authenticated:
                     if request.user.is_customer():
                         data.user = request.user
-                        is_rated = Rating.objects.get(is_deleted=False, item=item, user=request.user)
 
                 else:
                     if request.session['guest_email_id']:
@@ -144,7 +143,6 @@ def item_detail(request, slug):
                         except GuestEmail.DoesNotExist:
                             g_mail = None
                         data.guest_user = g_mail
-                        is_rated = Rating.objects.get(is_deleted=False, item=item, guest_user=g_mail)
 
                 data.save()
                 return HttpResponseRedirect("")
@@ -222,24 +220,7 @@ def item_detail(request, slug):
             if request.user.is_customer():
                 try:
                     is_rated = Rating.objects.get(is_deleted=False, item=item, user=request.user)
-                except:
-                    is_rated = None
-                if is_rated:
-                    context['rate'] = is_rated
-                    context['is_rated'] = True
-
-        else:
-            if request.session['guest_email_id']:
-                guest_email_id = request.session['guest_email_id']
-                try:
-                    g_mail = GuestEmail.objects.get(id=guest_email_id)
-                except GuestEmail.MultipleObjectsReturned:
-                    g_mail = GuestEmail.objects.filter(id=guest_email_id).last()
-                except GuestEmail.DoesNotExist:
-                    g_mail = None
-                try:
-                    is_rated = Rating.objects.get(is_deleted=False, item=item, guest_user=g_mail)
-                except:
+                except Rating.DoesNotExist:
                     is_rated = None
                 if is_rated:
                     context['rate'] = is_rated

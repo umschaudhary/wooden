@@ -8,6 +8,7 @@
                 <div class="card">
                     <div class="body">
                         <canvas id="bar-chart" width="800" height="450"></canvas>
+
                     </div>
                 </div>
             </div>
@@ -17,25 +18,26 @@
     {% block extra_script %}
         <script src="{% static 'js/Chart.min.js' %}"></script>
         <script>
-            let endpoint = '/api/v1/data/orders/';
-            let defaultData = [];
-            let labelData = [];
-            $.ajax({
-                method: 'GET',
-                url: endpoint,
-                success: function (data) {
-                    labelData = data.labels;
-                    defaultData = data.defaultData;
-                    setChart()
-                },
-                error: function (error_data) {
-                    console.log('error');
-                    console.log(error_data)
+            $(function () {
+                let endpoint = '/api/v1/data/orders/';
+                let defaultData = [];
+                let labelData = [];
+                $.ajax({
+                    method: 'GET',
+                    url: endpoint,
+                    success: function (data) {
+                        labelData = data.labels;
+                        defaultData = data.defaultData;
+                        setChart()
+                    },
+                    error: function (error_data) {
+                        console.log('error');
+                        console.log(error_data)
 
-                }
-            });
+                    }
+                });
 
-            function setChart() {
+                function setChart() {
 
                 new Chart(document.getElementById("bar-chart"), {
                     type: 'bar',
@@ -70,30 +72,11 @@
 
                 });
 
-
-                {#                new Chart(document.getElementById("polar-chart"), {#}
-                {#                    type: 'polarArea',#}
-                {#                    data: {#}
-                {#                        labels: labelData,#}
-                {#                        datasets: [#}
-                {#                            {#}
-                {#                                label: "संख्या",#}
-                {#                                backgroundColor: ["red", "green", "blue", "orange", "darkblue", "darkgreen", "skyblue", "#3cba9f", "#e8c3b9", "#c45850", "#3e95cd"],#}
-                {#                                data: defaultData#}
-                {#                            }#}
-                {#                        ]#}
-                {#                    },#}
-                {#                    options: {#}
-                {#                        legend: {display: false},#}
-                {#                        title: {#}
-                {#                            display: true,#}
-                {#                            text: 'कुल आवेदन संख्या'#}
-                {##}
-                {#                        }#}
-                {#                    }#}
-                {#                });#}
-
             }
+
+
+
+            });
 
 
         </script>
