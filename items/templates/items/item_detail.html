@@ -238,7 +238,8 @@
                                     <i class="fa fa-star checked"></i>
                                 </li>
                                 <li></li>
-                                <li>{{ ratings5 }}</li>
+                                <li>
+                                <input style='color:black;box-shadow: none;' id='ratings_5' type="text" value="{{ ratings5 }}" class="btn btn-default  text-left" disabled></li>
                             </ul>
                             <ul class="rating">
                                 <li>
@@ -257,7 +258,7 @@
                                     <i class="fa fa-star blue-text"></i>
                                 </li>
                                 <li></li>
-                                <li>{{ ratings4 }}</li>
+                                <li><input style='color:black;box-shadow: none;' id='ratings_4' type="text" value="{{ ratings4 }}" class="btn btn-default  text-left" disabled></li>
                             </ul>
                             <ul class="rating">
                                 <li>
@@ -276,7 +277,8 @@
                                     <i class="fa fa-star blue-text"></i>
                                 </li>
                                 <li></li>
-                                <li>{{ ratings3 }}</li>
+                                <li>
+                                <input style='color:black;box-shadow: none;' id='ratings_3' type="text" value="{{ ratings3 }}" class="btn btn-default  text-left" disabled></li>
                             </ul>
                             <ul class="rating">
                                 <li>
@@ -295,7 +297,8 @@
                                     <i class="fa fa-star blue-text"></i>
                                 </li>
                                 <li></li>
-                                <li>{{ ratings2 }}</li>
+                                <li>
+                                <input style='color:black;box-shadow: none;' id='ratings_2' type="text" value="{{ ratings2 }}" class="btn btn-default  text-left" disabled></li>
                             </ul>
                             <ul class="rating">
                                 <li>
@@ -314,7 +317,8 @@
                                     <i class="fa fa-star blue-text"></i>
                                 </li>
                                 <li></li>
-                                <li>{{ ratings1 }}</li>
+                                <li>
+                                    <input style='color:black;box-shadow: none;' id='ratings_1' type="text" value="{{ ratings1 }}" class="btn btn-default text-left" disabled></li>
                             </ul>
                         </div>
 
@@ -397,11 +401,12 @@
 
         {% if request.user.is_authenticated %}
 
-            <form action="" method="POST" enctype="multipart/form-data">
-                {% csrf_token %}
-                {% render_field form.comment class='form-control' placeholder='comment here.....' rows='3' %}
-                <button type="submit" class="pull-right btn btn-lg font-17 mt-2 btn-primary">Comment</button>
+        <form  method="POST" id="post-form">
+            {% csrf_token %}
+            {% render_field form.comment class='form-control' rows=3 placeholder='comment' %}
+           <input type="submit" value='submit'>
             </form>
+           
         {% endif %}
 
         <section id="reviews" class="mt-5">
@@ -413,6 +418,34 @@
 
             <!--Main wrapper-->
             <div class="comments-list text-center mt-3 text-md-left">
+                    <div class="row mb-5">
+                            <!--Image column-->
+                            <div class="col-sm-2 col-12 mb-2">
+                                <ul>
+                                    <li id='id_image' style="display: inline-block"></li>
+                                    <li style="display: inline-block">
+                                    </li>
+                                </ul>
+    
+                            </div>
+                        
+                            <div class="col-sm-10 col-12 pull-left">
+                                <a>
+                                    <h5 class="user-name font-weight-bold" id='id_full_name'></h5>
+                                </a>
+                                <!-- Rating -->
+    
+                                <div class="card-data">
+                                    <ul class="list-unstyled mb-1">
+                                        <li class="comment-date font-small grey-text" id='id_date'>
+                                          
+                                        </li>
+                                    </ul>
+                                </div>
+                                <p class="dark-grey-text article" id='id_comment_text'></p>
+                            </div>
+                            <!--/.Content column-->
+                        </div>
 
                 <!--First row-->
                 {% for comment in comments %}
@@ -421,7 +454,7 @@
 
                         <div class="col-sm-2 col-12 mb-2">
                             <ul>
-                                <li style="display: inline-block"> {% if comment.user.userprofile.pic %}
+                                <li style="display: inline-block" id='id_image'> {% if comment.user.userprofile.pic %}
                                     <img src="{{ comment.user.userprofile.pic.url }}" alt="sample image"
                                          class="avatar rounded-circle z-depth-1-half">
                                 {% else %}
@@ -439,7 +472,7 @@
                         <!--Content column-->
                         <div class="col-sm-10 col-12 pull-left">
                             <a>
-                                <h5 class="user-name font-weight-bold">
+                                <h5 class="user-name font-weight-bold"  id='id_full_name'>
 
                                     {% if not comment.user.full_name == None %}
                                         {{ comment.user.full_name }}  {% else %} Authorised User {% endif %}</h5>
@@ -448,12 +481,12 @@
 
                             <div class="card-data">
                                 <ul class="list-unstyled mb-1">
-                                    <li class="comment-date font-small grey-text">
+                                    <li class="comment-date font-small grey-text" id="id_date">
                                         <i class="fa fa-clock-o"></i> {{ comment.created_at }}
                                     </li>
                                 </ul>
                             </div>
-                            <p class="dark-grey-text article">{{ comment.comment }}</p>
+                            <p class="dark-grey-text article" id='id_comment_text'>{{ comment.comment }}</p>
                         </div>
                         <!--/.Content column-->
                     </div>
@@ -482,14 +515,52 @@
 
 
             $(function () {
-                quantity ={{ item_count }};
+                let quantity ={{ item_count }} ;
 
                 for (i = 1; i < quantity + 1; i++) {
                     $('#id_quantity').append('<option value="' + i + '">' + i + '</option>');
                 }
+            
             });
+            $('#post-form').on('submit', function(e){
+                e.preventDefault();
+                console.log("form submitted!")  // sanity check
+                create_comment();
+                });
 
+            function create_comment(){
+                let slug = "{{item.slug}}";
+                let comment = $('#id_comment').val()
+                iUrl = "/comments/create/" + slug
+                $.ajax({
+                url : iUrl, // the endpoint
+                type : "POST", // http method
+                data : { 
+                    'slug':slug,
+                    'comment':comment,
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                 }, // data sent with the post request
 
+                // handle a successful response
+                success : function(response_data) {
+                 
+                    console.log(response_data); // log the returned json to the console
+                    $('#id_comment').val("");
+                    $("#id_image").html("<img class='avatar rounded-circle z-depth-1-half' src=/media/" +response_data.image + ">")
+                    $('#id_full_name').text(response_data.author)
+                    $('#id_date').html("<i class='fa fa-clock-o'></i> "+ response_data.created)
+                    $('#id_comment_text').text(response_data.comment)
+                },
+
+                // handle a non-successful response
+                error : function(xhr,errmsg,err) {
+                    $('#results').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: "+errmsg+
+                        " <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
+                    console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+                }
+    });
+
+            }
         </script>
 
         <script>
@@ -500,29 +571,26 @@
                 let iUrl = '/ratings/' + slug;
                 $.ajax({
                     url: iUrl,
-                    type: 'POST',
-                    dataType: 'json',
+                    method: 'POST',
                     data: {
                         'rating': id,
                         'slug': slug,
                         'csrfmiddlewaretoken': '{{ csrf_token }}'
-                    },
-                    success: function (data) {
-
-                        alert('thank you')
-
-                    },
-                    error: function (data) {
-
-                        $('#id_rating').html("Thank you for Rating");
-
-
                     }
-
-                });
-
-
+                }).done(function(data) {
+                        $('#id_rating').html('<p> Thank you for rating '+ data + ' stars </p>')
+                        if (data == id){
+                            let countStar = $('#ratings_'+data).val()
+                            let coutInt = parseInt(countStar)
+                            coutInt += 1;
+                            $('#ratings_'+data).val(coutInt)
+                        }
+                        
+                    });
             }
+   
+
+         
         </script>
     {% endblock %}
 

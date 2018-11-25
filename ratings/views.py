@@ -31,7 +31,7 @@ def rating_create(request, slug):
                                 rating.rating = data
                                 rating.user = request.user
                                 rating.save()
-                                astr = "<html><b> you sent an ajax post request </b> <br> returned data: %s</html>" % data
+                                astr = data
                                 return HttpResponse(astr)
                             else:
                                 astr = "<html><b> you sent an ajax post request </b> <br> returned data: %s</html>" % data

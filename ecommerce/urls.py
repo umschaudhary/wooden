@@ -30,6 +30,7 @@ urlpatterns = [
                   path('cart/', include('carts.urls')),
                   path('companies/', include('companies.urls.companies')),
                   path('company_users/', include('companies.urls.company_users')),
+                  path('comments/', include('comments.urls')),
                   path('categories/', include('categories.urls')),
                   path('data-analysis/', include('data_analysis.urls')),
                   path('fiscal-years/', include('settings.urls.fiscal_years')),

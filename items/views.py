@@ -125,28 +125,6 @@ def item_detail(request, slug):
         quantity_form = forms.QuantityForm(request.POST or None)
         rating_form = RatingForm(request.POST or None)
         if request.method == 'POST':
-            if form.is_valid():
-                data = form.save(commit=False)
-                data.item = item
-                data.fiscal_year = FiscalYear.get_active_fiscal_year()
-                if request.user.is_authenticated:
-                    if request.user.is_customer():
-                        data.user = request.user
-
-                else:
-                    if request.session['guest_email_id']:
-                        guest_email_id = request.session['guest_email_id']
-                        try:
-                            g_mail = GuestEmail.objects.get(id=guest_email_id)
-                        except GuestEmail.MultipleObjectsReturned:
-                            g_mail = GuestEmail.objects.filter(id=guest_email_id).last()
-                        except GuestEmail.DoesNotExist:
-                            g_mail = None
-                        data.guest_user = g_mail
-
-                data.save()
-                return HttpResponseRedirect("")
-
             if quantity_form.is_valid():
                 data = quantity_form.save(commit=False)
                 data.cart = cart_obj
