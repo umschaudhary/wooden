@@ -18,6 +18,7 @@ from ratings.forms import RatingForm
 from ratings.models import Rating
 from settings.models import FiscalYear
 from users.decorators import provider_required
+from django.db.models import Sum
 from users.models import GuestEmail
 
 
@@ -203,7 +204,18 @@ def item_detail(request, slug):
                 if is_rated:
                     context['rate'] = is_rated
                     context['is_rated'] = True
-
+                try:
+                    ratings = Rating.objects.filter(item=item, is_deleted=False)
+                except :
+                    ratings = None
+                if ratings:
+                    total_ratings = ratings.aggregate(Sum('rating'))
+                    rating_total = total_ratings['rating__sum']
+                    avg_rating = rating_total/ratings.count()
+                    rating_percentage = (avg_rating/5)*100
+                    context['rating_percentage'] = rating_percentage
+                    context['avg_rating'] = avg_rating
+                    context['rating_total'] = rating_total
     context['item'] = item
     template_name = 'items/item_detail.html'
     return render(request, template_name, context)

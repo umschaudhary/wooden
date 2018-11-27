@@ -88,6 +88,31 @@
         }
 
 
+.star-rating, .back-stars, .front-stars {
+  display: flex;
+}
+
+.star-rating {
+  
+  font-size: 2em;
+ 
+
+}
+
+.back-stars {
+  color: #bb5252;
+  position: relative;
+  text-shadow: 4px 4px 5px #843a3a;
+}
+
+.front-stars {
+  color: #ffbc0b;
+  overflow: hidden;
+  position: absolute;
+  text-shadow: 2px 2px 5px #d29b09;
+  top: 0;
+}
+
     </style>
 
 {% endblock %}
@@ -154,7 +179,25 @@
                     <h2 class="h2-responsive text-center text-md-left product-name font-weight-bold dark-grey-text mb-1 ml-xl-0 ml-4">
                         <strong>{{ item.name }} </strong>
                     </h2>
-
+                    <div class="star-rating" title="{{avg_rating|floatformat}}">
+                        <div class="back-stars">
+                            <i class="fa fa-star" aria-hidden="true"></i>
+                            <i class="fa fa-star" aria-hidden="true"></i>
+                            <i class="fa fa-star" aria-hidden="true"></i>
+                            <i class="fa fa-star" aria-hidden="true"></i>
+                            <i class="fa fa-star" aria-hidden="true"></i>
+                            
+                            <div class="front-stars" style="width: {{rating_percentage}}%">
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                            </div>
+                        </div>
+                    </div>    
+                    
+               
                     <h3 class="h3-responsive text-center text-md-left mb-5 ml-xl-0 ml-4">
                             <span class="red-text font-weight-bold">
                                 <strong>Rs {{ item.stock_record.discounted_price }}</strong>
