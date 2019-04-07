@@ -43,8 +43,5 @@ urlpatterns = [
                   path('register/', register_page, name='register'),
                   path('success/', success, name='success'),
                   path('search_products/', views.search_products, name='search_products'),
-
-                  # api
                   path('api/v1/data/', include('data_analysis.api.urls'))
-
-              ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+              ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

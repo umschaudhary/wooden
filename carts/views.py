@@ -1,14 +1,5 @@
-import json
-
-import decimal
 from django.contrib import messages
-from django.core import serializers
-from django.db.models import Sum
-from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
-from django.urls import reverse
-
-from addresses.forms import AddressForm
 from addresses.models import Address
 from billings.models import BillingProfile
 from carts.models import Cart, CartItem
@@ -29,10 +20,8 @@ def cart(request):
         total = 0
         for item in cart_items:
             total += item.total
-
         cart_obj.total = total
         cart_obj.save()
-        
 
     template_name = 'carts/cart.html'
     return render(request, template_name, context)

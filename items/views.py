@@ -6,7 +6,6 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.forms.models import modelformset_factory
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
-
 from carts.models import Cart, CartItem
 from categories.models import Category
 from comments.forms import CommentForm
@@ -204,18 +203,20 @@ def item_detail(request, slug):
                 if is_rated:
                     context['rate'] = is_rated
                     context['is_rated'] = True
-                try:
-                    ratings = Rating.objects.filter(item=item, is_deleted=False)
-                except :
-                    ratings = None
-                if ratings:
-                    total_ratings = ratings.aggregate(Sum('rating'))
-                    rating_total = total_ratings['rating__sum']
-                    avg_rating = rating_total/ratings.count()
-                    rating_percentage = (avg_rating/5)*100
-                    context['rating_percentage'] = rating_percentage
-                    context['avg_rating'] = avg_rating
-                    context['rating_total'] = rating_total
+    try:
+        ratings = Rating.objects.filter(item=item, is_deleted=False)
+    except :
+        ratings = None
+        
+    if ratings:
+        total_ratings = ratings.aggregate(Sum('rating'))
+        rating_total = total_ratings['rating__sum']
+        avg_rating = rating_total/ratings.count()
+        rating_percentage = (avg_rating/5)*100
+        print(rating_percentage)
+        context['rating_percentage'] = rating_percentage
+        context['avg_rating'] = avg_rating
+        context['rating_total'] = rating_total
     context['item'] = item
     template_name = 'items/item_detail.html'
     return render(request, template_name, context)
