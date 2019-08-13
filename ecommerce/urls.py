@@ -34,7 +34,8 @@ urlpatterns = [
                   path('categories/', include('categories.urls')),
                   path('data-analysis/', include('data_analysis.urls')),
                   path('fiscal-years/', include('settings.urls.fiscal_years')),
-                  path('guest_register/', guest_register_view, name='guest_register'),
+                  path('guest_register/', guest_register_view,
+                       name='guest_register'),
                   path('items/', include('items.urls')),
                   path('login_admin/', login_admin, name='login_admin'),
                   path('orders/', include('orders.urls')),
@@ -42,6 +43,12 @@ urlpatterns = [
                   path('refunds/', include('refunds.urls')),
                   path('register/', register_page, name='register'),
                   path('success/', success, name='success'),
-                  path('search_products/', views.search_products, name='search_products'),
-                  path('api/v1/data/', include('data_analysis.api.urls'))
-              ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+                  path('search_products/', views.search_products,
+                       name='search_products'),
+                  path('api/v1/data/', include('data_analysis.api.urls')),
+]
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL,
+                          document_root=settings.STATIC_ROOT)
+    urlpatterns += static(settings.MEDIA_URL,
+                          document_root=settings.MEDIA_ROOT)

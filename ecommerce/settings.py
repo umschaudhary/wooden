@@ -140,11 +140,11 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-MEDIA_URL = '/media/',
+MEDIA_URL = '/media/'
 
-STATIC_ROOT='/home/kali/workspace_media/static'
+STATIC_ROOT='/home/march/workspace_media/static'
 
-MEDIA_ROOT='/home/kali/workspace_media/media'
+MEDIA_ROOT='/home/march/workspace_media/media'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'staticfiles'),
 )

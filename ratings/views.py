@@ -13,7 +13,6 @@ def rating_create(request, slug):
     except Item.DoesNotExist:
         item = None
     if item:
-
         if request.method == 'POST':
             if request.is_ajax():
                 data = request.POST['rating']
